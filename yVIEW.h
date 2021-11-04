@@ -9,6 +9,10 @@ typedef  const char           cchar;
 typedef  const int            cint;
 
 
+#define      YVIEW_OPENGL      'g'
+#define      YVIEW_CURSES      'c'
+
+
 /*---(normal)-------------------------*/
 #define      YVIEW_TITLE       't'
 #define      YVIEW_BUFFER      'b'
@@ -53,16 +57,19 @@ typedef  const int            cint;
 
 #define      YVIEW_ALLALL      '0'
 
+#define      YVIEW_TOPALL      't'
 #define      YVIEW_TOPLEF      '1'
 #define      YVIEW_TOPCEN      '2'
 #define      YVIEW_TOPRIG      '3'
 #define      YVIEW_TOPS        "123"
 
+#define      YVIEW_UPSALL      'k'
 #define      YVIEW_UPSBEG      'a'
 #define      YVIEW_UPSCEN      't'
 #define      YVIEW_UPSEND      'u'
 #define      YVIEW_UPS         "atu"
 
+#define      YVIEW_MIDALL      'm'
 #define      YVIEW_MIDLEF      '4'
 #define      YVIEW_MIDBEG      's'
 #define      YVIEW_MIDCEN      '5'
@@ -70,15 +77,22 @@ typedef  const int            cint;
 #define      YVIEW_MIDRIG      '6'
 #define      YVIEW_MIDS        "4s5e6"
 
+#define      YVIEW_LOWALL      'j'
 #define      YVIEW_LOWBEG      'd'
 #define      YVIEW_LOWCEN      'b'
 #define      YVIEW_LOWEND      'z'
 #define      YVIEW_LOWS        "dbz"
 
+#define      YVIEW_BOTALL      'b'
 #define      YVIEW_BOTLEF      '7'
 #define      YVIEW_BOTCEN      '8'
 #define      YVIEW_BOTRIG      '9'
 #define      YVIEW_BOTS        "789"
+
+#define      YVIEW_ALLFUL      'f'
+#define      YVIEW_ALLLEF      'l'
+#define      YVIEW_ALLCEN      'c'
+#define      YVIEW_ALLRIG      'r'
 
 #define      YVIEW_LEFS        "147"
 #define      YVIEW_BEGS        "asd"

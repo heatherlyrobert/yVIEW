@@ -104,6 +104,21 @@ tPARTS  g_parts [MAX_PARTS] = {
  *
  */
 
+
+
+static  char        s_abbr   =  '-';
+static  char        s_pindex =  -10;
+static  tPARTS     *s_part   = NULL;
+static  char        s_aindex =  -10;
+static  tPARTS     *s_link   = NULL;
+
+
+
+/*====================------------------------------------====================*/
+/*===----                        program level                         ----===*/
+/*====================------------------------------------====================*/
+static void  o___PROGRAM_________o () { return; }
+
 char
 yview_parts_init        (void)
 {
@@ -122,19 +137,26 @@ yview_parts_init        (void)
    /*---(ribbon)-------------------------*/
    /*> for (i = 0; i < LEN_LABEL; ++i)  s_win.r_icons [i] = -1;                       <* 
     *> s_win.r_nicon = 0;                                                             <*/
+   yview_set_anchor (YVIEW_FLOAT  , YVIEW_TOPALL);
+   yview_set_anchor (YVIEW_MENUS  , YVIEW_TOPCEN);
+   yview_set_anchor (YVIEW_HISTORY, YVIEW_ALLFUL);
+   myVIEW.loc_menu   = 't';
+   myVIEW.loc_float  = 't';
+   myVIEW.loc_hist   = 'f';
    /*---(complete)-----------------------*/
    DEBUG_PROG   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
-static  char        s_abbr   =  '-';
-static  char        s_pindex =  -10;
-static  tPARTS     *s_part   = NULL;
-static  char        s_aindex =  -10;
-static  tPARTS     *s_link   = NULL;
+
+
+/*====================------------------------------------====================*/
+/*===----                        finding parts                         ----===*/
+/*====================------------------------------------====================*/
+static void  o___SEARCH__________o () { return; }
 
 char
-yview__find_link        (char n, tPARTS **a_link)
+yview__find_link        (char n, tPARTS **r_link)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -143,13 +165,13 @@ yview__find_link        (char n, tPARTS **a_link)
    /*---(header)-------------------------*/
    DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
    DEBUG_GRAF   yLOG_sint    (n);
-   DEBUG_GRAF   yLOG_spoint  (a_link);
+   DEBUG_GRAF   yLOG_spoint  (r_link);
    /*---(check for link)-----------------*/
-   if (a_link == NULL) {
+   if (r_link == NULL) {
       DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
       return 0;
    }
-   *a_link = NULL;
+   *r_link = NULL;
    DEBUG_GRAF   yLOG_schar   (g_parts [n].x_tie);
    DEBUG_GRAF   yLOG_schar   (g_parts [n].y_tie);
    if (g_parts [n].x_tie == '-' && g_parts [n].y_tie == '-') {
@@ -160,26 +182,26 @@ yview__find_link        (char n, tPARTS **a_link)
    for (i = 0; i < myVIEW.npart; ++i) {
       if (g_parts [i].abbr == g_parts [n].x_tie)  {
          a = i;
-         *a_link = &(g_parts [i]);
+         *r_link = &(g_parts [i]);
          break;
       }
       if (g_parts [i].abbr == g_parts [n].y_tie)  {
          a = i;
-         *a_link = &(g_parts [i]);
+         *r_link = &(g_parts [i]);
          break;
       }
    }
-   DEBUG_GRAF   yLOG_spoint  (*a_link);
+   DEBUG_GRAF   yLOG_spoint  (*r_link);
    /*---(complete)-----------------------*/
    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
    return a;
 }
 
 char
-yview__parts_saved      (tPARTS **a_part, tPARTS **a_link)
+yview__parts_saved      (tPARTS **r_part, tPARTS **r_link)
 {
-   if (a_part != NULL)  *a_part = s_part;
-   if (a_link != NULL)  *a_link = s_link;
+   if (r_part != NULL)  *r_part = s_part;
+   if (r_link != NULL)  *r_link = s_link;
    return s_pindex;
 }
 
@@ -195,7 +217,7 @@ yview__parts_saving     (cchar a_abbr, cchar n, tPARTS *a_part, cchar a, tPARTS 
 }
 
 char         /*-> locate screen parts by abbrev ------[ ------ [gz.742.001.01]*/ /*-[00.0000.112.!]-*/ /*-[--.---.---.--]-*/
-yview_by_abbr           (cchar  a_abbr, tPARTS **a_part, tPARTS **a_link)
+yview_by_abbr           (cchar  a_abbr, tPARTS **r_part, tPARTS **r_link)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -206,13 +228,13 @@ yview_by_abbr           (cchar  a_abbr, tPARTS **a_part, tPARTS **a_link)
    DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
    DEBUG_GRAF   yLOG_sint    (a_abbr);
    /*---(defaults)-----------------------*/
-   if (a_part != NULL)  *a_part = NULL;
-   if (a_link != NULL)  *a_link = NULL;
+   if (r_part != NULL)  *r_part = NULL;
+   if (r_link != NULL)  *r_link = NULL;
    /*---(short-cut)----------------------*/
    if (a_abbr == s_abbr) {
       DEBUG_GRAF   yLOG_snote   ("short-cut using saved");
       DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-      return yview__parts_saved (a_part, a_link);
+      return yview__parts_saved (r_part, r_link);
    }
    /*---(defense)------------------------*/
    --rce;  if (a_abbr <= G_KEY_SPACE || a_abbr >= G_KEY_TILDA) {
@@ -236,17 +258,17 @@ yview_by_abbr           (cchar  a_abbr, tPARTS **a_part, tPARTS **a_link)
    DEBUG_GRAF   yLOG_snote   (g_parts [n].name);
    /*---(save back)----------------------*/
    yview__parts_saving (a_abbr, n, g_parts + n, -1, NULL);
-   if (a_part != NULL)   *a_part = &(g_parts [n]);
+   if (r_part != NULL)   *r_part = &(g_parts [n]);
    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
    /*---(run link)-----------------------*/
-   a = yview__find_link (n, a_link);
-   yview__parts_saving (a_abbr, n, g_parts + n, a, *a_link);
+   a = yview__find_link (n, r_link);
+   yview__parts_saving (a_abbr, n, g_parts + n, a, g_parts + a);
    /*---(complete)-----------------------*/
    return n;
 }
 
 char
-yview_by_cursor         (char a_move, tPARTS **a_part, tPARTS **a_link)
+yview_by_cursor         (char a_move, tPARTS **r_part, tPARTS **r_link)
 {
    /*---(locals)-----------+-----+-----+-*/
    char         rce        =  -10;
@@ -256,8 +278,8 @@ yview_by_cursor         (char a_move, tPARTS **a_part, tPARTS **a_link)
    DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
    DEBUG_GRAF   yLOG_schar   (a_move);
    /*---(prepare)------------------------*/
-   if (a_part != NULL)  *a_part = NULL;
-   if (a_link != NULL)  *a_link = NULL;
+   if (r_part != NULL)  *r_part = NULL;
+   if (r_link != NULL)  *r_link = NULL;
    /*---(prepare)------------------------*/
    DEBUG_GRAF   yLOG_sint    (myVIEW.npart);
    n = s_pindex;
@@ -270,9 +292,9 @@ yview_by_cursor         (char a_move, tPARTS **a_part, tPARTS **a_link)
    case YDLST_NEXT : ++n;                   break;
    case YDLST_TAIL : n = myVIEW.npart - 1;  break;
    default  :
-              DEBUG_GRAF   yLOG_snote   ("illegal move");
-              DEBUG_GRAF   yLOG_sexitr  (__FUNCTION__, rce);
-              return rce;
+                     DEBUG_GRAF   yLOG_snote   ("illegal move");
+                     DEBUG_GRAF   yLOG_sexitr  (__FUNCTION__, rce);
+                     return rce;
    }
    DEBUG_GRAF   yLOG_sint    (n);
    /*---(check for trouble)--------------*/
@@ -286,11 +308,11 @@ yview_by_cursor         (char a_move, tPARTS **a_part, tPARTS **a_link)
    }
    /*---(save back)----------------------*/
    yview__parts_saving (g_parts [n].abbr, n, g_parts + n, -1, NULL);
-   if (a_part != NULL)   *a_part = &(g_parts [n]);
+   if (r_part != NULL)   *r_part = &(g_parts [n]);
    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
    /*---(run link)-----------------------*/
-   a = yview__find_link (n, a_link);
-   yview__parts_saving (g_parts [n].abbr, n, g_parts + n, a, *a_link);
+   a = yview__find_link (n, r_link);
+   yview__parts_saving (g_parts [n].abbr, n, g_parts + n, a, g_parts + a);
    /*---(complete)-----------------------*/
    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
    return n;
@@ -301,6 +323,170 @@ yview_parts_name        (cchar n)
 {
    if (n < 0 || n >= myVIEW.npart)  return  "n/a";
    return g_parts [n].name;
+}
+
+char
+yview__default          (char a_part, char a_on, short a_nwide, short a_ntall, short a_owide, short a_otall, void *a_draw)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        n           =    0;
+   tPARTS     *p           = NULL;
+   /*---(prepare)------------------------*/
+   n = yview_by_abbr (a_part, &p, NULL);
+   --rce;  if (n < 0)  return rce;
+   /*---(set defaults)-------------------*/
+   p->on         = a_on;
+   if (myVIEW.env == YVIEW_CURSES) {
+      p->def_wide   = a_nwide;
+      p->def_tall   = a_ntall;
+   } else if (myVIEW.env == YVIEW_OPENGL) {
+      p->def_wide   = a_owide;
+      p->def_tall   = a_otall;
+   } else {
+      p->def_wide   = 0;
+      p->def_tall   = 0;
+   }
+   if (a_draw != NULL && p->drawer == NULL)  p->drawer     = a_draw;
+   /*---(initialize)---------------------*/
+   p->wide       = 0;
+   p->left       = 0;
+   p->tall       = 0;
+   p->bott       = 0;
+   /*---(output)-------------------------*/
+   DEBUG_GRAF   yLOG_complex ("part"      , "%-12.12s, on %c, wide %3d, tall %3d, draw %-10.10p", p->name, p->on, p->def_wide, p->def_tall, p->drawer);
+   /*---(complete)-----------------------*/
+   return 0;
+}
+
+char
+yview_defaults          (cchar a_env)
+{
+   /*---(header)-------------------------*/
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   /*---(global)-------------------------*/
+   myVIEW.env = a_env;
+   /*                                   -curses-- -opengl--                       */
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_TITLE   , 'y',   1,   0,  15,   0,  NULL);
+   yview__default (YVIEW_VERSION , 'y',   1,   5,  15,  40,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_BUFFER  , '-',   0,   1,   0,  15,  NULL);
+   yview__default (YVIEW_FORMULA , '-',   0,   1,   0,  15,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_NAV     , '-',  20,   0, 150,   0,  NULL);
+   yview__default (YVIEW_LAYERS  , '-',  20,   0, 150,   0,  NULL);
+   yview__default (YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL);
+   yview__default (YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_ALT     , '-',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_PROGRESS, '-',   0,  10,   0, 100,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_DETAILS , '-',  20,   0, 250,   0,  NULL);
+   yview__default (YVIEW_RIBBON  , '-',   5,   0,  40,   0,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_MODES   , 'y',   5,   1,  40,  15,  NULL);
+   yview__default (YVIEW_STATUS  , 'y',   0,   1,   0,  15,  NULL);
+   yview__default (YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL);
+   yview__default (YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL);
+   yview__default (YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_MENUS   , 'y',  40,  14, 280, 200,  NULL);
+   yview__default (YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL);
+   /*------------ ---part--------- -on- wide tall wide tall ---drawer------------ */
+   yview__default (YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL);
+   yview__default (YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL);
+   /*---(complete)-----------------------*/
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_get_anchor        (char a_part)
+{
+   char        rce         =  -10;
+   char        n           =    0;
+   n = yview_by_abbr (a_part, NULL, NULL);
+   --rce;  if (n < 0) {
+      return rce;
+   }
+   return g_parts [n].anchor;
+}
+
+char
+yview_set_anchor        (char a_part, char a_anchor)
+{
+   char        rce         =  -10;
+   char        n           =    0;
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_GRAF   yLOG_char    ("a_part"    , a_part);
+   DEBUG_GRAF   yLOG_char    ("a_anchor"  , a_anchor);
+   --rce;  if (a_anchor == 0) {
+      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   --rce;  switch (a_part) {
+   case YVIEW_FLOAT   :
+      DEBUG_GRAF   yLOG_info    ("float"     , YVIEW_LOC_FLOAT);
+      if (strchr (YVIEW_LOC_FLOAT, a_anchor) == NULL) {
+         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      switch (a_anchor) {
+      case 't' : a_anchor = YVIEW_TOPALL;   break;
+      case 'k' : a_anchor = YVIEW_UPSALL;   break;
+      case 'm' : a_anchor = YVIEW_MIDALL;   break;
+      case 'j' : a_anchor = YVIEW_LOWALL;   break;
+      case 'b' : a_anchor = YVIEW_BOTALL;   break;
+      }
+      myVIEW.loc_float = a_anchor;
+      break;
+   case YVIEW_HISTORY :
+      DEBUG_GRAF   yLOG_info    ("history"   , YVIEW_LOC_HIST);
+      if (strchr (YVIEW_LOC_HIST , a_anchor) == NULL) {
+         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      switch (a_anchor) {
+      case 'f' : a_anchor = YVIEW_ALLFUL;   break;
+      case 'l' : a_anchor = YVIEW_ALLLEF;   break;
+      case 'c' : a_anchor = YVIEW_ALLCEN;   break;
+      case 'r' : a_anchor = YVIEW_ALLRIG;   break;
+      }
+      break;
+   case YVIEW_MENUS   :
+      DEBUG_GRAF   yLOG_info    ("menus"     , YVIEW_LOC_MENU);
+      if (strchr (YVIEW_LOC_MENU , a_anchor) == NULL) {
+         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      myVIEW.loc_menu  = a_anchor;
+      break;
+   default    :
+      DEBUG_GRAF   yLOG_info    ("normal"    , YVIEW_LOC_NORM);
+      if (strchr (YVIEW_LOC_NORM , a_anchor) == NULL) {
+         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      myVIEW.loc_hist  = a_anchor;
+      break;
+   }
+   n = yview_by_abbr (a_part, NULL, NULL);
+   DEBUG_GRAF   yLOG_value   ("n"         , n);
+   --rce;  if (n < 0) {
+      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   g_parts [n].anchor = a_anchor;
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
 }
 
 

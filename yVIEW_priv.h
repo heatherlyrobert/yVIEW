@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0a"
-#define     P_VERTXT    "first separation from yVIKEYS, unit tested parts finding"
+#define     P_VERNUM    "2.0b"
+#define     P_VERTXT    "horizontal sizing and anchoring basics unit tested"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -76,17 +76,17 @@ struct cPARTS {
    cchar       horz;                        /* evaluation order left-to-right */
    cchar       nox;                         /* do not add to x cumulatives    */
    cchar       x_tie;                       /* tie to another field in x-axis */
-   int         def_wide;                    /* default width                  */
-   int         wide;                        /* screen width                   */
-   int         left;                        /* screen left                    */
+   short       def_wide;                    /* default width                  */
+   short       wide;                        /* screen width                   */
+   short       left;                        /* screen left                    */
    /*---(vertical)-------------*/
    cchar       vert;                        /* evaluation order bottom-to-top */
    cchar       noy;                         /* do not add to y cumulatives    */
    cchar       y_tie;                       /* tie to another field in y-axis */
    cchar       under;                       /* fall below buffer/formula      */
-   int         def_tall;                    /* default height                 */
-   int         tall;                        /* screen height                  */
-   int         bott;                        /* screen bottom                  */
+   short       def_tall;                    /* default height                 */
+   short       tall;                        /* screen height                  */
+   short       bott;                        /* screen bottom                  */
    /*---(for std elements)-----*/
    char        orient;                      /* orientation of text            */
    char        (*source) (char*);           /* content source                 */
@@ -112,7 +112,18 @@ extern tPARTS  g_parts [MAX_PARTS];
 
 typedef    struct    cMY    tMY;
 struct cMY {
-   int         npart;                       /* total number of window parts   */
+   char        env;                         /* curses vs opengl               */
+   char        npart;                       /* total number of window parts   */
+   short       orig_wide;
+   short       orig_tall;
+   short       main_wide;
+   short       main_tall;
+   short       alt_wide;
+   short       full_wide;
+   short       full_tall;
+   char        loc_float;
+   char        loc_menu;
+   char        loc_hist;
 };
 extern tMY         myVIEW;
 
@@ -120,18 +131,29 @@ extern tMY         myVIEW;
 
 /*===[[ yVIEW_base.c ]]=======================================================*/
 /*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
+/*---(unittest)-------------*/
 char        yview__unit_quiet       (void);
 char        yview__unit_loud        (void);
 char        yview__unit_end         (void);
+/*---(done)-----------------*/
 
 
 
 /*===[[ yVIEW_parts.c ]]======================================================*/
 /*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
+/*---(program)--------------*/
 char        yview_parts_init        (void);
-char        yview_by_abbr           (cchar  a_abbr, tPARTS **a_part, tPARTS **a_link);
-char        yview_by_cursor         (cchar  a_move, tPARTS **a_part, tPARTS **a_link);
+/*---(search)---------------*/
+char        yview_by_abbr           (cchar  a_abbr, tPARTS **r_part, tPARTS **r_link);
+char        yview_by_cursor         (cchar  a_move, tPARTS **r_part, tPARTS **r_link);
 char*       yview_parts_name        (cchar n);
+/*---(defaults)-------------*/
+char        yview__default          (char a_part, char a_on, short a_nwide, short a_ntall, short a_owide, short a_otall, void *a_draw);
+char        yview_defaults          (cchar a_env);
+/*---(anchoring)------------*/
+char        yview_get_anchor        (char a_part);
+char        yview_set_anchor        (char a_part, char a_anchor);
+/*---(done)-----------------*/
 
 
 char        yview_horz_fixed        (void);
@@ -142,7 +164,7 @@ char        yview_horz__float       (tPARTS *p, int a_left);
 char        yview_horz__menus       (tPARTS *p, int a_left);
 char        yview_horz__hist        (tPARTS *p, int a_left);
 char        yview_horz_float        (void);
-char        yview_horz_other        (void);
+char        yview_horz_final        (void);
 
 #endif
 

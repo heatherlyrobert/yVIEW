@@ -43,6 +43,7 @@ static void  o___PROGRAM_________o () { return; }
 char
 yVIEW_init              (void)
 {
+   myVIEW.env = '-';
    yview_parts_init ();
    return 0;
 }
