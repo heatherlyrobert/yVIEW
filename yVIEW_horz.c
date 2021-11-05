@@ -5,22 +5,19 @@
 
 
 
-
-static int    s_orig_wide  = 0;
-static int    s_orig_tall  = 0;
 static int    s_main_wide  = 0;
-static int    s_main_tall  = 0;
 static int    s_alt_wide   = 0;
 static int    s_full_wide  = 0;
-static int    s_full_tall  = 0;
-
-
 
 static int    s_yaxis      =  0;
-static int    s_xaxis      =  0;
-static int    s_prog       =  0;
 static int    s_cum        =  0;
 
+
+
+/*====================------------------------------------====================*/
+/*===----                       detailed functions                     ----===*/
+/*====================------------------------------------====================*/
+static void  o___DETAILS_________o () { return; }
 
 char
 yview_horz_fixed        (void)
@@ -266,10 +263,12 @@ yview_horz_float        (void)
    /*---(get main info)------------------*/
    if (myVIEW.env == YVIEW_OPENGL )  {
       /*> yVIKEYS_view_bounds (YVIEW_MAIN, &x_left, NULL, NULL, NULL, NULL, NULL);    <*/
-   } else {
       yview_by_abbr (YVIEW_MAIN, &p, NULL);
       x_left = p->left;
+   } else {
       /*> yVIKEYS_view_size   (YVIEW_MAIN, &x_left, NULL, NULL, NULL, NULL);          <*/
+      yview_by_abbr (YVIEW_MAIN, &p, NULL);
+      x_left = p->left;
    }
    /*---(walk floats)--------------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
@@ -330,6 +329,13 @@ yview_horz_final         (void)
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                          main driver                         ----===*/
+/*====================------------------------------------====================*/
+static void  o___DRIVER__________o () { return; }
 
 char         /*-> resize widths based on layout ------[ ------ [gz.742.001.01]*/ /*-[00.0000.112.!]-*/ /*-[--.---.---.--]-*/
 yview_horz               (cint a_wide, cint a_alt)
