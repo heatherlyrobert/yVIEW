@@ -109,15 +109,7 @@ yVIEW__unit             (char *a_question, char a_index)
    /*---(dependency list)----------------*/
    if      (strcmp (a_question, "size"           )   == 0) {
       n = yview_by_abbr   (a_index, NULL, NULL);
-      snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: on %c, left %4d, wide %4d, bott %4d, tall %4d", g_parts [n].name, g_parts [n].on, g_parts [n].left, g_parts [n].wide, g_parts [n].bott, g_parts [n].tall);
-   }
-   else if (strcmp (a_question, "bounds"         )   == 0) {
-      n = yview_by_abbr   (a_index, NULL, NULL);
-      snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: an %c, xmin %4d, xmax %4d, ymin %4d, ymax %4d", g_parts [n].name, g_parts [n].anchor, g_parts [n].xmin, g_parts [n].xmin + g_parts [n].xlen, g_parts [n].ymin, g_parts [n].ymin + g_parts [n].ylen);
-   }
-   if      (strcmp (a_question, "active"         )   == 0) {
-      n = yview_by_abbr   (a_index, NULL, NULL);
-      snprintf (unit_answer, LEN_FULL, "VIEW active      : %-12.12s, on %c", g_parts [n].name, g_parts [n].on);
+      snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: %c %4dL %4dW %4dB %4dT  §  %c %c %5.2f %5dx %5dX %5dy %5dY %5dz %5dZ", g_parts [n].name, g_parts [n].on, g_parts [n].left, g_parts [n].wide, g_parts [n].bott, g_parts [n].tall, g_parts [n].orient, chrvisible (g_parts [n].anchor), g_parts [n].magn, g_parts [n].xmin, g_parts [n].xmin + g_parts [n].xlen, g_parts [n].ymin, g_parts [n].ymin + g_parts [n].ylen, g_parts [n].zmin, g_parts [n].zmin + g_parts [n].zlen);
    }
    /*---(complete)-----------------------*/
    return unit_answer;

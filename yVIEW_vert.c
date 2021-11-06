@@ -188,7 +188,7 @@ yview_vert_link  (void)
 }
 
 char
-yview_vert__float (tPARTS *p, int a_bott)
+yview__vert_float       (tPARTS *p, int a_bott)
 {
    p->tall = p->def_tall;
    switch (p->anchor) {
@@ -198,15 +198,15 @@ yview_vert__float (tPARTS *p, int a_bott)
    case YVIEW_LOWALL : p->bott = a_bott + s_main_tall * (0.25) - (p->tall * 0.5);  break;
    case YVIEW_BOTALL : p->bott = a_bott + p->tall;  break;
    default    :
-                         DEBUG_GRAF   yLOG_note    ("no appropriate float location found");
-                         break;
+                       DEBUG_GRAF   yLOG_note    ("no appropriate float location found");
+                       break;
    }
    DEBUG_GRAF   yLOG_complex ("vert_float", "%c, %3da, %3ds, %3dt, %3db", myVIEW.loc_float, a_bott, s_main_tall, p->tall, p->bott);
    return 0;
 }
 
 char
-yview_vert__menu  (tPARTS *p, int a_bott)
+yview__vert_menu        (tPARTS *p, int a_bott)
 {
    p->tall = p->def_tall;
    switch (p->anchor) {
@@ -234,7 +234,7 @@ yview_vert__menu  (tPARTS *p, int a_bott)
 }
 
 char
-yview_vert__hist  (tPARTS *p, int a_bott)
+yview__vert_hist        (tPARTS *p, int a_bott)
 {
    p->tall = s_main_tall * 0.90;
    p->bott = a_bott + (s_main_tall * 0.05);
@@ -272,13 +272,13 @@ yview_vert_float        (void)
       /*---(set)----------------------*/
       switch (p->abbr) {
       case YVIEW_FLOAT    :
-         yview_vert__float (p, x_bott);
+         yview__vert_float (p, x_bott);
          break;
       case YVIEW_MENUS    :
-         yview_vert__menu  (p, x_bott);
+         yview__vert_menu  (p, x_bott);
          break;
       case YVIEW_HISTORY  :
-         yview_vert__hist  (p, x_bott);
+         yview__vert_hist  (p, x_bott);
          break;
       default               :
          yview_by_cursor (YDLST_NEXT, &p, NULL);
@@ -345,6 +345,121 @@ yview_vert_flip         (void)
 
 
 /*====================------------------------------------====================*/
+/*===----                       coordinate calcs                       ----===*/
+/*====================------------------------------------====================*/
+static void  o___COORDS__________o () { return; }
+
+char
+yview_vert_coords       (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   short       y_len       =    0;
+   short       y_max       =    0;
+   tPARTS     *p           = NULL;
+   /*---(header)----------------------*/
+   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
+   /*---(check for opengl)---------------*/
+   DEBUG_GRAF   yLOG_schar   (myVIEW.env);
+   if (myVIEW.env != YVIEW_OPENGL) {
+      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+      return 0;
+   }
+   /*---(walk all)-----------------------*/
+   yview_by_cursor (YDLST_HEAD, &p, NULL);
+   while (p != NULL) {
+      /*---(skip non-auto)---------------*/
+      if (p->mgmt != YVIEW_AUTO)  continue;
+      if (p->own  != OWN_OVERLAY) {
+         /*---(easy first)---------------*/
+         y_len = p->ylen = p->tall * p->magn;
+         DEBUG_GRAF   yLOG_sint    (y_len);
+         /*---(vertical)-----------------*/
+         switch (p->anchor) {
+         case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :
+            p->ymin = 0 - y_len;
+            break;
+         case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :
+            p->ymin = 0 - (y_len * 0.75);
+            break;
+         case YVIEW_MIDLEF : case YVIEW_MIDBEG : case YVIEW_MIDCEN : case YVIEW_MIDEND : case YVIEW_MIDRIG :
+            p->ymin = 0 - (y_len * 0.50);
+            break;
+         case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :
+            p->ymin = 0 - (y_len * 0.75);
+            break;
+         case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :
+            p->ymin = 0;
+            break;
+         }
+         DEBUG_GRAF   yLOG_sint    (p->ymin);
+         /*---(and last)-----------------*/
+         y_max = p->ymin + y_len;
+         DEBUG_GRAF   yLOG_sint    (y_max);
+      }
+      /*---(done)------------------------*/
+      yview_by_cursor (YDLST_NEXT, &p, NULL);
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_vert_overlay      (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   tPARTS     *w           = NULL;
+   tPARTS     *m           = NULL;
+   tPARTS     *p           = NULL;
+   /*---(header)----------------------*/
+   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
+   /*---(check for opengl)---------------*/
+   DEBUG_GRAF   yLOG_schar   (myVIEW.env);
+   if (myVIEW.env != YVIEW_OPENGL) {
+      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+      return 0;
+   }
+   /*---(get window info)----------------*/
+   yview_by_abbr   (YVIEW_WINDOW, &w, NULL);
+   /*---(get main info)------------------*/
+   yview_by_abbr   (YVIEW_MAIN  , &m, NULL);
+   /*---(walk all)-----------------------*/
+   yview_by_cursor (YDLST_HEAD  , &p, NULL);
+   while (p != NULL) {
+      /*---(skip non-auto)---------------*/
+      if (p->mgmt != YVIEW_AUTO)  continue;
+      if (p->own  == OWN_OVERLAY) {
+         /*---(full main space)----------*/
+         if (strchr (OVER_FULL, p->abbr) != NULL) {
+            p->ymin = m->ymin;
+            p->ylen = m->ylen;
+         }
+         /*---(full window space)--------*/
+         else if (p->abbr == YVIEW_MASK) {
+            p->ymin = w->ymin;
+            p->ylen = w->ylen;
+         } 
+         /*---(sub-main space)-----------*/
+         else {
+            p->ylen = p->tall * p->magn;
+            p->ymin = m->ymin + ((p->bott - m->bott) * m->magn);
+         }
+         DEBUG_GRAF   yLOG_sint    (p->ymin);
+         DEBUG_GRAF   yLOG_sint    (p->ylen);
+         DEBUG_GRAF   yLOG_sint    (p->ymin + p->ylen);
+         
+      }
+      /*---(done)---------------------*/
+      yview_by_cursor (YDLST_NEXT, &p, NULL);
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
+
+
+/*====================------------------------------------====================*/
 /*===----                          main driver                         ----===*/
 /*====================------------------------------------====================*/
 static void  o___DRIVER__________o () { return; }
@@ -359,14 +474,15 @@ yview_vert              (cint a_tall)
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    DEBUG_GRAF   yLOG_value   ("a_tall"    , a_tall);
    /*---(heights)------------------------*/
-   yview_vert_fixed ();
-   yview_vert_auto  (a_tall);
-   yview_vert_var   ();
-   yview_vert_link  ();
-   /*> yvikeys_sizes_anchor     (YVIEW_MAIN);                                         <*/
-   yview_vert_float ();
-   yview_vert_final ();
-   yview_vert_flip  ();
+   yview_vert_fixed   ();
+   yview_vert_auto    (a_tall);
+   yview_vert_var     ();
+   yview_vert_link    ();
+   yview_vert_float   ();
+   yview_vert_final   ();
+   yview_vert_flip    ();
+   yview_vert_coords  ();
+   yview_vert_overlay ();
    /*---(complete)-----------------------*/
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;

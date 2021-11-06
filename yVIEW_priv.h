@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0c"
-#define     P_VERTXT    "vertical sizing basics unit tested"
+#define     P_VERNUM    "2.0d"
+#define     P_VERTXT    "added coord calculations in horz/vert with basic unit testing"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -87,27 +87,47 @@ struct cPARTS {
    short       def_tall;                    /* default height                 */
    short       tall;                        /* screen height                  */
    short       bott;                        /* screen bottom                  */
-   /*---(for std elements)-----*/
-   char        orient;                      /* orientation of text            */
+   /*---(shared drawing)-------*/
    char        (*source) (char*);           /* content source                 */
    char        text        [LEN_RECD];      /* optional text                  */
-   /*---(special drawing)------*/
    char        (*drawer) (void);            /* drawing function               */
+   /*---(curses drawing)-------*/
+   cchar       orient;                      /* curses orientation of text     */
+   /*---(opengl drawing)-------*/
    char        type;                        /* ortho vs 3d                    */
    char        mgmt;                        /* auto vs custom setup           */
    uchar       anchor;                      /* fixed point for resizing       */
-   int         color;                       /* background color               */
-   int         xmin;                        /* x-coord minimum                */
-   int         xlen;                        /* x-coord range                  */
-   int         ymin;                        /* y-coord minimum                */
-   int         ylen;                        /* y-coord range                  */
-   int         zmin;                        /* z-coord minimum                */
-   int         zlen;                        /* z-coord range                  */
+   float       magn;                        /* magification factor on coords  */
+   short       color;                       /* background color               */
+   short       xmin;                        /* x-coord minimum                */
+   short       xlen;                        /* x-coord range                  */
+   short       ymin;                        /* y-coord minimum                */
+   short       ylen;                        /* y-coord range                  */
+   short       zmin;                        /* z-coord minimum                */
+   short       zlen;                        /* z-coord range                  */
    /*---(other)----------------*/
    cchar       desc        [LEN_DESC ];     /* explanation of element         */
    /*---(done)-----------------*/
 };
 extern tPARTS  g_parts [MAX_PARTS];
+
+#define      OVER_FULL        "CGONZ"
+
+#define      OWN_FULLY        'y'   /* only change color, text, and hiding    */
+#define      OWN_PARTLY       'p'   /* change hiding, color, and drawing      */
+#define      OWN_LITTLE       's'   /* change anything and everything         */
+#define      OWN_MAIN         'm'   /* change anything and everything         */
+#define      OWN_UNDERLAY     'u'   /* drawn before main                      */
+#define      OWN_OVERLAY      'o'   /* drawn after everything else            */
+#define      OWN_DATA         '-'   /* just a data holder                     */
+
+#define      OWN_SETUP        "ypsm"
+#define      OWN_HIDE         "ypso"
+#define      OWN_REANCHOR     "yp"
+
+#define      OWN_COMPLEX      "mso"
+#define      OWN_MODERATE     "msp"
+#define      OWN_SIMPLE       "po"
 
 
 typedef    struct    cMY    tMY;
@@ -145,14 +165,20 @@ char        yview__unit_end         (void);
 char        yview_parts_init        (void);
 /*---(search)---------------*/
 char        yview_by_abbr           (cchar  a_abbr, tPARTS **r_part, tPARTS **r_link);
+char        yview_by_name           (cchar *a_name, tPARTS **r_part, tPARTS **r_link);
 char        yview_by_cursor         (cchar  a_move, tPARTS **r_part, tPARTS **r_link);
 char*       yview_parts_name        (cchar n);
 /*---(defaults)-------------*/
-char        yview__default          (char a_part, char a_on, short a_nwide, short a_ntall, short a_owide, short a_otall, void *a_draw);
-char        yview_defaults          (cchar a_env);
+char        yview_factory           (cchar a_env);
+char        yview_clear             (void);
 /*---(anchoring)------------*/
-char        yview_get_anchor        (char a_part);
-char        yview_set_anchor        (char a_part, char a_anchor);
+char        yview_anchor_calc       (char a_abbr);
+char        yview_anchor_calc_all   (void);
+char        yview_get_anchor        (char a_abbr);
+char        yview_set_anchor        (char a_abbr, char a_anchor);
+char        yview_float_loc         (char a_loc);
+char        yview_history_loc       (char a_loc);
+char        yview_menu_loc          (char a_loc);
 /*---(done)-----------------*/
 
 
@@ -164,11 +190,14 @@ char        yview_horz_fixed        (void);
 char        yview_horz_auto         (cint a_wide, cint a_alt);
 char        yview_horz_var          (void);
 char        yview_horz_link         (void);
-char        yview_horz__float       (tPARTS *p, int a_left);
-char        yview_horz__menus       (tPARTS *p, int a_left);
-char        yview_horz__hist        (tPARTS *p, int a_left);
+char        yview_horz__float       (tPARTS *p, short a_left, short a_wide);
+char        yview_horz__menus       (tPARTS *p, short a_left, short a_wide);
+char        yview_horz__hist        (tPARTS *p, short a_left, short a_wide);
 char        yview_horz_float        (void);
 char        yview_horz_final        (void);
+/*---(coords)---------------*/
+char        yview_horz_coords       (void);
+char        yview_horz_overlay      (void);
 /*---(driver)---------------*/
 char        yview_horz              (cint a_wide, cint a_alt);
 /*---(done)-----------------*/
@@ -188,10 +217,20 @@ char        yview_vert__hist        (tPARTS *p, int a_bott);
 char        yview_vert_float        (void);
 char        yview_vert_final        (void);
 char        yview_vert_flip         (void);
+/*---(coords)---------------*/
+char        yview_vert_coords       (void);
+char        yview_vert_overlay      (void);
 /*---(driver)---------------*/
 char        yview_vert              (cint a_tall);
 /*---(done)-----------------*/
 
+
+
+/*===[[ yVIEW_layout.c ]]=====================================================*/
+/*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
+char        yview_layout_init       (void);
+char        yview_layout            (char *a_name);
+char        yview_switch            (char *a_name, char *a_opt);
 
 
 
