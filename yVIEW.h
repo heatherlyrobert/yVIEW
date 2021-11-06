@@ -116,5 +116,8 @@ char*       yVIEW__unit             (char *a_question, char a_index);
 char        yVIEW_switch_add        (char a_part, char *a_opt, void *a_source, char *a_desc);
 char        yVIEW_resize            (cint a_wide, cint a_tall, cint a_alt);
 
+char        yVIEW_defsize           (char a_part, short a_wide, short a_tall);
+
+
 #endif
 /*============================----end-of-source---============================*/

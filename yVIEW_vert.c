@@ -102,7 +102,7 @@ yview_vert_auto  (cint a_tall)
       case YVIEW_NAV      :
       case YVIEW_DETAILS  :
       case YVIEW_RIBBON   : p->tall = x_other;                   break;
-      default               : yview_by_cursor (YDLST_NEXT, &p, NULL); continue;
+      default             : yview_by_cursor (YDLST_NEXT, &p, NULL); continue;
       }
       /*---(display)------------------*/
       DEBUG_GRAF   yLOG_complex ("automatic" , "%c %-12.12s tall %3d, bott %3d", p->abbr, p->name, p->tall, p->bott);

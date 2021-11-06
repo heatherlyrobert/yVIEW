@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0d"
-#define     P_VERTXT    "added coord calculations in horz/vert with basic unit testing"
+#define     P_VERNUM    "2.0e"
+#define     P_VERTXT    "greatly improved linking and defsize capabilities, unit tested"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -88,6 +88,7 @@ struct cPARTS {
    short       tall;                        /* screen height                  */
    short       bott;                        /* screen bottom                  */
    /*---(shared drawing)-------*/
+   char        defs;                        /* changable defaults (w/t/B)     */
    char        (*source) (char*);           /* content source                 */
    char        text        [LEN_RECD];      /* optional text                  */
    char        (*drawer) (void);            /* drawing function               */
@@ -110,6 +111,7 @@ struct cPARTS {
    /*---(done)-----------------*/
 };
 extern tPARTS  g_parts [MAX_PARTS];
+
 
 #define      OVER_FULL        "CGONZ"
 
@@ -179,6 +181,8 @@ char        yview_set_anchor        (char a_abbr, char a_anchor);
 char        yview_float_loc         (char a_loc);
 char        yview_history_loc       (char a_loc);
 char        yview_menu_loc          (char a_loc);
+/*---(sizing)---------------*/
+char        yview_update            (void);
 /*---(done)-----------------*/
 
 

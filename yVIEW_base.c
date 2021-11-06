@@ -103,13 +103,15 @@ yview__unit_end          (void)
 char*        /*-> tbd --------------------------------[ leaf   [gs.520.202.40]*/ /*-[01.0000.00#.#]-*/ /*-[--.---.---.--]-*/
 yVIEW__unit             (char *a_question, char a_index)
 {
-   char        n;
+   char        rc          =    0;
+   tPARTS     *p           = NULL;
    /*---(preprare)-----------------------*/
    strlcpy  (unit_answer, "VIEW unit        : question not understood", LEN_FULL);
    /*---(dependency list)----------------*/
    if      (strcmp (a_question, "size"           )   == 0) {
-      n = yview_by_abbr   (a_index, NULL, NULL);
-      snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: %c %4dL %4dW %4dB %4dT  §  %c %c %5.2f %5dx %5dX %5dy %5dY %5dz %5dZ", g_parts [n].name, g_parts [n].on, g_parts [n].left, g_parts [n].wide, g_parts [n].bott, g_parts [n].tall, g_parts [n].orient, chrvisible (g_parts [n].anchor), g_parts [n].magn, g_parts [n].xmin, g_parts [n].xmin + g_parts [n].xlen, g_parts [n].ymin, g_parts [n].ymin + g_parts [n].ylen, g_parts [n].zmin, g_parts [n].zmin + g_parts [n].zlen);
+      rc = yview_by_abbr   (a_index, &p, NULL);
+      if (rc >= 0)  snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: %c %4dL %4dW %4dB %4dT  §  %c %c %5.2f %5dx %5dX %5dy %5dY %5dz %5dZ", p->name, p->on, p->left, p->wide, p->bott, p->tall, p->orient, chrvisible (p->anchor), p->magn, p->xmin, p->xmin + p->xlen, p->ymin, p->ymin + p->ylen, p->zmin, p->zmin + p->zlen);
+      else          snprintf (unit_answer, LEN_FULL, "VIEW n/a         : ·    ·L    ·W    ·B    ·T  §  · ·     ·f     ·x     ·X     ·y     ·Y     ·z     ·Z");
    }
    /*---(complete)-----------------------*/
    return unit_answer;
