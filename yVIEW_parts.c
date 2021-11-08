@@ -43,9 +43,9 @@ tPARTS  g_parts [MAX_PARTS] = {
    /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
    { YVIEW_NAV       , "nav"         , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "navigation panel to display tags and other links"   },
    { YVIEW_LAYERS    , "layers"      , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "displays all selected laysers over working"         },
-   { YVIEW_YAXIS     , "yaxis"       , OWN_PARTLY , '-',    3, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "show the y-axis labels left of the main screen"     },
+   { YVIEW_YAXIS     , "yaxis"       , OWN_PARTLY , '-',    3, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "show the y-axis labels left of the main screen"     },
    /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_XAXIS     , "xaxis"       , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    5, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "show the x-axis labels above the main screen"       },
+   { YVIEW_XAXIS     , "xaxis"       , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    5, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "show the x-axis labels above the main screen"       },
    { YVIEW_ALT       , "alt"         , OWN_LITTLE , '-',    5, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "alternate working area or view"                     },
    { YVIEW_PROGRESS  , "progress"    , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    3, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "time and sequencing controls about status line"     },
    /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
@@ -61,7 +61,7 @@ tPARTS  g_parts [MAX_PARTS] = {
    { YVIEW_CURSOR    , "cursor"      , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "cursor display on screen"                           },
    { YVIEW_OVERLAY   , "overlay"     , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
    /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_NOTES     , "notes"       , OWN_OVERLAY, 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "overlay for interactive notation"                   },
+   { YVIEW_NOTES     , "notes"       , OWN_OVERLAY, 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "overlay for interactive notation"                   },
    { YVIEW_FLOAT     , "float"       , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPALL  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
    { YVIEW_HISTORY   , "history"     , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_ALLFUL  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "list of command/search history"                     },
    { YVIEW_MENUS     , "menus"       , OWN_OVERLAY, 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPCEN  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "interactive menu overlay"                           },
@@ -414,9 +414,18 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
       p->magn       = 1.0;
       p->color      = a_color;
    }
+   /*---(coordinates)--------------------*/
    p->xmin       = p->xlen       = 0;
    p->ymin       = p->ylen       = 0;
-   p->zmin       = p->zlen       = 0;
+   if (myVIEW.env == YVIEW_OPENGL) {
+      if (p->type == YVIEW_DEPTH) {
+         p->zmin = -500;
+         p->zlen = 1000;
+      } else {
+         p->zmin =    0;
+         p->zlen =    0;
+      }
+   }
    /*---(output)-------------------------*/
    DEBUG_GRAF   yLOG_complex ("part"      , "%-12.12s, on %c, wide %3d, tall %3d, draw %-10.10p", p->name, p->on, p->def_wide, p->def_tall, p->drawer);
    /*---(complete)-----------------------*/
@@ -424,12 +433,18 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
 }
 
 char
-yview__clear_all        (char a_full, cchar a_env)
+yview__clear_all        (char a_full, char a_env)
 {
+   char        rce         =  -10;
    /*---(header)-------------------------*/
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    /*---(global)-------------------------*/
+   --rce;  if (a_env == 0 || strchr ("gc", a_env) == NULL) {
+      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
    myVIEW.env = a_env;
+   /*---(default values)-----------------*/
    /*                                       -curses-- -opengl--                       */
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_TITLE   , 'y',   1,   0,  15,   0,  NULL, YVIEW_BOTRIG  , YCOLOR_GRY     );
@@ -440,9 +455,9 @@ yview__clear_all        (char a_full, cchar a_env)
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_NAV     , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_LAYERS  , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , 0              );
+   yview__wipe (a_full, YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , 0              );
+   yview__wipe (a_full, YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_ALT     , '-',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_PROGRESS, '-',   0,  10,   0, 100,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
@@ -454,18 +469,18 @@ yview__clear_all        (char a_full, cchar a_env)
    yview__wipe (a_full, YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, 0             , 0              );
-   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, 0             , 0              );
-   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_MENUS   , 'y',  40,  14, 280, 200,  NULL, YVIEW_TOPCEN  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_MENUS   , 'y',  40,  14, 280, 200,  NULL, YVIEW_TOPCEN  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, 0             , 0              );
-   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, 0             , 0              );
+   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
    /*---(complete)-----------------------*/
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -481,109 +496,109 @@ char yview_clear        (void)       { return yview__clear_all ('-', myVIEW.env)
 /*====================------------------------------------====================*/
 static void  o___ANCHOR__________o () { return; }
 
-char
-yview__anchor_calc      (tPARTS *p)
-{
-   /*---(locals)-----------+-----+-----+-*/
-   int         x_len       =    0;
-   int         y_len       =    0;
-   /*---(header)----------------------*/
-   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
-   /*---(check for opengl)---------------*/
-   DEBUG_GRAF   yLOG_schar   (myVIEW.env);
-   if (myVIEW.env != YVIEW_OPENGL) {
-      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-      return 0;
-   }
-   /*---(handle auto first)--------------*/
-   if (p->mgmt != YVIEW_AUTO) {
-      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-      return 0;
-   }
-   /*---(easy first)---------------------*/
-   x_len = p->xlen = p->wide;
-   y_len = p->ylen = p->tall;
-   /*---(horzontal)----------------------*/
-   switch (p->anchor) {
-   case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :
-      p->xmin = 0;
-      break;
-   case YVIEW_UPSBEG : case YVIEW_MIDBEG : case YVIEW_LOWBEG :
-      p->xmin = 0 - (x_len * 0.75);
-      break;
-   case YVIEW_TOPCEN : case YVIEW_UPSCEN : case YVIEW_MIDCEN : case YVIEW_LOWCEN : case YVIEW_BOTCEN :
-      p->xmin = 0 - (x_len * 0.50);
-      break;
-   case YVIEW_UPSEND : case YVIEW_MIDEND : case YVIEW_LOWEND :
-      p->xmin = 0 - (x_len * 0.25);
-      break;
-   case YVIEW_TOPRIG : case YVIEW_MIDRIG : case YVIEW_BOTRIG :
-      p->xmin = 0 - x_len;
-      break;
-   }
-   /*---(vertical)-----------------------*/
-   switch (p->anchor) {
-   case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :
-      p->ymin = 0 - y_len;
-      break;
-   case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :
-      p->ymin = 0 - (y_len * 0.75);
-      break;
-   case YVIEW_MIDLEF : case YVIEW_MIDBEG : case YVIEW_MIDCEN : case YVIEW_MIDEND : case YVIEW_MIDRIG :
-      p->ymin = 0 - (y_len * 0.50);
-      break;
-   case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :
-      p->ymin = 0 - (y_len * 0.75);
-      break;
-   case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :
-      p->ymin = 0;
-      break;
-   }
-   /*---(default depths)-----------------*/
-   p->zmin = -500;
-   p->zlen = 1000;
-   /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-   return 0;
-}
+/*> char                                                                                                     <* 
+ *> yview__anchor_calc      (tPARTS *p)                                                                      <* 
+ *> {                                                                                                        <* 
+ *>    /+---(locals)-----------+-----+-----+-+/                                                              <* 
+ *>    int         x_len       =    0;                                                                       <* 
+ *>    int         y_len       =    0;                                                                       <* 
+ *>    /+---(header)----------------------+/                                                                 <* 
+ *>    DEBUG_GRAF   yLOG_senter  (__FUNCTION__);                                                             <* 
+ *>    /+---(check for opengl)---------------+/                                                              <* 
+ *>    DEBUG_GRAF   yLOG_schar   (myVIEW.env);                                                               <* 
+ *>    if (myVIEW.env != YVIEW_OPENGL) {                                                                     <* 
+ *>       DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);                                                          <* 
+ *>       return 0;                                                                                          <* 
+ *>    }                                                                                                     <* 
+ *>    /+---(handle auto first)--------------+/                                                              <* 
+ *>    if (p->mgmt != YVIEW_AUTO) {                                                                          <* 
+ *>       DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);                                                          <* 
+ *>       return 0;                                                                                          <* 
+ *>    }                                                                                                     <* 
+ *>    /+---(easy first)---------------------+/                                                              <* 
+ *>    x_len = p->xlen = p->wide;                                                                            <* 
+ *>    y_len = p->ylen = p->tall;                                                                            <* 
+ *>    /+---(horzontal)----------------------+/                                                              <* 
+ *>    switch (p->anchor) {                                                                                  <* 
+ *>    case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :                                           <* 
+ *>       p->xmin = 0;                                                                                       <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_UPSBEG : case YVIEW_MIDBEG : case YVIEW_LOWBEG :                                           <* 
+ *>       p->xmin = 0 - (x_len * 0.75);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_TOPCEN : case YVIEW_UPSCEN : case YVIEW_MIDCEN : case YVIEW_LOWCEN : case YVIEW_BOTCEN :   <* 
+ *>       p->xmin = 0 - (x_len * 0.50);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_UPSEND : case YVIEW_MIDEND : case YVIEW_LOWEND :                                           <* 
+ *>       p->xmin = 0 - (x_len * 0.25);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_TOPRIG : case YVIEW_MIDRIG : case YVIEW_BOTRIG :                                           <* 
+ *>       p->xmin = 0 - x_len;                                                                               <* 
+ *>       break;                                                                                             <* 
+ *>    }                                                                                                     <* 
+ *>    /+---(vertical)-----------------------+/                                                              <* 
+ *>    switch (p->anchor) {                                                                                  <* 
+ *>    case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :                                           <* 
+ *>       p->ymin = 0 - y_len;                                                                               <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :                                           <* 
+ *>       p->ymin = 0 - (y_len * 0.75);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_MIDLEF : case YVIEW_MIDBEG : case YVIEW_MIDCEN : case YVIEW_MIDEND : case YVIEW_MIDRIG :   <* 
+ *>       p->ymin = 0 - (y_len * 0.50);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :                                           <* 
+ *>       p->ymin = 0 - (y_len * 0.75);                                                                      <* 
+ *>       break;                                                                                             <* 
+ *>    case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :                                           <* 
+ *>       p->ymin = 0;                                                                                       <* 
+ *>       break;                                                                                             <* 
+ *>    }                                                                                                     <* 
+ *>    /+---(default depths)-----------------+/                                                              <* 
+ *>    p->zmin = -500;                                                                                       <* 
+ *>    p->zlen = 1000;                                                                                       <* 
+ *>    /+---(complete)-----------------------+/                                                              <* 
+ *>    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);                                                             <* 
+ *>    return 0;                                                                                             <* 
+ *> }                                                                                                        <*/
 
-char
-yview_anchor_calc       (char a_abbr)
-{
-   /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
-   /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   yview_by_abbr (a_abbr, &p, NULL);
-   if (p == NULL) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, -10);
-      return -10;
-   }
-   yview__anchor_calc (p);
-   /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
+/*> char                                                                              <* 
+ *> yview_anchor_calc       (char a_abbr)                                             <* 
+ *> {                                                                                 <* 
+ *>    /+---(locals)-----------+-----+-----+-+/                                       <* 
+ *>    tPARTS     *p           = NULL;                                                <* 
+ *>    /+---(header)-------------------------+/                                       <* 
+ *>    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);                                      <* 
+ *>    yview_by_abbr (a_abbr, &p, NULL);                                              <* 
+ *>    if (p == NULL) {                                                               <* 
+ *>       DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, -10);                              <* 
+ *>       return -10;                                                                 <* 
+ *>    }                                                                              <* 
+ *>    yview__anchor_calc (p);                                                        <* 
+ *>    /+---(complete)-----------------------+/                                       <* 
+ *>    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);                                      <* 
+ *>    return 0;                                                                      <* 
+ *> }                                                                                 <*/
 
-char
-yview_anchor_calc_all   (void)
-{
-   /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
-   /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   /*---(find fixed heights)-------------*/
-   yview_by_cursor (YDLST_HEAD, &p, NULL);
-   while (p != NULL) {
-      yview__anchor_calc (p);
-      DEBUG_GRAF   yLOG_complex (p->name, "bott %4d, left %4d, wide %4d, tall %4d, on %c", p->bott, p->left, p->wide, p->tall, p->on);
-      DEBUG_GRAF   yLOG_complex (p->name, "xmin %4d, xlen %4d, ymin %4d, ylen %4d, zmin %4d, zlen %4d", p->xmin, p->xlen, p->ymin, p->ylen, p->zmin, p->zlen);
-      yview_by_cursor (YDLST_NEXT, &p, NULL);
-   }
-   /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
+/*> char                                                                                                                                                             <* 
+ *> yview_anchor_calc_all   (void)                                                                                                                                   <* 
+ *> {                                                                                                                                                                <* 
+ *>    /+---(locals)-----------+-----+-----+-+/                                                                                                                      <* 
+ *>    tPARTS     *p           = NULL;                                                                                                                               <* 
+ *>    /+---(header)-------------------------+/                                                                                                                      <* 
+ *>    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);                                                                                                                     <* 
+ *>    /+---(find fixed heights)-------------+/                                                                                                                      <* 
+ *>    yview_by_cursor (YDLST_HEAD, &p, NULL);                                                                                                                       <* 
+ *>    while (p != NULL) {                                                                                                                                           <* 
+ *>       yview__anchor_calc (p);                                                                                                                                    <* 
+ *>       DEBUG_GRAF   yLOG_complex (p->name, "bott %4d, left %4d, wide %4d, tall %4d, on %c", p->bott, p->left, p->wide, p->tall, p->on);                           <* 
+ *>       DEBUG_GRAF   yLOG_complex (p->name, "xmin %4d, xlen %4d, ymin %4d, ylen %4d, zmin %4d, zlen %4d", p->xmin, p->xlen, p->ymin, p->ylen, p->zmin, p->zlen);   <* 
+ *>       yview_by_cursor (YDLST_NEXT, &p, NULL);                                                                                                                    <* 
+ *>    }                                                                                                                                                             <* 
+ *>    /+---(complete)-----------------------+/                                                                                                                      <* 
+ *>    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);                                                                                                                     <* 
+ *>    return 0;                                                                                                                                                     <* 
+ *> }                                                                                                                                                                <*/
 
 
 char
@@ -672,52 +687,13 @@ yview_set_anchor        (char a_abbr, char a_anchor)
 char
 yview__anchor_float     (char a_abbr, char a_loc)
 {
-   yview_set_anchor (YVIEW_FLOAT  , a_loc);
+   yview_set_anchor (a_abbr, a_loc);
    yview_horz_float ();
    yview_vert_float ();
    return 0;
 }
 
-char yview_float_loc    (char a_loc) { return yview__anchor_float (YVIEW_FLOAT  , a_loc); }
-char yview_history_loc  (char a_loc) { return yview__anchor_float (YVIEW_HISTORY, a_loc); }
-char yview_menu_loc     (char a_loc) { return yview__anchor_float (YVIEW_MENUS  , a_loc); }
-
-
-
-/*====================------------------------------------====================*/
-/*===----                       overall sizing                         ----===*/
-/*====================------------------------------------====================*/
-static void  o___SIZING__________o () { return; }
-
-char
-yview_update            (void)
-{
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   yview_clear ();
-   yview_horz  (myVIEW.orig_wide, myVIEW.alt_wide);
-   yview_vert  (myVIEW.orig_tall);
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
-
-char
-yVIEW_resize            (cint a_wide, cint a_tall, cint a_alt)
-{
-   /*---(locals)-----------+-----+-----+-*/
-   char        rce         =  -10;
-   /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   DEBUG_GRAF   yLOG_value   ("a_wide"    , a_wide);
-   DEBUG_GRAF   yLOG_value   ("a_tall"    , a_tall);
-   DEBUG_GRAF   yLOG_value   ("a_alt"     , a_alt);
-   /*---(update globals)-----------------*/
-   if (a_wide > 10)   myVIEW.orig_wide = a_wide;
-   if (a_tall > 10)   myVIEW.orig_tall = a_tall;
-   if (a_alt  > 10)   myVIEW.alt_wide  = a_alt;
-   yview_update ();
-   /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
-   return 0;
-}
-
+char yVIEW_loc_float    (char a_loc) { return yview__anchor_float (YVIEW_FLOAT  , a_loc); }
+char yVIEW_loc_history  (char a_loc) { return yview__anchor_float (YVIEW_HISTORY, a_loc); }
+char yVIEW_loc_menu     (char a_loc) { return yview__anchor_float (YVIEW_MENUS  , a_loc); }
 

@@ -100,7 +100,7 @@ yview_layout_init       (void)
 }
 
 char
-yview_layout            (char *a_name)
+yVIEW_layout            (char *a_name)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -244,7 +244,7 @@ yview__switch_linked    (tPARTS *p)
 }
 
 char
-yview_switch            (char *a_name, char *a_opt)
+yVIEW_switch            (char *a_name, char *a_opt)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;

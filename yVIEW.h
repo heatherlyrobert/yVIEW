@@ -9,6 +9,8 @@ typedef  const char           cchar;
 typedef  const int            cint;
 
 
+#define      YVIEW_LEAVE       -1
+
 #define      YVIEW_OPENGL      'g'
 #define      YVIEW_CURSES      'c'
 
@@ -64,24 +66,24 @@ typedef  const int            cint;
 #define      YVIEW_TOPS        "123"
 
 #define      YVIEW_UPSALL      'k'
-#define      YVIEW_UPSBEG      'a'
-#define      YVIEW_UPSCEN      't'
-#define      YVIEW_UPSEND      'u'
-#define      YVIEW_UPS         "atu"
+#define      YVIEW_UPSBEG      'A'
+#define      YVIEW_UPSCEN      'T'
+#define      YVIEW_UPSEND      'U'
+#define      YVIEW_UPS         "ATU"
 
 #define      YVIEW_MIDALL      'm'
 #define      YVIEW_MIDLEF      '4'
-#define      YVIEW_MIDBEG      's'
+#define      YVIEW_MIDBEG      'S'
 #define      YVIEW_MIDCEN      '5'
-#define      YVIEW_MIDEND      'e'
+#define      YVIEW_MIDEND      'E'
 #define      YVIEW_MIDRIG      '6'
-#define      YVIEW_MIDS        "4s5e6"
+#define      YVIEW_MIDS        "4S5E6"
 
 #define      YVIEW_LOWALL      'j'
-#define      YVIEW_LOWBEG      'd'
-#define      YVIEW_LOWCEN      'b'
-#define      YVIEW_LOWEND      'z'
-#define      YVIEW_LOWS        "dbz"
+#define      YVIEW_LOWBEG      'D'
+#define      YVIEW_LOWCEN      'B'
+#define      YVIEW_LOWEND      'Z'
+#define      YVIEW_LOWS        "DBZ"
 
 #define      YVIEW_BOTALL      'b'
 #define      YVIEW_BOTLEF      '7'
@@ -100,7 +102,7 @@ typedef  const int            cint;
 #define      YVIEW_ENDS        "uez"
 #define      YVIEW_RIGS        "369"
 
-#define      YVIEW_LOC_MENU    "0123456789atusedbz"
+#define      YVIEW_LOC_MENU    "0123456789ATUSEDBZ"
 #define      YVIEW_LOC_FLOAT   "tkmjb"
 #define      YVIEW_LOC_HIST    "flcr"
 #define      YVIEW_LOC_NORM    "0123456789"
@@ -109,15 +111,34 @@ typedef  const int            cint;
 /*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
 /*---(base)-----------------*/
 char*       yVIEW_version           (void);
-char        yVIEW_init              (void);
+char        yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse, void *a_prep, void *a_cursor, void *a_refresh);
+char        yVIEW_resize            (short a_wide, short a_tall, short a_alt);
 char        yVIEW_wrap              (void);
 char*       yVIEW__unit             (char *a_question, char a_index);
 
+
+char        yVIEW_layout            (char *a_name);
 char        yVIEW_switch_add        (char a_part, char *a_opt, void *a_source, char *a_desc);
-char        yVIEW_resize            (cint a_wide, cint a_tall, cint a_alt);
+char        yVIEW_switch            (char *a_name, char *a_opt);
+char        yVIEW_loc_float         (char a_loc);
+char        yVIEW_loc_history       (char a_loc);
+char        yVIEW_loc_menu          (char a_loc);
+
+char        yVIEW_config            (char *a_title, char *a_ver, char a_env, short a_wide, short a_tall, short a_alt);
+char        yVIEW_simple            (char a_part, char a_color, void *a_drawer);
+char        yVIEW_full              (char a_part, char a_type, char a_anchor, float a_magn, char a_color, void *a_drawer);
 
 char        yVIEW_defsize           (char a_part, short a_wide, short a_tall);
+char        yVIEW_size              (char a_part, char *a_on, short *a_left, short *a_wide, short *a_bott, short *a_tall);
+char        yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_magn, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen);
+char        yVIEW_showing           (char a_part);
+char        yVIEW_anchor            (char a_part);
 
+char        yVIEW_keys              (char *a_text);
+char        yVIEW_modes             (char *a_text);
+char        yVIEW_command           (char *a_text);
+
+char        yVIEW_draw              (void);
 
 #endif
 /*============================----end-of-source---============================*/

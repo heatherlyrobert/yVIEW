@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0e"
-#define     P_VERTXT    "greatly improved linking and defsize capabilities, unit tested"
+#define     P_VERNUM    "2.0f"
+#define     P_VERTXT    "magnification and linked parts coordinates unit tested"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -113,7 +113,8 @@ struct cPARTS {
 extern tPARTS  g_parts [MAX_PARTS];
 
 
-#define      OVER_FULL        "CGONZ"
+#define      OVER_FULL        "GONC"
+#define      OVER_WIND        "Z"
 
 #define      OWN_FULLY        'y'   /* only change color, text, and hiding    */
 #define      OWN_PARTLY       'p'   /* change hiding, color, and drawing      */
@@ -153,10 +154,17 @@ extern tMY         myVIEW;
 
 /*===[[ yVIEW_base.c ]]=======================================================*/
 /*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
+/*---(program)--------------*/
+char        yview_init              (void);
 /*---(unittest)-------------*/
 char        yview__unit_quiet       (void);
 char        yview__unit_loud        (void);
 char        yview__unit_end         (void);
+char        yview__unit_cleanse     (void);
+char        yview__unit_prep        (void);
+char        yview__unit_draw        (void);
+char        yview__unit_cursor      (void);
+char        yview__unit_refresh     (void);
 /*---(done)-----------------*/
 
 
@@ -178,11 +186,6 @@ char        yview_anchor_calc       (char a_abbr);
 char        yview_anchor_calc_all   (void);
 char        yview_get_anchor        (char a_abbr);
 char        yview_set_anchor        (char a_abbr, char a_anchor);
-char        yview_float_loc         (char a_loc);
-char        yview_history_loc       (char a_loc);
-char        yview_menu_loc          (char a_loc);
-/*---(sizing)---------------*/
-char        yview_update            (void);
 /*---(done)-----------------*/
 
 
@@ -194,9 +197,9 @@ char        yview_horz_fixed        (void);
 char        yview_horz_auto         (cint a_wide, cint a_alt);
 char        yview_horz_var          (void);
 char        yview_horz_link         (void);
-char        yview_horz__float       (tPARTS *p, short a_left, short a_wide);
-char        yview_horz__menus       (tPARTS *p, short a_left, short a_wide);
-char        yview_horz__hist        (tPARTS *p, short a_left, short a_wide);
+char        yview_horz__float       (tPARTS *m, tPARTS *p);
+char        yview_horz__menus       (tPARTS *m, tPARTS *p);
+char        yview_horz__hist        (tPARTS *m, tPARTS *p);
 char        yview_horz_float        (void);
 char        yview_horz_final        (void);
 /*---(coords)---------------*/
@@ -215,9 +218,9 @@ char        yview_vert_fixed        (void);
 char        yview_vert_auto         (cint a_tall);
 char        yview_vert_var          (void);
 char        yview_vert_link         (void);
-char        yview_vert__float       (tPARTS *p, int a_bott);
-char        yview_vert__menus       (tPARTS *p, int a_bott);
-char        yview_vert__hist        (tPARTS *p, int a_bott);
+char        yview_vert__float       (tPARTS *m, tPARTS *p);
+char        yview_vert__menus       (tPARTS *m, tPARTS *p);
+char        yview_vert__hist        (tPARTS *m, tPARTS *p);
 char        yview_vert_float        (void);
 char        yview_vert_final        (void);
 char        yview_vert_flip         (void);
@@ -233,9 +236,16 @@ char        yview_vert              (cint a_tall);
 /*===[[ yVIEW_layout.c ]]=====================================================*/
 /*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
 char        yview_layout_init       (void);
-char        yview_layout            (char *a_name);
-char        yview_switch            (char *a_name, char *a_opt);
 
+
+
+/*===[[ yVIEW_conf.c ]]=======================================================*/
+/*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-123456*/
+/*---(support)--------------*/
+char        yview_conf_text         (char a_part, char *a_text);
+/*---(sizing)---------------*/
+char        yview_update            (void);
+/*---(done)-----------------*/
 
 
 #endif

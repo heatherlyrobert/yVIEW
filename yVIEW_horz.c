@@ -5,10 +5,6 @@
 
 
 
-static int    s_main_wide  = 0;
-static int    s_alt_wide   = 0;
-static int    s_full_wide  = 0;
-
 static int    s_yaxis      =  0;
 static int    s_cum        =  0;
 
@@ -69,16 +65,16 @@ yview_horz_auto         (cint a_wide, cint a_alt)
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    /*---(major sizes)--------------------*/
    if (myVIEW.env == YVIEW_OPENGL) {
-      s_full_wide = s_cum + a_wide + a_alt;
-      s_main_wide = a_wide;
+      myVIEW.full_wide = s_cum + a_wide + a_alt;
+      myVIEW.main_wide = a_wide;
    } else {
-      s_full_wide = a_wide;
-      s_main_wide = a_wide - s_cum - a_alt;
+      myVIEW.full_wide = a_wide;
+      myVIEW.main_wide = a_wide - s_cum - a_alt;
       x_float /= 10;
       x_hist  /= 10;
    }
-   s_alt_wide  = a_alt;
-   DEBUG_GRAF   yLOG_complex ("bigs"      , "full %3d, main %3d, alt %3d, s_cum %3d", s_full_wide, s_main_wide, s_alt_wide, s_cum);
+   myVIEW.alt_wide  = a_alt;
+   DEBUG_GRAF   yLOG_complex ("bigs"      , "full %3d, main %3d, alt %3d, s_cum %3d", myVIEW.full_wide, myVIEW.main_wide, myVIEW.alt_wide, s_cum);
    /*---(walk auto parts)----------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -89,12 +85,12 @@ yview_horz_auto         (cint a_wide, cint a_alt)
       }
       /*---(set)----------------------*/
       switch (p->abbr) {
-      case YVIEW_WINDOW   : p->wide = s_full_wide;                    break;
+      case YVIEW_WINDOW   : p->wide = myVIEW.full_wide;                    break;
       case YVIEW_MAIN     :
-      case YVIEW_NOTES    : p->wide = s_main_wide;                    break;
-      case YVIEW_ALT      : p->wide = s_alt_wide;                     break;
-      case YVIEW_PROGRESS : p->wide = s_main_wide + a_alt;            break;
-      case YVIEW_XAXIS    : p->wide = s_main_wide + a_alt + s_yaxis;  break;
+      case YVIEW_NOTES    : p->wide = myVIEW.main_wide;                    break;
+      case YVIEW_ALT      : p->wide = myVIEW.alt_wide;                     break;
+      case YVIEW_PROGRESS : p->wide = myVIEW.main_wide + a_alt;            break;
+      case YVIEW_XAXIS    : p->wide = myVIEW.main_wide + a_alt + s_yaxis;  break;
       default            : yview_by_cursor (YDLST_NEXT, &p, NULL);   continue;
       }
       /*---(display)------------------*/
@@ -165,7 +161,7 @@ yview_horz_link         (void)
                if (a->on != 'y' || a->wide > 0) {
                   DEBUG_GRAF   yLOG_note    ("leftmost is fixed length or off");
                   p->left = a->left + a->wide;
-                  if (p->on == 'y')  p->wide  = s_full_wide - p->left;
+                  if (p->on == 'y')  p->wide  = myVIEW.full_wide - p->left;
                   else               p->wide  = 0;
                }
                /*---(leftside is variable)-----------*/
@@ -173,7 +169,7 @@ yview_horz_link         (void)
                /*   xxxx[-----------a----------->?[--p--]               */
                else {
                   DEBUG_GRAF   yLOG_note    ("leftmost is variable length");
-                  p->left  = s_full_wide - p->wide;
+                  p->left  = myVIEW.full_wide - p->wide;
                   if (a->on == 'y')  a->wide  = p->left - a->left;
                   else               a->wide  = 0;
                }
@@ -191,63 +187,69 @@ yview_horz_link         (void)
 }
 
 char
-yview_horz__float       (tPARTS *p, short a_left, short a_wide)
+yview_horz__float       (tPARTS *m, tPARTS *p)
 {
-   p->wide = a_wide * 0.90;
-   p->left = a_left + (a_wide * 0.05);
-   DEBUG_GRAF   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, a_left, a_wide, p->wide, p->left);
+   p->type = m->type;
+   p->magn = m->magn;
+   p->wide = m->wide * 0.90;
+   p->left = m->left + (m->wide * 0.05);
+   DEBUG_GRAF   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
 char
-yview_horz__menus       (tPARTS *p, short a_left, short a_wide)
+yview_horz__menus       (tPARTS *m, tPARTS *p)
 {
-   DEBUG_GRAF   yLOG_value   ("a_left"    , a_left);
+   p->type = m->type;
+   p->magn = m->magn;
+   DEBUG_GRAF   yLOG_value   ("a_left"    , m->left);
    DEBUG_GRAF   yLOG_value   ("wide"      , p->wide);
    p->wide = p->def_wide;
    switch (p->anchor) {
    case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :
-      p->left = a_left;
+      p->left = m->left;
       break;
    case YVIEW_UPSBEG : case YVIEW_MIDBEG : case YVIEW_LOWBEG :
-      p->left = a_left + (a_wide * 0.10);
+      p->left = m->left + (m->wide * 0.10);
       break;
    case YVIEW_TOPCEN : case YVIEW_MIDCEN : case YVIEW_BOTCEN : case YVIEW_UPSCEN : case YVIEW_LOWCEN :
-      p->left = a_left + (a_wide * 0.50) - (p->wide * 0.50);
+      p->left = m->left + (m->wide * 0.50) - (p->wide * 0.50);
       break;
    case YVIEW_UPSEND : case YVIEW_MIDEND : case YVIEW_LOWEND :
-      p->left = a_left + (a_wide * 0.90) - p->wide;
+      p->left = m->left + (m->wide * 0.90) - p->wide;
       break;
    case YVIEW_TOPRIG : case YVIEW_MIDRIG : case YVIEW_BOTRIG :
-      p->left = a_left + a_wide - p->wide;
+      p->left = m->left + m->wide - p->wide;
       break;
    }
-   DEBUG_GRAF   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, a_left, a_wide, p->wide, p->left);
+   DEBUG_GRAF   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
 char
-yview_horz__hist        (tPARTS *p, short a_left, short a_wide)
+yview_horz__hist        (tPARTS *m, tPARTS *p)
 {
+   p->type = m->type;
+   p->magn = m->magn;
    switch (p->anchor) {
    case YVIEW_ALLLEF :
-      p->wide = a_wide * 0.45;
-      p->left = a_left + (a_wide * 0.05);
+      p->wide = m->wide * 0.45;
+      p->left = m->left + (m->wide * 0.05);
       break;
    case YVIEW_ALLCEN :
-      p->wide = a_wide * 0.50;
-      p->left = a_left + (a_wide * 0.25);
+      p->wide = m->wide * 0.50;
+      p->left = m->left + (m->wide * 0.25);
       break;
    case YVIEW_ALLRIG :
-      p->wide = a_wide * 0.45;
-      p->left = a_left + (a_wide * 0.50);
+      p->wide = m->wide * 0.45;
+      p->left = m->left + (m->wide * 0.50);
       break;
    case YVIEW_ALLFUL :
-      p->wide = a_wide * 0.80;
-      p->left = a_left + (a_wide * 0.10);
+      p->wide = m->wide * 0.80;
+      p->left = m->left + (m->wide * 0.10);
       break;
    }
-   DEBUG_GRAF   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, a_left, a_wide, p->wide, p->left);
+   DEBUG_GRAF   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
@@ -255,15 +257,12 @@ char
 yview_horz_float        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   short       x_left      =    0;
-   short       x_wide      =    0;
+   tPARTS     *m           = NULL;
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
-   yview_by_abbr   (YVIEW_MAIN, &p, NULL);
-   x_left = p->left;
-   x_wide = p->wide;
+   yview_by_abbr   (YVIEW_MAIN, &m, NULL);
    /*---(walk floats)--------------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -275,13 +274,13 @@ yview_horz_float        (void)
       /*---(set)----------------------*/
       switch (p->abbr) {
       case YVIEW_FLOAT    :
-         yview_horz__float  (p, x_left, x_wide);
+         yview_horz__float  (m, p);
          break;
       case YVIEW_MENUS    :
-         yview_horz__menus  (p, x_left, x_wide);
+         yview_horz__menus  (m, p);
          break;
       case YVIEW_HISTORY  :
-         yview_horz__hist   (p, x_left, x_wide);
+         yview_horz__hist   (m, p);
          break;
       default               :
          yview_by_cursor (YDLST_NEXT, &p, NULL);
@@ -313,7 +312,7 @@ yview_horz_final         (void)
          continue;
       }
       /*---(set)----------------------*/
-      p->wide = s_full_wide - p->left;
+      p->wide = myVIEW.full_wide - p->left;
       /*---(display)------------------*/
       DEBUG_GRAF   yLOG_complex ("other"     , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
       /*---(done)---------------------*/
@@ -397,10 +396,10 @@ yview_horz_overlay      (void)
    DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
    /*---(check for opengl)---------------*/
    DEBUG_GRAF   yLOG_schar   (myVIEW.env);
-   if (myVIEW.env != YVIEW_OPENGL) {
-      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-      return 0;
-   }
+   /*> if (myVIEW.env != YVIEW_OPENGL) {                                              <* 
+    *>    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);                                   <* 
+    *>    return 0;                                                                   <* 
+    *> }                                                                              <*/
    /*---(get window info)----------------*/
    yview_by_abbr   (YVIEW_WINDOW, &w, NULL);
    /*---(get main info)------------------*/
@@ -413,23 +412,33 @@ yview_horz_overlay      (void)
       if (p->own  == OWN_OVERLAY) {
          /*---(full main space)----------*/
          if (strchr (OVER_FULL, p->abbr) != NULL) {
-            p->xmin = m->xmin;
-            p->xlen = m->xlen;
+            p->left = m->left;
+            p->wide = m->wide;
+            if (myVIEW.env == YVIEW_OPENGL) {
+               p->xmin = m->xmin;
+               p->xlen = m->xlen;
+            }
          }
          /*---(full window space)--------*/
-         else if (p->abbr == YVIEW_MASK) {
-            p->xmin = w->xmin;
-            p->xlen = w->xlen;
+         else if (strchr (OVER_WIND, p->abbr) != NULL) {
+            p->left = w->left;
+            p->wide = w->wide;
+            if (myVIEW.env == YVIEW_OPENGL) {
+               p->xmin = w->xmin;
+               p->xlen = w->xlen;
+            }
          } 
          /*---(sub-main space)-----------*/
          else {
-            p->xlen = p->wide * p->magn;
-            p->xmin = m->xmin + ((p->left - m->left) * m->magn);
+            if (myVIEW.env == YVIEW_OPENGL) {
+               p->xlen = p->wide * p->magn;
+               p->xmin = m->xmin + ((p->left - m->left) * m->magn);
+            }
          }
          DEBUG_GRAF   yLOG_sint    (p->xmin);
          DEBUG_GRAF   yLOG_sint    (p->xlen);
          DEBUG_GRAF   yLOG_sint    (p->xmin + p->xlen);
-         
+
       }
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
@@ -465,3 +474,5 @@ yview_horz               (cint a_wide, cint a_alt)
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+
