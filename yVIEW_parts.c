@@ -524,7 +524,7 @@ yview__clear_all        (char a_full, char a_env)
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_MENUS   , 'y',  40,  14, 280, 200,  NULL, YVIEW_TOPCEN  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );

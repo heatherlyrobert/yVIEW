@@ -102,7 +102,7 @@ typedef  const int            cint;
 #define      YVIEW_ENDS        "uez"
 #define      YVIEW_RIGS        "369"
 
-#define      YVIEW_LOC_MENU    "0123456789ATUSEDBZ"
+#define      YVIEW_LOC_MENU    "tkmjb0123456789ATUSEDBZ"
 #define      YVIEW_LOC_FLOAT   "tkmjb"
 #define      YVIEW_LOC_HIST    "flcr"
 #define      YVIEW_LOC_NORM    "0123456789"

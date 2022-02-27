@@ -216,19 +216,19 @@ yview__vert_menu        (tPARTS *m, tPARTS *p)
    p->tall   = p->def_tall;
    p->magn   = m->magn;
    switch (p->anchor) {
-   case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :
+   case YVIEW_TOPALL : case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :
       p->bott = m->bott + m->tall - p->tall;
       break;
-   case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :
-      p->bott = m->bott + (m->tall * 0.90) - p->tall;
+   case YVIEW_UPSALL : case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :
+      p->bott = m->bott + (m->tall * 0.75) - (p->tall * 0.50);
       break;
-   case YVIEW_MIDLEF : case YVIEW_MIDCEN : case YVIEW_MIDRIG : case YVIEW_MIDBEG : case YVIEW_MIDEND :
+   case YVIEW_MIDALL : case YVIEW_MIDLEF : case YVIEW_MIDCEN : case YVIEW_MIDRIG : case YVIEW_MIDBEG : case YVIEW_MIDEND :
       p->bott = m->bott + (m->tall * 0.50) - (p->tall * 0.50);
       break;
-   case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :
-      p->bott = m->bott + (m->tall * 0.10);
+   case YVIEW_LOWALL : case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :
+      p->bott = m->bott + (m->tall * 0.25) - (p->tall * 0.50);;
       break;
-   case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :
+   case YVIEW_BOTALL : case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :
       p->bott = m->bott;
       break;
    default    :

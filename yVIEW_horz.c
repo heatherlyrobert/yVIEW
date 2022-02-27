@@ -213,6 +213,7 @@ yview_horz__menus       (tPARTS *m, tPARTS *p)
       p->left = m->left + (m->wide * 0.10);
       break;
    case YVIEW_TOPCEN : case YVIEW_MIDCEN : case YVIEW_BOTCEN : case YVIEW_UPSCEN : case YVIEW_LOWCEN :
+   case YVIEW_TOPALL : case YVIEW_MIDALL : case YVIEW_BOTALL : case YVIEW_UPSALL : case YVIEW_LOWALL :
       p->left = m->left + (m->wide * 0.50) - (p->wide * 0.50);
       break;
    case YVIEW_UPSEND : case YVIEW_MIDEND : case YVIEW_LOWEND :
