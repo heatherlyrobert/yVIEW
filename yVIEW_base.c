@@ -10,7 +10,7 @@ tMY         myVIEW;
 
 static char   (*s_cursor)  (void) = NULL;
 static char   (*s_cleanse) (void) = NULL;
-static char   (*s_prep)    (void) = NULL;
+static char   (*s_prep)    (char) = NULL;
 static char   (*s_refresh) (void) = NULL;
 
 
@@ -49,7 +49,6 @@ static void  o___PROGRAM_________o () { return; }
 char
 yview_init              (void)
 {
-   myVIEW.env = '-';
    yview_parts_init   ();
    yview_layout_init  ();
    s_cleanse  = NULL;
@@ -79,60 +78,65 @@ yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse
    char        rce         =  -10;
    char        rc          =    0;
    /*---(header)-------------------------*/
-   DEBUG_SCRP   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(defense)------------------------*/
    --rce;  if (!yMODE_check_prep  (FMOD_VIEW)) {
-      DEBUG_PROG   yLOG_note    ("status is not ready for init");
-      DEBUG_PROG   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_note    ("status is not ready for init");
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    /*---(globals)------------------------*/
+   myVIEW.env = a_env;
    yview_init ();
    /*---(defaults)-----------------------*/
    rc = yview_factory (a_env);
    --rce;  if (rc < 0) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    /*---(content)------------------------*/
    if (a_title != NULL)    yview_conf_text (YVIEW_TITLE  , a_title);
    if (a_ver   != NULL)    yview_conf_text (YVIEW_VERSION, a_ver);
+   yVIEW_keys ("  ··");
+   yVIEW_modes (yMODE_text ());
    /*---(cleanse)------------------------*/
-   DEBUG_SCRP   yLOG_point   ("a_cleanse" , a_cleanse);
+   DEBUG_YVIEW   yLOG_point   ("a_cleanse" , a_cleanse);
    --rce;  if (a_cleanse == NULL) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    s_cleanse = a_cleanse;
    /*---(prep)---------------------------*/
-   DEBUG_SCRP   yLOG_point   ("a_prep"    , a_prep);
+   DEBUG_YVIEW   yLOG_point   ("a_prep"    , a_prep);
    --rce;  if (a_prep    == NULL) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    s_prep    = a_prep;
    /*---(cursor)-------------------------*/
    if (a_env == YVIEW_CURSES) {
-      DEBUG_SCRP   yLOG_point   ("a_cursor"  , a_cursor);
+      DEBUG_YVIEW   yLOG_point   ("a_cursor"  , a_cursor);
       --rce;  if (a_cursor  == NULL) {
-         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
       s_cursor  = a_cursor;
    }
    /*---(refresh)------------------------*/
-   DEBUG_SCRP   yLOG_point   ("a_refresh" , a_refresh);
+   DEBUG_YVIEW   yLOG_point   ("a_refresh" , a_refresh);
    --rce;  if (a_refresh == NULL) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    s_refresh = a_refresh;
    /*---(update status)------------------*/
    yMODE_init_set (FMOD_VIEW, NULL, NULL);
    /*---(complete)-----------------------*/
-   DEBUG_SCRP   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+char  yVIEW_env  (void)  { return myVIEW.env; }
 
 char
 yVIEW_draw              (void)
@@ -141,47 +145,62 @@ yVIEW_draw              (void)
    int         rc          =    0;
    tPARTS     *p           = NULL;
    short       x_cur, y_cur;
+   int         i           =    0;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(clear)--------------------------*/
-   rc = s_cleanse ();
-   DEBUG_GRAF   yLOG_value   ("s_cleanse" , rc);
+   DEBUG_YVIEW   yLOG_point   ("s_cleanse" , s_cleanse);
+   if (s_cleanse != NULL) {
+      rc = s_cleanse ();
+      DEBUG_YVIEW   yLOG_value   ("s_cleanse" , rc);
+   }
    /*---(draw each element)--------------*/
-   DEBUG_GRAF   yLOG_note    ("independent screen elements");
-   yview_by_cursor (YDLST_HEAD, &p, NULL);
-   while (p != NULL) {
-      /*---(filter)------------*/
-      DEBUG_GRAF   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (strchr (OWN_SETUP, p->own) == NULL)  continue;
-      if (p->on   != 'y')                      continue;
-      /*---(draw)--------------*/
-      s_prep ();
-      if (p->drawer != NULL)  p->drawer ();
+   DEBUG_YVIEW   yLOG_point   ("s_prep"    , s_prep);
+   DEBUG_YVIEW   yLOG_note    ("INDEPENDENT SCREEN ELEMENTS");
+   for (i = 0; i < myVIEW.npart; ++i) {
+      yview_by_index (i, &p, NULL);
+      if (p == NULL)  continue;
+      DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
+      if (strchr (OWN_SETUP, p->own) == NULL || p->on   != 'y') {
+         DEBUG_YVIEW   yLOG_note    ("skipping, either not on or not independent");
+      } else if (p->drawer == NULL) {
+         DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
+      } else {
+         DEBUG_YVIEW   yLOG_note    ("ready to go, calling prep, source, and drawer");
+         if (s_prep    != NULL)  s_prep (p->abbr);
+         if (p->source != NULL)  p->source (myVIEW.s_size, myVIEW.s_wide, p->text);
+         if (p->drawer != NULL)  p->drawer ();
+      }
       /*---(done)--------------*/
-      yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(find cursor)--------------------*/
    if (myVIEW.env == YVIEW_CURSES)  s_cursor ();
    /*---(on top of main)-----------------*/
-   DEBUG_GRAF   yLOG_note    ("overlay screen elements");
-   yview_by_cursor (YDLST_HEAD, &p, NULL);
-   while (p != NULL) {
-      /*---(filter)------------*/
-      DEBUG_GRAF   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (p->own    != OWN_OVERLAY)              continue;
-      if (p->on     != 'y')                      continue;
-      /*---(draw)--------------*/
-      if (p->drawer != NULL)  p->drawer ();
-      if (p->source != NULL)  p->source (NULL);
+   DEBUG_YVIEW   yLOG_note    ("OVERLAY SREEN ELEMENTS");
+   for (i = 0; i < myVIEW.npart; ++i) {
+      yview_by_index (i, &p, NULL);
+      if (p == NULL)  continue;
+      DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
+      if (p->own != OWN_OVERLAY || p->on     != 'y') {
+         DEBUG_YVIEW   yLOG_note    ("skipping, either not on or not overlay");
+      } else if (p->drawer == NULL) {
+         DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
+      } else  {
+         DEBUG_YVIEW   yLOG_note    ("ready to go, calling source and drawer");
+         if (p->source != NULL)  p->source (myVIEW.s_size, myVIEW.s_wide, NULL);
+         if (p->drawer != NULL)  p->drawer ();
+      }
       /*---(done)--------------*/
-      yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(flush)--------------------------*/
-   DEBUG_GRAF   yLOG_note    ("flush and show");
-   rc = s_refresh ();
-   DEBUG_GRAF   yLOG_value   ("s_refresh" , rc);
+   DEBUG_YVIEW   yLOG_point   ("s_refresh" , s_refresh);
+   if (s_refresh != NULL) {
+      DEBUG_YVIEW   yLOG_note    ("flush and show");
+      rc = s_refresh ();
+      DEBUG_YVIEW   yLOG_value   ("s_refresh" , rc);
+   }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -211,12 +230,12 @@ yview__unit_loud         (void)
    yURG_logger   (x_narg, x_args);
    yURG_urgs     (x_narg, x_args);
    yURG_name  ("kitchen"      , YURG_ON);
-   yURG_name  ("edit"         , YURG_ON);
    yURG_name  ("ystr"         , YURG_ON);
    yURG_name  ("ymode"        , YURG_ON);
-   yURG_name  ("mode"         , YURG_ON);
-   yURG_name  ("cmds"         , YURG_ON);
-   DEBUG_CMDS  yLOG_info     ("yVIEW"     , yVIEW_version   ());
+   yURG_name  ("ycmd"         , YURG_ON);
+   yURG_name  ("ysrc"         , YURG_ON);
+   yURG_name  ("yview"        , YURG_ON);
+   DEBUG_YVIEW  yLOG_info     ("yVIEW"     , yVIEW_version   ());
    yview_init ();
    return 0;
 }
@@ -224,9 +243,9 @@ yview__unit_loud         (void)
 char       /*----: stop logging ----------------------------------------------*/
 yview__unit_end          (void)
 {
-   DEBUG_CMDS  yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW  yLOG_enter   (__FUNCTION__);
    yVIEW_wrap   ();
-   DEBUG_CMDS  yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW  yLOG_exit    (__FUNCTION__);
    yLOGS_end    ();
    return 0;
 }
@@ -238,7 +257,7 @@ yview__unit_cleanse      (void)
 }
 
 char
-yview__unit_prep         (void)
+yview__unit_prep         (char a_abbr)
 {
    return 0;
 }

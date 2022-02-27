@@ -21,7 +21,7 @@ static const tLAYOUT   s_layouts [] = {
    { "rob"         , "tv -- --- -m-- -- xsc- - FMH" , "more balanced display of common elements"             },
    { "max"         , "tv bf n-- -m-p dr xsck - FMH" , "everything displays at one time"                      },
    { "ycolor"      , "tv bf n-- -map -r xsck - FMH" , "more balanced display of common elements"             },
-   { "gyges"       , "-- -f --Y Xm-- -- xsck - FMH" , "prepared for gyges spreadsheet"                       },
+   { "gyges"       , "-- bf --Y Xm-- -- xsck - FMH" , "prepared for gyges spreadsheet"                       },
    { "everything"  , "tv bf n-Y Xmap dr xsck - FMH" , "everything displays at one time"                      },
    { ""            , "-- -- --- ---- -- ---- - FMH" , ""                                                     },
 };
@@ -37,20 +37,28 @@ struct cOPTION  {
    char        desc        [LEN_DESC ];
 };
 tOPTION  s_options [MAX_OPTION ] = {
+   /*---(yMODE)--------------------------*/
    { YVIEW_STATUS  , "mod"   , "mode"         , yMODE_status           , "display the mode stack"                   },
+   /*---(yKEYS)--------------------------*/
    { YVIEW_STATUS  , "key"   , "keylog"       , yKEYS_keylog_status    , "displays keystroke history"               },
    { YVIEW_STATUS  , "log"   , "logger"       , yKEYS_logger_status    , "displays logging statistics"              },
    { YVIEW_STATUS  , "loo"   , "loop"         , yKEYS_loop_status      , "displays main looping statistics"         },
+   /*---(yMACRO)-------------------------*/
    { YVIEW_STATUS  , "rec"   , "record"       , yMACRO_rec_status      , "details of current macro recording"       },
    { YVIEW_STATUS  , "exe"   , "execute"      , yMACRO_exe_status      , "details of single macro playback"         },
    { YVIEW_STATUS  , "mex"   , "multiexe"     , yMACRO_mex_status      , "details of layered macro playback"        },
+   /*---(yMAP)---------------------------*/
+   { YVIEW_STATUS  , "vis"   , "visual"       , yMAP_visu_status       , "details of current visual selection"      },
+   { YVIEW_STATUS  , "cur"   , "current"      , yMAP_current_status    , "current map position"                     },
+   /*---(ySRC)---------------------------*/
+   { YVIEW_STATUS  , "sreg"  , "sregister"    , ySRC_sreg_status       , "details of current source register"       },
+   { YVIEW_STATUS  , "sel"   , "selection"    , ySRC_select_status     , "displays selection status"                },
    /*> { YVIEW_STATUS  , "script"       , "script"       , yMACRO_script_status   , "details of script playback"               },   <*/
    /*> { YVIEW_STATUS  , "empty"        , "empty"        , VIEW_status_default    , "empty status display"        },                               <* 
     *> { YVIEW_STATUS  , "xmap"         , "xmap"         , yvikeys_map_xstatus    , "x-axis position details"     },                               <* 
     *> { YVIEW_STATUS  , "ymap"         , "ymap"         , yvikeys_map_ystatus    , "y-axis position details"     },                               <* 
     *> { YVIEW_STATUS  , "treg"         , "treg"         , yvikeys_sreg_status    , "displays contents of treg"   },                               <* 
     *> { YVIEW_STATUS  , "words"        , "words"        , SOURCE_status_words    , "displays word breaks"        },                               <* 
-    *> { YVIEW_STATUS  , "select"       , "select"       , yvikeys_sreg_status_sel, "displays selection status"   },                               <* 
     *> { YVIEW_STATUS  , "visual"       , "visual"       , yvikeys_visu_status    , "visual selection in map"     },                               <* 
     *> { YVIEW_STATUS  , "file"         , "file"         , yvikeys_file_status    , "file, control, and version"  },                               <* 
     *> { YVIEW_STATUS  , "regs"         , "regs"         , yvikeys_mreg_status    , "current register information"},                               <* 
@@ -62,7 +70,6 @@ tOPTION  s_options [MAX_OPTION ] = {
     *> { YVIEW_STATUS  , "mark"         , "mark"         , yvikeys_mark_status    , "details of mark environment"                },                <* 
     *> { YVIEW_STATUS  , "hint"         , "hint"         , yvikeys_hint_status    , "details of hint environment"              },                  <* 
     *> { YVIEW_STATUS  , "search"       , "search"       , yvikeys_srch_status    , "details of search environment"            },                  <* 
-    *> { YVIEW_STATUS  , "sreg"         , "sreg"         , yvikeys_sreg_status    , "details of current source register" },                        <* 
     *> { YVIEW_STATUS  , "sundo"        , "sundo"        , yvikeys_sundo_status   , "source editing undo stack" },                                 <* 
     *> { YVIEW_GRID    , "norm"         , "norm"         , VIEW__grid_normal      , "traditional cross-hatch grid" },                              <* 
     *> { YVIEW_GRID    , "zoom"         , "zoom"         , VIEW__grid_zoom        , "zoom/targeting grid"          },                              <* 
@@ -95,6 +102,7 @@ yview_layout_init       (void)
       if (s_options [i].part     == 0)  break;
       ++s_noption;
    }
+   yVIEW_switch ("status", "mode");
    /*---(complete)-----------------------*/
    return 0;
 }
@@ -111,26 +119,26 @@ yVIEW_layout            (char *a_name)
    uchar       x_key       =    0;
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   /*> DEBUG_PROG   yLOG_complex ("origs"     , "%3dw, %3dt, %3da", s_orig_wide, s_orig_tall, s_alt_wide);   <*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*> DEBUG_YVIEW   yLOG_complex ("origs"     , "%3dw, %3dt, %3da", s_orig_wide, s_orig_tall, s_alt_wide);   <*/
    /*---(defense)------------------------*/
-   DEBUG_GRAF   yLOG_point   ("a_name"    , a_name);
+   DEBUG_YVIEW   yLOG_point   ("a_name"    , a_name);
    --rce;  if (a_name == NULL || a_name [0] == '\0') {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   DEBUG_GRAF   yLOG_info    ("a_name"    , a_name);
+   DEBUG_YVIEW   yLOG_info    ("a_name"    , a_name);
    /*---(find the layout)----------------*/
    for (i = 0; i < s_nlayout; ++i) {
-      DEBUG_GRAF   yLOG_info    ("check"     , s_layouts [i].name);
+      DEBUG_YVIEW   yLOG_info    ("check"     , s_layouts [i].name);
       if (s_layouts [i].name [0] != a_name [0])         continue;
       if (strcmp (s_layouts [i].name, a_name) != 0)     continue;
       n = i;
       break;
    }
-   DEBUG_GRAF   yLOG_value   ("result"    , n);
+   DEBUG_YVIEW   yLOG_value   ("result"    , n);
    --rce;  if (n < 0) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    /*---(clear the parts)----------------*/
@@ -146,10 +154,10 @@ yVIEW_layout            (char *a_name)
       if (x_ch == x_key && p->on != 'X')  p->on = 'y';
       if (x_ch == ' ' || x_ch == '-')     p->on = '-';
    }
-   /*---(reset)--------------------------*/
-   /*> yvikeys_sizes_resize ('r');                                                    <*/
+   /*---(resize)-------------------------*/
+   yview_update ();
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -161,44 +169,86 @@ yVIEW_layout            (char *a_name)
 static void  o___ELEMENTS________o () { return; }
 
 char
-yVIEW_switch_add        (char a_part, char *a_opt, void *a_source, char *a_desc)
+yview_switch_by_name    (char a_part, char *a_name)
 {
-   /*> /+---(locals)-----------+-----+-----+-+/                                                 <* 
-    *> char        rce         =  -10;                                                          <* 
-    *> char        x_on        =  '-';                                                          <* 
-    *> char        i           =    0;                                                          <* 
-    *> char        n           =   -1;                                                          <* 
-    *> char        a           =   -1;                                                          <* 
-    *> /+---(header)-------------------------+/                                                 <* 
-    *> DEBUG_GRAF   yLOG_enter   (__FUNCTION__);                                                <* 
-    *> /+---(defense)------------------------+/                                                 <* 
-    *> n = yvikeys_view__abbr (a_part);                                                         <* 
-    *> --rce;  if (n < 0) {                                                                     <* 
-    *>    DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);                                        <* 
-    *>    return rce;                                                                           <* 
-    *> }                                                                                        <* 
-    *> /+> DEBUG_GRAF   yLOG_info    ("name"      , s_parts [n].name);                    <+/   <* 
-    *> /+> DEBUG_GRAF   yLOG_char    ("abbr"      , s_parts [n].abbr);                    <+/   <* 
-    *> --rce;  if (a_opt == NULL) {                                                             <* 
-    *>    DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);                                        <* 
-    *>    return rce;                                                                           <* 
-    *> }                                                                                        <* 
-    *> DEBUG_GRAF   yLOG_info    ("a_opt"     , a_opt);                                         <* 
-    *> --rce;  if (a_source == NULL) {                                                          <* 
-    *>    DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);                                        <* 
-    *>    return rce;                                                                           <* 
-    *> }                                                                                        <* 
-    *> DEBUG_GRAF   yLOG_point   ("a_source"  , a_source);                                      <* 
-    *> /+---(add)----------------------------+/                                                 <* 
-    *> s_options [s_noption].part   = a_part;                                                   <* 
-    *> strlcpy (s_options [s_noption].opt, a_opt, LEN_LABEL);                                   <* 
-    *> s_options [s_noption].source = a_source;                                                 <* 
-    *> if (a_desc != NULL)  strlcpy (s_options [s_noption].desc, a_desc, LEN_LABEL);            <* 
-    *> ++s_noption;                                                                             <* 
-    *> DEBUG_GRAF   yLOG_value   ("s_noption" , s_noption);                                     <* 
-    *> /+---(complete)-----------------------+/                                                 <* 
-    *> DEBUG_GRAF   yLOG_exit    (__FUNCTION__);                                                <* 
-    *> return 0;                                                                                <*/
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        i           =    0;
+   /*---(defense)------------------------*/
+   --rce;  if (a_part <  0)             return rce;
+   --rce;  if (a_part >= myVIEW.npart)  return rce;
+   --rce;  if (a_name == NULL)          return rce;
+   for (i = 0; i < s_noption; ++i) {
+      if (s_options [i].part == NULL)          break;
+      if (s_options [i].part != a_part)        continue;
+      if (strcmp (s_options [i].opt, a_name) != NULL &&
+            strcmp (s_options [i].terse, a_name) != NULL)  continue;
+      return i;
+   }
+   --rce;  return rce;
+}
+
+char
+yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source, char *a_desc)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    0;
+   char        x_on        =  '-';
+   char        i           =    0;
+   char        a           =   -1;
+   tPARTS     *p           = NULL;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
+   rc = yview_by_abbr   (a_part, &p, NULL);
+   --rce;  if (p == NULL) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_point   ("a_source"  , a_source);
+   --rce;  if (a_source == NULL) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   /*---(check for dups)-----------------*/
+   rc = yview_switch_by_name (a_part, a_opt);
+   DEBUG_YVIEW   yLOG_value   ("name"      , rc);
+   --rce;  if (rc >= 0)  {
+      DEBUG_YVIEW   yLOG_note    ("a_opt already appears in either name/terse in another switch");
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_info    ("a_opt"     , a_opt);
+   DEBUG_YVIEW   yLOG_point   ("a_terse"   , a_terse);
+   if (a_terse != NULL) {
+      rc = yview_switch_by_name (a_part, a_terse);
+      DEBUG_YVIEW   yLOG_value   ("terse"     , rc);
+      --rce;  if (rc >= 0)  {
+         DEBUG_YVIEW   yLOG_note    ("a_terse already appears in either name/terse in another switch");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      DEBUG_YVIEW   yLOG_info    ("a_terse"   , a_terse);
+      --rce;  if (strlen (a_terse) > 3) {
+         DEBUG_YVIEW   yLOG_note    ("a_terse is more than 3 characters");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+   }
+   /*---(add)----------------------------*/
+   s_options [s_noption].part   = a_part;
+   strlcpy (s_options [s_noption].opt  , a_opt  , LEN_LABEL);
+   if (a_terse != NULL)  strlcpy (s_options [s_noption].terse, a_terse, LEN_SHORT);
+   else                  strlcpy (s_options [s_noption].terse, ""     , LEN_SHORT);
+   s_options [s_noption].source = a_source;
+   if (a_desc != NULL)  strlcpy (s_options [s_noption].desc, a_desc, LEN_LABEL);
+   else                 strlcpy (s_options [s_noption].desc, ""    , LEN_LABEL);
+   ++s_noption;
+   DEBUG_YVIEW   yLOG_value   ("s_noption" , s_noption);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
 }
 
 char
@@ -207,7 +257,7 @@ yview__switch_linked    (tPARTS *p)
    tPARTS     *a           = NULL;
    tPARTS     *x_ind       = NULL;
    tPARTS     *x_dep       = NULL;
-   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(get alternate)------------------*/
    switch (p->abbr) {
    case YVIEW_TITLE    :  yview_by_abbr (YVIEW_VERSION, &a, NULL);  break;
@@ -219,27 +269,27 @@ yview__switch_linked    (tPARTS *p)
    case YVIEW_NAV      :  yview_by_abbr (YVIEW_LAYERS , &a, NULL);  break;
    case YVIEW_LAYERS   :  yview_by_abbr (YVIEW_NAV    , &a, NULL);  break;
    default   :
-                            DEBUG_GRAF   yLOG_snote   ("not a target");
-                            DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
-                            return 0;;
+                          DEBUG_YVIEW   yLOG_snote   ("not a target");
+                          DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+                          return 0;;
    }
    /*---(handle switching)---------------*/
    switch (p->abbr) {
    case YVIEW_TITLE    : case YVIEW_STATUS   : case YVIEW_COMMAND  :
-      DEBUG_GRAF   yLOG_snote   ("independent");
+      DEBUG_YVIEW   yLOG_snote   ("independent");
       if      (p->on == '-' && a->on == 'y')  a->on = '-';
       break;
    case YVIEW_VERSION  : case YVIEW_MODES    : case YVIEW_KEYS     :
-      DEBUG_GRAF   yLOG_snote   ("dependent");
+      DEBUG_YVIEW   yLOG_snote   ("dependent");
       if      (a->on == 'X')                  p->on = '-';
       else if (p->on == 'y' && a->on == '-')  a->on = 'y';
       break;
    case YVIEW_NAV      : case YVIEW_LAYERS   :
-      DEBUG_GRAF   yLOG_snote   ("either/or");
+      DEBUG_YVIEW   yLOG_snote   ("either/or");
       if      (p->on == 'y' && a->on == 'y')  a->on = '-';
       break;
    }
-   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
    return 0;
 }
 
@@ -254,26 +304,26 @@ yVIEW_switch            (char *a_name, char *a_opt)
    char        n           =   -1;
    char        x_good      =  '-';
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(defense)------------------------*/
    yview_by_name (a_name, &p, NULL);
    --rce;  if (p == NULL) {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
    --rce;  if (a_opt == NULL || a_opt [0] == '\0') {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   DEBUG_GRAF   yLOG_info    ("a_opt"     , a_opt);
+   DEBUG_YVIEW   yLOG_info    ("a_opt"     , a_opt);
    --rce;  if (p->on == 'X') {
       if (strcmp (a_opt, "enable" ) != 0) {
-         DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
    }
    /*---(set the flag)-------------------*/
-   DEBUG_GRAF   yLOG_char    ("current"   , p->on);
+   DEBUG_YVIEW   yLOG_char    ("current"   , p->on);
    x_on = p->on;
    if        (strcmp (a_opt, "hide"   ) == 0) {
       p->on  = '-';
@@ -289,7 +339,7 @@ yVIEW_switch            (char *a_name, char *a_opt)
       x_good = 'y';
    } else {
       for (i = 0; i < s_noption; ++i) {
-         if (s_options [i].part == NULL)                   break;
+         if (s_options [i].part == NULL)          break;
          if (s_options [i].part != p->abbr)       continue;
          if (strcmp (s_options [i].opt, a_opt ) != NULL && strcmp (s_options [i].terse, a_opt) != NULL)  continue;
          p->on     = 'y';
@@ -298,22 +348,18 @@ yVIEW_switch            (char *a_name, char *a_opt)
          break;
       }
    }
-   DEBUG_GRAF   yLOG_char    ("x_good"    , x_good);
+   DEBUG_YVIEW   yLOG_char    ("x_good"    , x_good);
    --rce;  if (x_good != 'y') {
-      DEBUG_GRAF   yLOG_exitr   (__FUNCTION__, rce);
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   DEBUG_GRAF   yLOG_char    ("new"       , p->on);
-   DEBUG_GRAF   yLOG_point   ("source"    , p->source);
+   DEBUG_YVIEW   yLOG_char    ("new"       , p->on);
+   DEBUG_YVIEW   yLOG_point   ("source"    , p->source);
    /*---(handle linkages)----------------*/
    yview__switch_linked     (p);
    /*---(resize)-------------------------*/
-   /*> if (x_on != p->on) {                                                           <* 
-    *>    DEBUG_GRAF   yLOG_note    ("must resize");                                  <* 
-    *>    yvikeys_sizes_resize ('r');                                                 <* 
-    *>    myVIKEYS.redraw = 'y';                                                      <* 
-    *> }                                                                              <*/
+   yview_update ();
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }

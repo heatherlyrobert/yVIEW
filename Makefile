@@ -8,7 +8,7 @@ NAME_BASE  = yVIEW
 # additional standard and outside libraries
 LIB_STD    = -lm
 # all heatherly libraries used, debug versions whenever available
-LIB_MINE   = -lyKEYS_debug -lyMODE_debug -lyMACRO_debug -lyCMD_debug -lySTR_debug
+LIB_MINE   = -lyKEYS_debug -lyMODE_debug -lyMACRO_debug -lyCMD_debug -lyMAP_debug -lySRC_debug -lySTR_debug
 # directory for production code, no trailing slash
 INST_DIR   = 
 

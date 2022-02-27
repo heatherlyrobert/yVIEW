@@ -23,16 +23,16 @@ yview_horz_fixed        (void)
    int         x_max       =    0;          /* widest at level                */
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(prepare)------------------------*/
    s_cum = 0;
    /*---(find fixed widths)--------------*/
    for (x_lvl = 1; x_lvl <= 9; ++x_lvl) {
-      DEBUG_GRAF   yLOG_value   ("LEVEL"     , x_lvl);
+      DEBUG_YVIEW   yLOG_value   ("LEVEL"     , x_lvl);
       x_max = 0;
       yview_by_cursor (YDLST_HEAD, &p, NULL);
       while (p != NULL) {
-         DEBUG_GRAF   yLOG_complex ("checking"  , "%-10.10p, %c %-10.10s, on %c, horz %d, wide %3d", p, p->abbr, p->name, p->on, p->horz, p->wide);
+         DEBUG_YVIEW   yLOG_complex ("checking"  , "%-10.10p, %c %-10.10s, on %c, horz %d, wide %3d", p, p->abbr, p->name, p->on, p->horz, p->wide);
          if (p->horz == x_lvl  ) {
             /*---(set width)----------------*/
             if    (p->on  != 'y')   p->wide = 0;
@@ -40,7 +40,7 @@ yview_horz_fixed        (void)
             /*---(find greatest)------------*/
             if (p->nox == '-'  && p->wide > x_max)   x_max = p->wide;
             /*---(read-out)-----------------*/
-            DEBUG_GRAF   yLOG_complex ("fixed"     , "%c %-12.12s wide %3d, max %3d, cum %3d", p->abbr, p->name, p->wide, x_max, s_cum);
+            DEBUG_YVIEW   yLOG_complex ("fixed"     , "%c %-12.12s wide %3d, max %3d, cum %3d", p->abbr, p->name, p->wide, x_max, s_cum);
             /*---(special)------------------*/
             if (p->abbr == YVIEW_YAXIS   )  s_yaxis = p->wide;
             /*---(done)---------------------*/
@@ -50,7 +50,7 @@ yview_horz_fixed        (void)
       s_cum += x_max;
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -62,7 +62,7 @@ yview_horz_auto         (cint a_wide, cint a_alt)
    int         x_float     = 40;
    int         x_hist      = 60;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(major sizes)--------------------*/
    if (myVIEW.env == YVIEW_OPENGL) {
       myVIEW.full_wide = s_cum + a_wide + a_alt;
@@ -74,7 +74,7 @@ yview_horz_auto         (cint a_wide, cint a_alt)
       x_hist  /= 10;
    }
    myVIEW.alt_wide  = a_alt;
-   DEBUG_GRAF   yLOG_complex ("bigs"      , "full %3d, main %3d, alt %3d, s_cum %3d", myVIEW.full_wide, myVIEW.main_wide, myVIEW.alt_wide, s_cum);
+   DEBUG_YVIEW   yLOG_complex ("bigs"      , "full %3d, main %3d, alt %3d, s_cum %3d", myVIEW.full_wide, myVIEW.main_wide, myVIEW.alt_wide, s_cum);
    /*---(walk auto parts)----------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -94,12 +94,12 @@ yview_horz_auto         (cint a_wide, cint a_alt)
       default            : yview_by_cursor (YDLST_NEXT, &p, NULL);   continue;
       }
       /*---(display)------------------*/
-      DEBUG_GRAF   yLOG_complex ("automatic" , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
+      DEBUG_YVIEW   yLOG_complex ("automatic" , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -111,12 +111,12 @@ yview_horz_var          (void)
    int         x_max       =    0;          /* widest at level                */
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(set lefts)----------------------*/
    s_cum = 0;
    /*---(find var widths)----------------*/
    for (x_lvl = 1; x_lvl <= 9; ++x_lvl) {
-      DEBUG_GRAF   yLOG_value   ("LEVEL"     , x_lvl);
+      DEBUG_YVIEW   yLOG_value   ("LEVEL"     , x_lvl);
       x_max = 0;
       yview_by_cursor (YDLST_HEAD, &p, NULL);
       while (p != NULL) {
@@ -126,7 +126,7 @@ yview_horz_var          (void)
             /*---(find greatest)------------*/
             if (p->nox == '-'  && p->wide > x_max)   x_max = p->wide;
             /*---(read-out)-----------------*/
-            DEBUG_GRAF   yLOG_complex ("variable"  , "%c %-12.12s wide %3d, max %3d, cum %3d", p->abbr, p->name, p->wide, x_max, s_cum);
+            DEBUG_YVIEW   yLOG_complex ("variable"  , "%c %-12.12s wide %3d, max %3d, cum %3d", p->abbr, p->name, p->wide, x_max, s_cum);
             /*---(done)---------------------*/
          }
          yview_by_cursor (YDLST_NEXT, &p, NULL);
@@ -134,7 +134,7 @@ yview_horz_var          (void)
       s_cum += x_max;
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -146,10 +146,10 @@ yview_horz_link         (void)
    tPARTS     *p           = NULL;
    tPARTS     *a           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(find var widths)----------------*/
    for (x_lvl = 1; x_lvl <= 9; ++x_lvl) {
-      DEBUG_GRAF   yLOG_value   ("LEVEL"     , x_lvl);
+      DEBUG_YVIEW   yLOG_value   ("LEVEL"     , x_lvl);
       yview_by_cursor (YDLST_HEAD, &p, &a);
       while (p != NULL) {
          if (p->horz == x_lvl && a != NULL) {
@@ -159,7 +159,7 @@ yview_horz_link         (void)
                /*   [--------------full]----------------]               */
                /*   xxxx[--a--][-----------p----------->?               */
                if (a->on != 'y' || a->wide > 0) {
-                  DEBUG_GRAF   yLOG_note    ("leftmost is fixed length or off");
+                  DEBUG_YVIEW   yLOG_note    ("leftmost is fixed length or off");
                   p->left = a->left + a->wide;
                   if (p->on == 'y')  p->wide  = myVIEW.full_wide - p->left;
                   else               p->wide  = 0;
@@ -168,13 +168,13 @@ yview_horz_link         (void)
                /*   [--------------full]----------------]               */
                /*   xxxx[-----------a----------->?[--p--]               */
                else {
-                  DEBUG_GRAF   yLOG_note    ("leftmost is variable length");
+                  DEBUG_YVIEW   yLOG_note    ("leftmost is variable length");
                   p->left  = myVIEW.full_wide - p->wide;
                   if (a->on == 'y')  a->wide  = p->left - a->left;
                   else               a->wide  = 0;
                }
                /*---(read-out)-----------------*/
-               DEBUG_GRAF   yLOG_complex ("linked"    , "%c %-12.12s wide %3d AND %c %-12.12s wide %3d", p->abbr, p->name, p->wide, a->abbr, a->name, a->wide);
+               DEBUG_YVIEW   yLOG_complex ("linked"    , "%c %-12.12s wide %3d AND %c %-12.12s wide %3d", p->abbr, p->name, p->wide, a->abbr, a->name, a->wide);
             }
             /*---(done)---------------------*/
          }
@@ -182,7 +182,7 @@ yview_horz_link         (void)
       }
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -193,7 +193,7 @@ yview_horz__float       (tPARTS *m, tPARTS *p)
    p->magn = m->magn;
    p->wide = m->wide * 0.90;
    p->left = m->left + (m->wide * 0.05);
-   DEBUG_GRAF   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, m->left, m->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
@@ -202,8 +202,8 @@ yview_horz__menus       (tPARTS *m, tPARTS *p)
 {
    p->type = m->type;
    p->magn = m->magn;
-   DEBUG_GRAF   yLOG_value   ("a_left"    , m->left);
-   DEBUG_GRAF   yLOG_value   ("wide"      , p->wide);
+   DEBUG_YVIEW   yLOG_value   ("a_left"    , m->left);
+   DEBUG_YVIEW   yLOG_value   ("wide"      , p->wide);
    p->wide = p->def_wide;
    switch (p->anchor) {
    case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :
@@ -222,7 +222,7 @@ yview_horz__menus       (tPARTS *m, tPARTS *p)
       p->left = m->left + m->wide - p->wide;
       break;
    }
-   DEBUG_GRAF   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, m->left, m->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
@@ -249,7 +249,7 @@ yview_horz__hist        (tPARTS *m, tPARTS *p)
       p->left = m->left + (m->wide * 0.10);
       break;
    }
-   DEBUG_GRAF   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, m->left, m->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, m->left, m->wide, p->wide, p->left);
    return 0;
 }
 
@@ -260,7 +260,7 @@ yview_horz_float        (void)
    tPARTS     *m           = NULL;
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
    yview_by_abbr   (YVIEW_MAIN, &m, NULL);
    /*---(walk floats)--------------------*/
@@ -287,12 +287,12 @@ yview_horz_float        (void)
          continue;
       }
       /*---(display)------------------*/
-      DEBUG_GRAF   yLOG_complex ("overlay"   , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
+      DEBUG_YVIEW   yLOG_complex ("overlay"   , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -302,7 +302,7 @@ yview_horz_final         (void)
    /*---(locals)-----------+-----+-----+-*/
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(walk floats)--------------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -314,12 +314,12 @@ yview_horz_final         (void)
       /*---(set)----------------------*/
       p->wide = myVIEW.full_wide - p->left;
       /*---(display)------------------*/
-      DEBUG_GRAF   yLOG_complex ("other"     , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
+      DEBUG_YVIEW   yLOG_complex ("other"     , "%c %-12.12s %3d wide", p->abbr, p->name, p->wide);
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -338,11 +338,11 @@ yview_horz_coords       (void)
    short       x_max       =    0;
    tPARTS     *p           = NULL;
    /*---(header)----------------------*/
-   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(check for opengl)---------------*/
-   DEBUG_GRAF   yLOG_schar   (myVIEW.env);
+   DEBUG_YVIEW   yLOG_schar   (myVIEW.env);
    if (myVIEW.env != YVIEW_OPENGL) {
-      DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+      DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
       return 0;
    }
    /*---(walk all)-----------------------*/
@@ -353,7 +353,7 @@ yview_horz_coords       (void)
       if (p->own  != OWN_OVERLAY) {
          /*---(easy first)---------------*/
          x_len = p->xlen = p->wide * p->magn;
-         DEBUG_GRAF   yLOG_sint    (x_len);
+         DEBUG_YVIEW   yLOG_sint    (x_len);
          /*---(horzontal)----------------*/
          switch (p->anchor) {
          case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :
@@ -372,16 +372,16 @@ yview_horz_coords       (void)
             p->xmin = 0 - x_len;
             break;
          }
-         DEBUG_GRAF   yLOG_sint    (p->xmin);
+         DEBUG_YVIEW   yLOG_sint    (p->xmin);
          /*---(and last)-----------------*/
          x_max = p->xmin + x_len;
-         DEBUG_GRAF   yLOG_sint    (x_max);
+         DEBUG_YVIEW   yLOG_sint    (x_max);
       }
       /*---(done)------------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
    return 0;
 }
 
@@ -393,11 +393,11 @@ yview_horz_overlay      (void)
    tPARTS     *m           = NULL;
    tPARTS     *p           = NULL;
    /*---(header)----------------------*/
-   DEBUG_GRAF   yLOG_senter  (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(check for opengl)---------------*/
-   DEBUG_GRAF   yLOG_schar   (myVIEW.env);
+   DEBUG_YVIEW   yLOG_schar   (myVIEW.env);
    /*> if (myVIEW.env != YVIEW_OPENGL) {                                              <* 
-    *>    DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);                                   <* 
+    *>    DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);                                   <* 
     *>    return 0;                                                                   <* 
     *> }                                                                              <*/
    /*---(get window info)----------------*/
@@ -435,16 +435,84 @@ yview_horz_overlay      (void)
                p->xmin = m->xmin + ((p->left - m->left) * m->magn);
             }
          }
-         DEBUG_GRAF   yLOG_sint    (p->xmin);
-         DEBUG_GRAF   yLOG_sint    (p->xlen);
-         DEBUG_GRAF   yLOG_sint    (p->xmin + p->xlen);
+         DEBUG_YVIEW   yLOG_sint    (p->xmin);
+         DEBUG_YVIEW   yLOG_sint    (p->xlen);
+         DEBUG_YVIEW   yLOG_sint    (p->xmin + p->xlen);
 
       }
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
    }
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_sexit   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_horz_status       (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   tPARTS     *p           = NULL;
+   /*---(header)----------------------*/
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
+   yview_by_abbr   (YVIEW_STATUS, &p, NULL);
+   /*---(set size)--------------------*/
+   myVIEW.s_wide = p->wide;
+   if      (p->wide <  20)  myVIEW.s_size  = 'u';
+   else if (p->wide <  40)  myVIEW.s_size  = 't';
+   else if (p->wide <  70)  myVIEW.s_size  = 's';
+   else if (p->wide < 110)  myVIEW.s_size  = 'm';
+   else if (p->wide < 160)  myVIEW.s_size  = 'l';
+   else if (p->wide < 220)  myVIEW.s_size  = 'h';
+   else                     myVIEW.s_size  = 'g';
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_horz_source       (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   tPARTS     *f           = NULL;
+   tPARTS     *p           = NULL;
+   short       x_formula   =    0;
+   short       x_command   =    0;
+   /*---(header)----------------------*/
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
+   /*---(set float)-------------------*/
+   yview_by_abbr   (YVIEW_FLOAT  , &f, NULL);
+   /*---(set formula)-----------------*/
+   yview_by_abbr   (YVIEW_FORMULA, &p, NULL);
+   if (p->on == 'y')    x_formula = p->wide;
+   else                 x_formula = f->wide;
+   /*---(set command)-----------------*/
+   yview_by_abbr   (YVIEW_COMMAND, &p, NULL);
+   if (p->on == 'y')    x_command = p->wide;
+   else                 x_command = f->wide;
+   /*---(update ySCR)--------------------*/
+   ySRC_size (x_formula, x_command);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_horz_xaxis        (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   tPARTS     *b           = NULL;
+   tPARTS     *m           = NULL;
+   /*---(header)----------------------*/
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
+   /*---(set)-------------------------*/
+   /*> yview_by_abbr   (YVIEW_BUFFER , &b, NULL);                                     <* 
+    *> if (b->on == 'y')  yMAP_axis_avail ('u', b->wide);                             <* 
+    *> yview_by_abbr   (YVIEW_MAIN   , &m, NULL);                                     <* 
+    *> yMAP_axis_avail ('x', m->wide);                                                <* 
+    *> if (b->on != 'y')  yMAP_axis_avail ('u', m->wide);                             <*/
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
    return 0;
 }
 
@@ -459,8 +527,8 @@ char         /*-> resize widths based on layout ------[ ------ [gz.742.001.01]*/
 yview_horz               (cint a_wide, cint a_alt)
 {
    /*---(header)-------------------------*/
-   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
-   DEBUG_GRAF   yLOG_complex ("args"      , "wide %3d, alt %3d", a_wide, a_alt);
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_complex ("args"      , "wide %3d, alt %3d", a_wide, a_alt);
    /*---(widths)-------------------------*/
    yview_horz_fixed   ();
    yview_horz_auto    (a_wide, a_alt);
@@ -470,8 +538,11 @@ yview_horz               (cint a_wide, cint a_alt)
    yview_horz_final   ();
    yview_horz_coords  ();
    yview_horz_overlay ();
+   yview_horz_status  ();
+   yview_horz_source  ();
+   yview_horz_xaxis   ();
    /*---(complete)-----------------------*/
-   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 

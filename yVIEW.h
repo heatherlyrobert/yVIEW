@@ -118,27 +118,33 @@ char*       yVIEW__unit             (char *a_question, char a_index);
 
 
 char        yVIEW_layout            (char *a_name);
-char        yVIEW_switch_add        (char a_part, char *a_opt, void *a_source, char *a_desc);
+char        yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source, char *a_desc);
 char        yVIEW_switch            (char *a_name, char *a_opt);
 char        yVIEW_loc_float         (char a_loc);
 char        yVIEW_loc_history       (char a_loc);
 char        yVIEW_loc_menu          (char a_loc);
 
-char        yVIEW_config            (char *a_title, char *a_ver, char a_env, short a_wide, short a_tall, short a_alt);
 char        yVIEW_simple            (char a_part, char a_color, void *a_drawer);
 char        yVIEW_full              (char a_part, char a_type, char a_anchor, float a_magn, char a_color, void *a_drawer);
+char        yVIEW_menus             (void *a_drawer);
 
+char        yVIEW_env               (void);
 char        yVIEW_defsize           (char a_part, short a_wide, short a_tall);
 char        yVIEW_size              (char a_part, char *a_on, short *a_left, short *a_wide, short *a_bott, short *a_tall);
 char        yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_magn, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen);
 char        yVIEW_showing           (char a_part);
 char        yVIEW_anchor            (char a_part);
 
+char        yVIEW_curses            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *r_orient, short *r_left, short *r_wide, short *r_bott, short *r_tall);
+char        yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *a_type, char *a_anchor, float *a_magn, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen);
+
 char        yVIEW_keys              (char *a_text);
 char        yVIEW_modes             (char *a_text);
 char        yVIEW_command           (char *a_text);
 
 char        yVIEW_draw              (void);
+
+char        yVIEW_debug_list        (void);
 
 #endif
 /*============================----end-of-source---============================*/

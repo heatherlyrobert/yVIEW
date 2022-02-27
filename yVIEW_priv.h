@@ -11,11 +11,11 @@
 
 #define     P_FOCUS     "RS (run-time support)"
 #define     P_NICHE     "us (user control)"
-#define     P_SUBJECT   "view management"
+#define     P_SUBJECT   "windor/view management"
 #define     P_PURPOSE   ""
 
-#define     P_NAMESAKE  ""
-#define     P_HERITAGE  ""
+#define     P_NAMESAKE  "iapetus-progonos (progenitor)"
+#define     P_HERITAGE  "titan and father of prometheus, protector of mankind"
 #define     P_IMAGERY   ""
 #define     P_REASON    ""
 
@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0f"
-#define     P_VERTXT    "magnification and linked parts coordinates unit tested"
+#define     P_VERNUM    "2.0g"
+#define     P_VERTXT    "fixed stupid drawing issue for overlays/floats"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -55,10 +55,12 @@
 #include    <yURG.h>              /* heatherly urgent processing              */
 #include    <yLOG.h>              /* heatherly program logging                */
 #include    <ySTR.h>              /* heatherly string processing              */
-#include    <yKEYS.h>             /* heatherly vim-ish key handling           */
-#include    <yMODE.h>             /* heatherly vim-ish mode tracking          */
-#include    <yMACRO.h>            /* heatherly vim-ish macro processing       */
-#include    <yCMD.h>              /* heatherly vim-ish command processing     */
+#include    <yKEYS.h>             /* heatherly vi-keys key handling           */
+#include    <yMODE.h>             /* heatherly vi-keys mode tracking          */
+#include    <yMACRO.h>            /* heatherly vi-keys macro processing       */
+#include    <yCMD.h>              /* heatherly vi-keys command processing     */
+#include    <ySRC.h>              /* heatherly vi-keys source editing         */
+#include    <yMAP.h>              /* heatherly vi-keys location management    */
 #include    <yCOLOR.h>            /* heatherly opengl color handling          */
 #include    <yDLST_solo.h>        /* heatherly double-double-list             */
 
@@ -88,8 +90,8 @@ struct cPARTS {
    short       tall;                        /* screen height                  */
    short       bott;                        /* screen bottom                  */
    /*---(shared drawing)-------*/
-   char        defs;                        /* changable defaults (w/t/B)     */
-   char        (*source) (char*);           /* content source                 */
+   cchar       defs;                        /* changable defaults (w/t/B)     */
+   char        (*source) (char, short, char*);   /* content source            */
    char        text        [LEN_RECD];      /* optional text                  */
    char        (*drawer) (void);            /* drawing function               */
    /*---(curses drawing)-------*/
@@ -147,6 +149,8 @@ struct cMY {
    char        loc_float;
    char        loc_menu;
    char        loc_hist;
+   char        s_wide;
+   char        s_size;
 };
 extern tMY         myVIEW;
 
@@ -161,7 +165,7 @@ char        yview__unit_quiet       (void);
 char        yview__unit_loud        (void);
 char        yview__unit_end         (void);
 char        yview__unit_cleanse     (void);
-char        yview__unit_prep        (void);
+char        yview__unit_prep        (char a_abbr);
 char        yview__unit_draw        (void);
 char        yview__unit_cursor      (void);
 char        yview__unit_refresh     (void);
@@ -175,6 +179,7 @@ char        yview__unit_refresh     (void);
 char        yview_parts_init        (void);
 /*---(search)---------------*/
 char        yview_by_abbr           (cchar  a_abbr, tPARTS **r_part, tPARTS **r_link);
+char        yview_by_index          (int n, tPARTS **r_part, tPARTS **r_link);
 char        yview_by_name           (cchar *a_name, tPARTS **r_part, tPARTS **r_link);
 char        yview_by_cursor         (cchar  a_move, tPARTS **r_part, tPARTS **r_link);
 char*       yview_parts_name        (cchar n);
