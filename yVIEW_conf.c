@@ -79,6 +79,7 @@ yview__conf_type        (tPARTS *p, char a_type)
    DEBUG_YVIEW   yLOG_char    ("a_type"    , a_type);
    if      (a_type == YVIEW_LEAVE)     return 0;
    else if (a_type == YVIEW_DEPTH)     p->type = YVIEW_DEPTH;
+   else if (a_type == YVIEW_FLATISH)   p->type = YVIEW_FLATISH;
    else                                p->type = YVIEW_FLAT;
    DEBUG_YVIEW   yLOG_char    ("type"      , p->type);
    return 0;

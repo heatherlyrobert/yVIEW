@@ -186,7 +186,7 @@ yview_vert_link  (void)
 char
 yview__vert_float       (tPARTS *m, tPARTS *p)
 {
-   p->type   = m->type;
+   /*> p->type   = m->type;                                                           <*/
    p->tall   = p->def_tall;
    p->magn   = m->magn;
    switch (p->anchor) {
@@ -212,7 +212,7 @@ yview__vert_menu        (tPARTS *m, tPARTS *p)
    short       x_bottm     =    0;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_complex ("main"      , "bott %4d tall %4d anchor %c magn %5.2f ymin %4d ylen %4d", m->bott, m->tall, m->anchor, m->magn, m->ymin, m->ylen);
-   p->type   = m->type;
+   /*> p->type   = m->type;                                                           <*/
    p->tall   = p->def_tall;
    p->magn   = m->magn;
    switch (p->anchor) {
@@ -254,7 +254,7 @@ yview__vert_menu        (tPARTS *m, tPARTS *p)
 char
 yview__vert_hist        (tPARTS *m, tPARTS *p)
 {
-   p->type = m->type;
+   /*> p->type = m->type;                                                             <*/
    p->magn = m->magn;
    p->tall = m->tall * 0.90;
    p->bott = m->bott + (m->tall * 0.05);
@@ -296,7 +296,7 @@ yview_vert_float        (void)
          break;
       case YVIEW_GRID     : case YVIEW_OVERLAY  :
       case YVIEW_NOTES    : case YVIEW_CURSOR   :
-         p->type = m->type;
+         /*> p->type = m->type;                                                       <*/
          p->magn = m->magn;
          p->zmin = m->zmin;
          p->zlen = m->zlen;
@@ -477,7 +477,6 @@ yview_vert_overlay      (void)
          DEBUG_YVIEW   yLOG_sint    (p->ymin);
          DEBUG_YVIEW   yLOG_sint    (p->ylen);
          DEBUG_YVIEW   yLOG_sint    (p->ymin + p->ylen);
-
       }
       /*---(done)---------------------*/
       yview_by_cursor (YDLST_NEXT, &p, NULL);
@@ -503,6 +502,71 @@ yview_vert_yaxis        (void)
    return 0;
 }
 
+char
+yview_vert_progress     (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   tPARTS     *m           = NULL;
+   tPARTS     *a           = NULL;
+   tPARTS     *x           = NULL;
+   tPARTS     *y           = NULL;
+   tPARTS     *p           = NULL;
+   int         x_max       =    0;
+   int         x_theo      =    0;
+   int         x_rem       =    0;
+   float       x_ratio     =  0.0;
+   int         x_orig      =    0;
+   int         x_tall      =    0;
+   /*---(header)----------------------*/
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
+   /*---(check full status)-----------*/
+   DEBUG_YVIEW   yLOG_schar   (myVIEW.prog_full);
+   if (myVIEW.prog_full == '-') {
+      DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+      return 0;
+   }
+   /*---(get specific windows)-----------*/
+   yview_by_abbr   (YVIEW_MAIN    , &m, NULL);
+   yview_by_abbr   (YVIEW_ALT     , &a, NULL);
+   yview_by_abbr   (YVIEW_XAXIS   , &x, NULL);
+   yview_by_abbr   (YVIEW_YAXIS   , &y, NULL);
+   yview_by_abbr   (YVIEW_PROGRESS, &p, NULL);
+   /*---(set)-------------------------*/
+   x_orig  = p->tall;
+   x_max   = x->tall + m->tall + p->tall;
+   switch (myVIEW.prog_full) {
+   case 'y' :
+      p->tall = x_max;
+      x_rem   = 0;
+      break;
+   default  :
+      x_theo  = p->tall * (myVIEW.prog_full - '0');
+      if (x_theo >= x_max)  { p->tall = x_max;  x_rem = x_max; }
+      else                  { p->tall = x_theo; x_rem = x_max - x_theo; }
+      break;
+   }
+   p->ylen = p->tall;
+   if (x_rem <  x->tall) {
+      x->tall = 0; x->wide = 0;  x->ylen = 0;
+      y->tall = 0; y->wide = 0;  y->ylen = 0;
+      m->tall = 0; m->wide = 0;  m->ylen = 0;
+      a->tall = 0; a->wide = 0;  a->ylen = 0;
+   } else {
+      x_rem  -= x->tall;
+      x_ratio = x_rem / (float) (x->tall + m->tall);
+      x_tall  = p->tall - x_orig;
+      y->bott += x_tall;
+      y->tall = x_rem;  y->ylen *= x_ratio;
+      m->bott += x_tall;
+      m->tall = x_rem;  m->ylen *= x_ratio;
+      a->bott += x_tall;
+      a->tall = x_rem;  a->ylen *= x_ratio;
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
+
 
 
 /*====================------------------------------------====================*/
@@ -520,16 +584,17 @@ yview_vert              (cint a_tall)
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_value   ("a_tall"    , a_tall);
    /*---(heights)------------------------*/
-   yview_vert_fixed   ();
-   yview_vert_auto    (a_tall);
-   yview_vert_var     ();
-   yview_vert_link    ();
-   yview_vert_float   ();
-   yview_vert_final   ();
-   yview_vert_flip    ();
-   yview_vert_coords  ();
-   yview_vert_overlay ();
-   yview_vert_yaxis   ();
+   yview_vert_fixed    ();
+   yview_vert_auto     (a_tall);
+   yview_vert_var      ();
+   yview_vert_link     ();
+   yview_vert_float    ();
+   yview_vert_final    ();
+   yview_vert_flip     ();
+   yview_vert_coords   ();
+   yview_vert_overlay  ();
+   yview_vert_yaxis    ();
+   yview_vert_progress ();
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

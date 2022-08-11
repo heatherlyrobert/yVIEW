@@ -189,7 +189,7 @@ yview_horz_link         (void)
 char
 yview_horz__float       (tPARTS *m, tPARTS *p)
 {
-   p->type = m->type;
+   /*> p->type = m->type;                                                             <*/
    p->magn = m->magn;
    p->wide = m->wide * 0.90;
    p->left = m->left + (m->wide * 0.05);
@@ -200,7 +200,7 @@ yview_horz__float       (tPARTS *m, tPARTS *p)
 char
 yview_horz__menus       (tPARTS *m, tPARTS *p)
 {
-   p->type = m->type;
+   /*> p->type = m->type;                                                             <*/
    p->magn = m->magn;
    DEBUG_YVIEW   yLOG_value   ("a_left"    , m->left);
    DEBUG_YVIEW   yLOG_value   ("wide"      , p->wide);
@@ -230,7 +230,7 @@ yview_horz__menus       (tPARTS *m, tPARTS *p)
 char
 yview_horz__hist        (tPARTS *m, tPARTS *p)
 {
-   p->type = m->type;
+   /*> p->type = m->type;                                                             <*/
    p->magn = m->magn;
    switch (p->anchor) {
    case YVIEW_ALLLEF :

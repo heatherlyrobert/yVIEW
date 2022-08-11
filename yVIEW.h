@@ -13,6 +13,7 @@ typedef  const int            cint;
 
 #define      YVIEW_OPENGL      'g'
 #define      YVIEW_CURSES      'c'
+#define      YVIEW_ENVS        "gc"
 
 
 /*---(normal)-------------------------*/
@@ -50,6 +51,7 @@ typedef  const int            cint;
 
 #define      YVIEW_DEPTH       '3'
 #define      YVIEW_FLAT        'O'
+#define      YVIEW_FLATISH     'F'
 #define      YVIEW_DISABLE     'X'
 
 
@@ -145,6 +147,10 @@ char        yVIEW_command           (char *a_text);
 char        yVIEW_draw              (void);
 
 char        yVIEW_debug_list        (void);
+
+char        yVIEW_note_direct       (char *a_all);
+char        yVIEW_note_showing      (void);
+char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, uchar *w, uchar *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
 
 #endif
 /*============================----end-of-source---============================*/

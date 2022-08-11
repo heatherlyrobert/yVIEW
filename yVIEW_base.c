@@ -55,6 +55,7 @@ yview_init              (void)
    s_prep     = NULL;
    s_cursor   = NULL;
    s_refresh  = NULL;
+   yview_note_init    ();
    return 0;
 }
 
@@ -86,7 +87,8 @@ yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse
       return rce;
    }
    /*---(globals)------------------------*/
-   myVIEW.env = a_env;
+   myVIEW.env       = a_env;
+   myVIEW.prog_full = '-';
    yview_init ();
    /*---(defaults)-----------------------*/
    rc = yview_factory (a_env);
@@ -187,6 +189,7 @@ yVIEW_draw              (void)
          DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
       } else  {
          DEBUG_YVIEW   yLOG_note    ("ready to go, calling source and drawer");
+         if (s_prep    != NULL)  s_prep (p->abbr);
          if (p->source != NULL)  p->source (myVIEW.s_size, myVIEW.s_wide, NULL);
          if (p->drawer != NULL)  p->drawer ();
       }

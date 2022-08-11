@@ -43,6 +43,7 @@ tOPTION  s_options [MAX_OPTION ] = {
    { YVIEW_STATUS  , "key"   , "keylog"       , yKEYS_keylog_status    , "displays keystroke history"               },
    { YVIEW_STATUS  , "log"   , "logger"       , yKEYS_logger_status    , "displays logging statistics"              },
    { YVIEW_STATUS  , "loo"   , "loop"         , yKEYS_loop_status      , "displays main looping statistics"         },
+   { YVIEW_STATUS  , "repl"  , "replay"       , yKEYS_replay_status    , "displays main looping statistics"         },
    /*---(yMACRO)-------------------------*/
    { YVIEW_STATUS  , "rec"   , "record"       , yMACRO_rec_status      , "details of current macro recording"       },
    { YVIEW_STATUS  , "exe"   , "execute"      , yMACRO_exe_status      , "details of single macro playback"         },
@@ -322,6 +323,8 @@ yVIEW_switch            (char *a_name, char *a_opt)
          return rce;
       }
    }
+   /*---(default progress)---------------*/
+   if (p->abbr == YVIEW_PROGRESS)   myVIEW.prog_full = '-';
    /*---(set the flag)-------------------*/
    DEBUG_YVIEW   yLOG_char    ("current"   , p->on);
    x_on = p->on;
@@ -337,6 +340,14 @@ yVIEW_switch            (char *a_name, char *a_opt)
    } else if (strcmp (a_opt, "disable") == 0) {
       p->on  = 'X';
       x_good = 'y';
+   } else if (p->abbr == YVIEW_PROGRESS && strcmp (a_opt, "full") == 0) {
+      p->on  = 'y';
+      x_good = 'y';
+      myVIEW.prog_full = 'y';
+   } else if (p->abbr == YVIEW_PROGRESS && strchr ("123456789", a_opt [0]) != NULL) {
+      p->on  = 'y';
+      x_good = 'y';
+      myVIEW.prog_full = a_opt [0];
    } else {
       for (i = 0; i < s_noption; ++i) {
          if (s_options [i].part == NULL)          break;

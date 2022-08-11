@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0h"
-#define     P_VERTXT    "updated size and anchoring of menus"
+#define     P_VERNUM    "2.0i"
+#define     P_VERTXT    "notes, targets, and lines working for opengl"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -151,8 +151,33 @@ struct cMY {
    char        loc_hist;
    char        s_wide;
    char        s_size;
+   char        prog_full;
 };
 extern tMY         myVIEW;
+
+
+extern char           unit_answer [LEN_FULL];
+
+
+
+#define      MAX_NOTES     20
+typedef    struct    cNOTE  tNOTE;
+struct cNOTE {
+   char        xr, yr, size;                /* requested pos and size         */
+   short       x, y;                        /* note top-left pos              */
+   uchar       w, h;                        /* note size                      */
+   char       *text;                        /* text to be displayed           */
+   char        s;                           /* main vs window                 */
+   char        c;                           /* connector type                 */
+   short       xt, yt;                      /* requested endpoint grid        */
+   short       xb, yb;                      /* connector beginning pos        */
+   short       xe, ye;                      /* connector ending pos           */
+};
+extern tNOTE  g_notes [MAX_NOTES];
+extern char   g_nnote;
+
+
+
 
 
 
@@ -251,6 +276,36 @@ char        yview_conf_text         (char a_part, char *a_text);
 /*---(sizing)---------------*/
 char        yview_update            (void);
 /*---(done)-----------------*/
+
+
+
+/*===[[ yVIEW_note.c ]]=======================================================*/
+/*··········>·······················>·········································*/
+/*---(support)--------------*/
+char        yview_note__find        (char xr, char yr);
+/*---(ordering)-------------*/
+char        yview_note__remove      (char n);
+char        yview_note__totop       (char n);
+char        yview_note__tobot       (char n);
+char        yview_note__move        (char n, char xr, char yr);
+/*---(mass)-----------------*/
+char        yview_note__purge       (char a_init);
+char        yview_note__purgeish    (void);
+char        yview_note__resize      (void);
+char        yview_note_init         (void);
+/*---(content)--------------*/
+char        yview_note__size        (char n, char xr, char yr, char a_size);
+char        yview_note__retarg      (char n);
+/*---(driver)---------------*/
+char        yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text);
+char        yVIEW_note_direct       (char *a_all);
+/*---(access)---------------*/
+char        yVIEW_note_showing      (void);
+char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, uchar *w, uchar *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
+/*---(unittest)-------------*/
+char*       yview_note__unit        (char *a_question, int n);
+/*---(done)-----------------*/
+
 
 
 #endif
