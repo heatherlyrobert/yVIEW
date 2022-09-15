@@ -519,18 +519,18 @@ yview__clear_all        (char a_full, char a_env)
    yview__wipe (a_full, YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    yview__wipe (a_full, YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
    yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, 0             , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

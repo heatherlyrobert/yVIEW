@@ -184,83 +184,91 @@ yview_vert_link  (void)
 }
 
 char
-yview__vert_float       (tPARTS *m, tPARTS *p)
+yview__vert_float       (tPARTS *w, tPARTS *p)
 {
-   /*> p->type   = m->type;                                                           <*/
+   /*> p->type   = w->type;                                                           <*/
    p->tall   = p->def_tall;
-   p->magn   = m->magn;
+   p->magn   = w->magn;
    switch (p->anchor) {
-   case YVIEW_TOPALL : p->bott = m->bott + m->tall - (p->tall * 2.0); break;
-   case YVIEW_UPSALL : p->bott = m->bott + m->tall * (0.75) - (p->tall * 0.5);  break;
-   case YVIEW_MIDALL : p->bott = m->bott + m->tall * (0.50) - (p->tall * 0.5);  break;
-   case YVIEW_LOWALL : p->bott = m->bott + m->tall * (0.25) - (p->tall * 0.5);  break;
-   case YVIEW_BOTALL : p->bott = m->bott + p->tall;  break;
+   case YVIEW_TOPALL : p->bott = w->bott + w->tall - (p->tall * 2.0); break;
+   case YVIEW_UPSALL : p->bott = w->bott + w->tall * (0.75) - (p->tall * 0.5);  break;
+   case YVIEW_MIDALL : p->bott = w->bott + w->tall * (0.50) - (p->tall * 0.5);  break;
+   case YVIEW_LOWALL : p->bott = w->bott + w->tall * (0.25) - (p->tall * 0.5);  break;
+   case YVIEW_BOTALL : p->bott = w->bott + p->tall;  break;
    default    :
                        DEBUG_YVIEW   yLOG_note    ("no appropriate float location found");
                        break;
    }
-   DEBUG_YVIEW   yLOG_complex ("vert_float", "%c, %3da, %3ds, %3dt, %3db", myVIEW.loc_float, m->bott, m->tall, p->tall, p->bott);
-   p->zmin   = m->zmin;
-   p->zlen   = m->zlen;
+   DEBUG_YVIEW   yLOG_complex ("vert_float", "%c, %3da, %3ds, %3dt, %3db", myVIEW.loc_float, w->bott, w->tall, p->tall, p->bott);
+   p->zmin   = w->zmin;
+   p->zlen   = w->zlen;
    return 0;
 }
 
 char
-yview__vert_menu        (tPARTS *m, tPARTS *p)
+yview__vert_menu        (tPARTS *w, tPARTS *p)
 {
    short       x_bott      =    0;
    short       x_bottm     =    0;
+   float       x_side      =  0.0;
+   float       x_half      =  0.0;
+   float       x_qtr       =  0.0;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
-   DEBUG_YVIEW   yLOG_complex ("main"      , "bott %4d tall %4d anchor %c magn %5.2f ymin %4d ylen %4d", m->bott, m->tall, m->anchor, m->magn, m->ymin, m->ylen);
-   /*> p->type   = m->type;                                                           <*/
+   DEBUG_YVIEW   yLOG_complex ("main"      , "bott %4d tall %4d anchor %c magn %5.2f ymin %4d ylen %4d", w->bott, w->tall, w->anchor, w->magn, w->ymin, w->ylen);
+   /*> p->type   = w->type;                                                           <*/
    p->tall   = p->def_tall;
-   p->magn   = m->magn;
+   p->magn   = w->magn;
+   x_side  = p->tall * 0.50;
+   x_half  = w->tall * 0.50;
+   x_qtr   = (x_half - x_side) * 0.55;
    switch (p->anchor) {
    case YVIEW_TOPALL : case YVIEW_TOPLEF : case YVIEW_TOPCEN : case YVIEW_TOPRIG :
-      p->bott = m->bott + m->tall - p->tall;
+      /*> p->bott = w->bott + w->tall - p->tall;                                      <*/
+      p->bott = w->bott + w->tall - p->tall;
       break;
    case YVIEW_UPSALL : case YVIEW_UPSBEG : case YVIEW_UPSCEN : case YVIEW_UPSEND :
-      p->bott = m->bott + (m->tall * 0.75) - (p->tall * 0.50);
+      /*> p->bott = w->bott + (w->tall * 0.75) - (p->tall * 0.50);                    <*/
+      p->bott = w->bott + x_half + x_qtr - x_side;
       break;
    case YVIEW_MIDALL : case YVIEW_MIDLEF : case YVIEW_MIDCEN : case YVIEW_MIDRIG : case YVIEW_MIDBEG : case YVIEW_MIDEND :
-      p->bott = m->bott + (m->tall * 0.50) - (p->tall * 0.50);
+      p->bott = w->bott + x_half - x_side;
       break;
    case YVIEW_LOWALL : case YVIEW_LOWBEG : case YVIEW_LOWCEN : case YVIEW_LOWEND :
-      p->bott = m->bott + (m->tall * 0.25) - (p->tall * 0.50);;
+      p->bott = w->bott + x_half - x_qtr - x_side;
       break;
    case YVIEW_BOTALL : case YVIEW_BOTLEF : case YVIEW_BOTCEN : case YVIEW_BOTRIG :
-      p->bott = m->bott;
+      p->bott = w->bott;
       break;
    default    :
       DEBUG_YVIEW   yLOG_note    ("no appropriate menu location found");
       break;
    }
    /*> if (myVIEW.env == YVIEW_OPENGL) {                                                                                                                               <* 
-    *>    /+> p->ymin = m->ymin + (p->bott - m->bott) * m->magn;                             <+/                                                                       <* 
-    *>    x_bott  = p->bott - m->bott;                                                                                                                                 <* 
-    *>    x_bottm = x_bott  * m->magn;                                                                                                                                 <* 
-    *>    p->ymin = m->ymin + x_bottm;                                                                                                                                 <* 
-    *>    DEBUG_YVIEW   yLOG_complex ("y_min"     , "%4db - %4db = %4dB * %5.2fm = %4d + %4dn = %4dN", p->bott, m->bott, x_bott, m->magn, x_bottm, m->ymin, p->ymin);   <* 
-    *>    p->ylen = p->tall * m->magn;                                                                                                                                 <* 
-    *>    DEBUG_YVIEW   yLOG_complex ("y_len"     , "%4dt, %4dT * %5.2fm = %4dL", p->def_tall, p->tall, m->magn, p->ylen);                                              <* 
+    *>    /+> p->ymin = w->ymin + (p->bott - w->bott) * w->magn;                             <+/                                                                       <* 
+    *>    x_bott  = p->bott - w->bott;                                                                                                                                 <* 
+    *>    x_bottm = x_bott  * w->magn;                                                                                                                                 <* 
+    *>    p->ymin = w->ymin + x_bottm;                                                                                                                                 <* 
+    *>    DEBUG_YVIEW   yLOG_complex ("y_min"     , "%4db - %4db = %4dB * %5.2fm = %4d + %4dn = %4dN", p->bott, w->bott, x_bott, w->magn, x_bottm, w->ymin, p->ymin);   <* 
+    *>    p->ylen = p->tall * w->magn;                                                                                                                                 <* 
+    *>    DEBUG_YVIEW   yLOG_complex ("y_len"     , "%4dt, %4dT * %5.2fm = %4dL", p->def_tall, p->tall, w->magn, p->ylen);                                              <* 
     *> }                                                                                                                                                               <*/
    DEBUG_YVIEW   yLOG_complex ("vert_menu" , "%c, %4db, %4dt, %4dn, %4dx", myVIEW.loc_menu, p->bott, p->tall, p->ymin, p->ylen);
-   p->zmin   = m->zmin;
-   p->zlen   = m->zlen;
+   p->zmin   = w->zmin;
+   p->zlen   = w->zlen;
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char
-yview__vert_hist        (tPARTS *m, tPARTS *p)
+yview__vert_hist        (tPARTS *w, tPARTS *p)
 {
-   /*> p->type = m->type;                                                             <*/
-   p->magn = m->magn;
-   p->tall = m->tall * 0.90;
-   p->bott = m->bott + (m->tall * 0.05);
-   DEBUG_YVIEW   yLOG_complex ("vert_hist" , "%c, %3da, %3ds, %3dt, %3db", myVIEW.loc_hist, m->bott, m->tall, p->tall, p->bott);
-   p->zmin   = m->zmin;
-   p->zlen   = m->zlen;
+   /*> p->type = w->type;                                                             <*/
+   p->magn = w->magn;
+   p->tall = w->tall * 0.90;
+   p->bott = w->bott + (w->tall * 0.05);
+   DEBUG_YVIEW   yLOG_complex ("vert_hist" , "%c, %3da, %3ds, %3dt, %3db", myVIEW.loc_hist, w->bott, w->tall, p->tall, p->bott);
+   p->zmin   = w->zmin;
+   p->zlen   = w->zlen;
    return 0;
 }
 
@@ -268,13 +276,13 @@ char
 yview_vert_float        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *m           = NULL;
+   tPARTS     *w           = NULL;
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
-   yview_by_abbr (YVIEW_MAIN, &m, NULL);
-   DEBUG_YVIEW   yLOG_complex ("working"   , "bott %4d tall %4d anchor %c magn %5.2f ymin %4d ylen %4d", m->bott, m->tall, m->anchor, m->magn, m->ymin, m->ylen);
+   yview_by_abbr (YVIEW_WINDOW, &w, NULL);
+   DEBUG_YVIEW   yLOG_complex ("working"   , "bott %4d tall %4d anchor %c magn %5.2f ymin %4d ylen %4d", w->bott, w->tall, w->anchor, w->magn, w->ymin, w->ylen);
    /*---(walk floats)--------------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -286,20 +294,20 @@ yview_vert_float        (void)
       /*---(set)----------------------*/
       switch (p->abbr) {
       case YVIEW_FLOAT    :
-         yview__vert_float (m, p);
+         yview__vert_float (w, p);
          break;
       case YVIEW_MENUS    :
-         yview__vert_menu  (m, p);
+         yview__vert_menu  (w, p);
          break;
       case YVIEW_HISTORY  :
-         yview__vert_hist  (m, p);
+         yview__vert_hist  (w, p);
          break;
       case YVIEW_GRID     : case YVIEW_OVERLAY  :
       case YVIEW_NOTES    : case YVIEW_CURSOR   :
-         /*> p->type = m->type;                                                       <*/
-         p->magn = m->magn;
-         p->zmin = m->zmin;
-         p->zlen = m->zlen;
+         /*> p->type = w->type;                                                       <*/
+         p->magn = w->magn;
+         p->zmin = w->zmin;
+         p->zlen = w->zlen;
       default               :
          yview_by_cursor (YDLST_NEXT, &p, NULL);
          continue;

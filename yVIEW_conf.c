@@ -550,10 +550,12 @@ char
 yview_update            (void)
 {
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   yVIEW_debug_list ();
    yview_clear ();
    yview_horz  (myVIEW.orig_wide, myVIEW.alt_wide);
    yview_vert  (myVIEW.orig_tall);
    yMAP_refresh_disponly ();
+   yVIEW_debug_list ();
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }

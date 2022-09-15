@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0i"
-#define     P_VERTXT    "notes, targets, and lines working for opengl"
+#define     P_VERNUM    "2.0j"
+#define     P_VERTXT    "conf unit test updated with latest sizes"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -115,8 +115,8 @@ struct cPARTS {
 extern tPARTS  g_parts [MAX_PARTS];
 
 
-#define      OVER_FULL        "GONC"
-#define      OVER_WIND        "Z"
+#define      OVER_FULL        "GCO"
+#define      OVER_WIND        "NZ"
 
 #define      OWN_FULLY        'y'   /* only change color, text, and hiding    */
 #define      OWN_PARTLY       'p'   /* change hiding, color, and drawing      */
@@ -297,7 +297,7 @@ char        yview_note_init         (void);
 char        yview_note__size        (char n, char xr, char yr, char a_size);
 char        yview_note__retarg      (char n);
 /*---(driver)---------------*/
-char        yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text);
+char        yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text);
 char        yVIEW_note_direct       (char *a_all);
 /*---(access)---------------*/
 char        yVIEW_note_showing      (void);

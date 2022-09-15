@@ -75,21 +75,21 @@
  *        ²                          ·                          ² 
  *       6F             ·            ·            ·             F6
  *        ²                          ·                          ² 
- *       7M ·  ·  ·  ·  ·  ·  ·  ·  ···  ·  ·  ·  ·  ·  ·  ·  · M7
- *        ²                          ·                          ² 
- *       8S             ·            ·            ·             S8
- *        ²                          ·                          ² 
- *       9Z             ·            ·            ·             Z9
- *         ZYXWVUTSRQPONMLKJIHGFEDCBA-abcdefghijklmnopqrstuvwxyz
- *         1      2     3      4     5     6      7     8      9
- *
- *   sizes
- *     . bullet      1  x   2
- *     , word        1  x   9
- *     ; call-out    1  x  14
- *     : long call   1  x  25
- *
- *     - small       2  x  14
+*       7M ·  ·  ·  ·  ·  ·  ·  ·  ···  ·  ·  ·  ·  ·  ·  ·  · M7
+*        ²                          ·                          ² 
+*       8S             ·            ·            ·             S8
+*        ²                          ·                          ² 
+*       9Z             ·            ·            ·             Z9
+*         ZYXWVUTSRQPONMLKJIHGFEDCBA-abcdefghijklmnopqrstuvwxyz
+*         1      2     3      4     5     6      7     8      9
+*
+*   sizes
+*     . bullet      1  x   2
+*     , word        1  x   9
+*     ; call-out    1  x  14
+*     : long call   1  x  25
+*
+*     - small       2  x  14
 *     ) title       2  x  25
 *
 *     ! warning     3    
@@ -125,6 +125,7 @@ static char  *s_norm       = "123456789";
 static char  *s_fine       = "ZYXWVUTSRQPONMLKJIHGFEDCBA*abcdefghijklmnopqrstuvwxyz";
 static char  *s_targ       = "ÔÕ×Öˆ‰†‡";
 static char   s_noting     = 'y';
+static char   s_part       = YVIEW_MAIN;
 
 
 
@@ -132,6 +133,22 @@ static char   s_noting     = 'y';
 /*===----                       little supporters                      ----===*/
 /*====================------------------------------------====================*/
 static void  o___SUPPORT_________o () { return; }
+
+char
+yview_note__untarget    (char n)
+{
+   /*---(target)-------------------------*/
+   g_notes [n].s     = YVIEW_MAIN;
+   g_notes [n].c     = '-';
+   g_notes [n].xt    = 0;
+   g_notes [n].yt    = 0;
+   g_notes [n].xb    = 0;
+   g_notes [n].yb    = 0;
+   g_notes [n].xe    = 0;
+   g_notes [n].ye    = 0;
+   /*---(complete)-----------------------*/
+   return 0;
+}
 
 char
 yview_note__wipe        (char a_init, char n)
@@ -149,14 +166,7 @@ yview_note__wipe        (char a_init, char n)
    g_notes [n].w     = 0;
    g_notes [n].h     = 0;
    /*---(target)-------------------------*/
-   g_notes [n].s     = YVIEW_MAIN;
-   g_notes [n].c     = '-';
-   g_notes [n].xt    = 0;
-   g_notes [n].yt    = 0;
-   g_notes [n].xb    = 0;
-   g_notes [n].yb    = 0;
-   g_notes [n].xe    = 0;
-   g_notes [n].ye    = 0;
+   yview_note__untarget (n);
    /*---(complete)-----------------------*/
    return 0;
 }
@@ -414,7 +424,7 @@ yview_note__x           (short a_left, short a_wide, uchar w, char xr, short *x)
       DEBUG_YVIEW   yLOG_sexitr  (__FUNCTION__, rce);
       return rce;
    }
-   DEBUG_YVIEW   yLOG_sint    (xr);
+   DEBUG_YVIEW   yLOG_schar   (xr);
    --rce;  if ((p = strchr (s_norm, xr)) != NULL) {
       DEBUG_YVIEW   yLOG_snote   ("norm");
       l  = strlen (s_norm) - 1;
@@ -456,7 +466,7 @@ yview_note__y           (short a_bott, short a_tall, uchar h, char yr, short *y)
       DEBUG_YVIEW   yLOG_sexitr  (__FUNCTION__, rce);
       return rce;
    }
-   DEBUG_YVIEW   yLOG_sint    (yr);
+   DEBUG_YVIEW   yLOG_schar   (yr);
    --rce;  if ((p = strchr (s_norm, yr)) != NULL) {
       DEBUG_YVIEW   yLOG_snote   ("norm");
       l  = strlen (s_norm) - 1;
@@ -493,6 +503,7 @@ yview_note__size        (char n, char xr, char yr, char a_size)
    char        rce         =  -10;
    char        rc          =    0;
    short       x_left, x_wide, x_bott, x_tall;
+   short       x_xlen, x_ylen;
    char       *p           = NULL;
    int         l           =    0;
    int         c           =    0;
@@ -521,14 +532,8 @@ yview_note__size        (char n, char xr, char yr, char a_size)
       return rce;
    }
    /*---(size)---------------------------*/
-   DEBUG_YVIEW   yLOG_char    ("a_size"    , a_size);
-   --rce;  if (strchr (s_size, a_size) == NULL) {
-      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
-      return rce;
-   }
    switch (myVIEW.env) {
    case YVIEW_OPENGL :
-      yVIEW_bounds (YVIEW_MAIN, NULL, NULL, NULL, &x_left, NULL, &x_wide, &x_bott, NULL, &x_tall);
       switch (a_size) {  /* single row/line    */
       case '.'  : g_notes [n].w =  20; g_notes [n].h =  20;  break; /*  2 chars */
       case ','  : g_notes [n].w =  80; g_notes [n].h =  20;  break; /*  9 chars */
@@ -549,7 +554,6 @@ yview_note__size        (char n, char xr, char yr, char a_size)
       }
       break;
    case YVIEW_CURSES :
-      yVIEW_size   (YVIEW_MAIN, NULL, &x_left, &x_wide, &x_bott, &x_tall);
       switch (a_size) {  /* single row/line    */
       case '.'  : g_notes [n].w =   3; g_notes [n].h =   1;  break;
       case ','  : g_notes [n].w =   9; g_notes [n].h =   1;  break;
@@ -570,11 +574,31 @@ yview_note__size        (char n, char xr, char yr, char a_size)
       }
       break;
    }
-   DEBUG_YVIEW   yLOG_complex  ("main"      , "%4dl, %4dw, %4db, %4dt", x_left, x_wide, x_bott, x_tall);
    DEBUG_YVIEW   yLOG_complex  ("size"      , "%4dw, %4dh", g_notes [n].w, g_notes [n].h);
+   /*---(note window)--------------------*/
+   DEBUG_YVIEW   yLOG_char    ("a_size"    , a_size);
+   --rce;  if (strchr (s_size, a_size) == NULL) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   yVIEW_size   (YVIEW_MAIN  , NULL, &x_left, &x_xlen, &x_bott, &x_ylen);
+   yVIEW_size   (YVIEW_WINDOW, NULL, NULL   , &x_wide, NULL   , &x_tall);
+   switch (s_part) {
+   case YVIEW_WINDOW   :
+      x_left  = 0;
+      if (myVIEW.env == YVIEW_OPENGL)  x_bott  = 0;
+      else                             x_bott  = x_tall - 1;
+      break;
+   case YVIEW_MAIN     :
+      x_wide  = x_xlen;
+      x_tall  = x_ylen;
+      break;
+   }
+   if (myVIEW.env == YVIEW_CURSES)  x_bott += 1;
+   DEBUG_YVIEW   yLOG_complex  ("area"      , "%c, %4dl, %4dw, %4db, %4dt", s_part, x_left, x_wide, x_bott, x_tall);
    /*---(vertical)-----------------------*/
    DEBUG_YVIEW   yLOG_value   ("yr"        , yr);
-   rc  = yview_note__y (x_bott + 1, x_tall, g_notes [n].h, yr, &y);
+   rc  = yview_note__y (x_bott, x_tall, g_notes [n].h, yr, &y);
    if (rc < 0) {
       DEBUG_YVIEW   yLOG_note    ("can not interpret yr");
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -753,33 +777,33 @@ yview_note__settarg     (char n, char *p)
    xt     = u [1];
    yt     = u [2];
    /*---(get bounds)---------------------*/
-   switch (myVIEW.env) {
-   case YVIEW_OPENGL :
-      DEBUG_YVIEW   yLOG_note    ("opengl environment");
-      if (strchr ("ÔÕ×Ö", x_type) != NULL) {
-         DEBUG_YVIEW   yLOG_note    ("main window type");
-         yVIEW_bounds (YVIEW_MAIN  , NULL, NULL, NULL, &x_left, NULL, &x_wide, &x_bott, NULL, &x_tall);
-         s = YVIEW_MAIN;
-      } else {
-         DEBUG_YVIEW   yLOG_note    ("full window type");
-         yVIEW_bounds (YVIEW_WINDOW, NULL, NULL, NULL, &x_left, NULL, &x_wide, &x_bott, NULL, &x_tall);
-         s = YVIEW_WINDOW;
-      }
-      break;
-   case YVIEW_CURSES :
-      DEBUG_YVIEW   yLOG_note    ("curses environment");
-      if (strchr ("ÔÕ×Ö", x_type) != NULL) {
-         DEBUG_YVIEW   yLOG_note    ("main window type");
-         yVIEW_size   (YVIEW_MAIN  , NULL, &x_left, &x_wide, &x_bott, &x_tall);
-         s = YVIEW_MAIN;
-      } else {
-         DEBUG_YVIEW   yLOG_note    ("full window type");
-         yVIEW_size   (YVIEW_WINDOW, NULL, &x_left, &x_wide, &x_bott, &x_tall);
-         s = YVIEW_WINDOW;
-      }
-      break;
+   /*> switch (myVIEW.env) {                                                                                  <* 
+    *> case YVIEW_OPENGL :                                                                                    <* 
+    *>    DEBUG_YVIEW   yLOG_note    ("opengl environment");                                                  <* 
+    *>    if (strchr ("ÔÕ×Ö", x_type) != NULL) {                                                              <* 
+    *>       DEBUG_YVIEW   yLOG_note    ("main window type");                                                 <* 
+    *>       yVIEW_bounds (YVIEW_MAIN  , NULL, NULL, NULL, &x_left, NULL, &x_wide, &x_bott, NULL, &x_tall);   <* 
+    *>       s = YVIEW_MAIN;                                                                                  <* 
+    *>    } else {                                                                                            <* 
+    *>       DEBUG_YVIEW   yLOG_note    ("full window type");                                                 <* 
+    *>       yVIEW_bounds (YVIEW_WINDOW, NULL, NULL, NULL, &x_left, NULL, &x_wide, &x_bott, NULL, &x_tall);   <* 
+    *>       s = YVIEW_WINDOW;                                                                                <* 
+    *>    }                                                                                                   <* 
+    *>    break;                                                                                              <*/
+   /*> case YVIEW_CURSES :                                                            <*/
+   DEBUG_YVIEW   yLOG_note    ("curses environment");
+   if (strchr ("ÔÕ×Ö", x_type) != NULL) {
+      DEBUG_YVIEW   yLOG_note    ("main window type");
+      yVIEW_size   (YVIEW_MAIN  , NULL, &x_left, &x_wide, &x_bott, &x_tall);
+      s = YVIEW_MAIN;
+   } else {
+      DEBUG_YVIEW   yLOG_note    ("full window type");
+      yVIEW_size   (YVIEW_WINDOW, NULL, &x_left, &x_wide, &x_bott, &x_tall);
+      s = YVIEW_WINDOW;
    }
-   DEBUG_YVIEW   yLOG_complex ("coord"     , "%4dl %4dw %4db %4dt", x_left, x_wide, x_bott, x_tall);
+   /*> break;                                                                      <*/
+   /*> }                                                                              <*/
+   /*> DEBUG_YVIEW   yLOG_complex ("coord"     , "%4dl %4dw %4db %4dt", x_left, x_wide, x_bott, x_tall);   <*/
    /*---(fix types)-------------------*/
    /*> switch (x_type) {                                                              <* 
     *> case 'ˆ' :  x_type = 'Ô';  break;                                              <* 
@@ -957,7 +981,7 @@ yview_note__retarg      (char n)
 static void  o___DRIVER__________o () { return; }
 
 char
-yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text)
+yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -983,6 +1007,17 @@ yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text)
    }
    strlcpy (x_text, a_text, LEN_RECD);
    DEBUG_YVIEW   yLOG_info    ("x_text"    , x_text);
+   /*---(check context)------------------*/
+   --rce;  switch (a_part) {
+   case YVIEW_MAIN     :
+   case YVIEW_WINDOW   :
+      s_part = a_part;
+      break;
+   default             :
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+      break;
+   }
    /*---(prepare)------------------------*/
    p = strrchr (x_text, ' ');
    DEBUG_YVIEW   yLOG_point   ("p"         , p);
@@ -1017,6 +1052,7 @@ yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text)
    if (n == g_nnote)  ++g_nnote;
    rc = yview_note__totop   (n);
    /*---(targeting)----------------------*/
+   yview_note__untarget (n);
    if (v == NULL) {
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
@@ -1033,7 +1069,7 @@ yview_note_add          (char a_xr, char a_yr, char a_size, char *a_text)
 }
 
 char
-yVIEW_note_direct       (char *a_all)
+yview_note__direct      (char *a_all, char a_part)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -1148,7 +1184,7 @@ yVIEW_note_direct       (char *a_all)
       return rc;
    }
    /*---(add a note)---------------------*/
-   rc = yview_note_add (xr, yr, x_size, u);
+   rc = yview_note_add (a_part, xr, yr, x_size, u);
    DEBUG_YVIEW   yLOG_value   ("add"       , rc);
    --rce;  if (rc < 0) {
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -1199,6 +1235,9 @@ yVIEW_note_direct       (char *a_all)
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
+
+char yVIEW_note_direct  (char *a_all)  { return yview_note__direct (a_all, YVIEW_MAIN);   }
+char yVIEW_note_directw (char *a_all)  { return yview_note__direct (a_all, YVIEW_WINDOW); }
 
 
 

@@ -49,6 +49,13 @@ typedef  const int            cint;
 #define      YVIEW_RIGHT       'r'
 #define      YVIEW_OFFICE      'o'
 
+
+/*
+ *  DEPTH   is opengl/3d window
+ *  FLAT    is curses/opengl 2d window
+ *  FLATISH is curses/opengl 2d overlay layer (clear background)
+ *
+ */
 #define      YVIEW_DEPTH       '3'
 #define      YVIEW_FLAT        'O'
 #define      YVIEW_FLATISH     'F'
@@ -149,6 +156,7 @@ char        yVIEW_draw              (void);
 char        yVIEW_debug_list        (void);
 
 char        yVIEW_note_direct       (char *a_all);
+char        yVIEW_note_directw      (char *a_all);
 char        yVIEW_note_showing      (void);
 char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, uchar *w, uchar *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
 

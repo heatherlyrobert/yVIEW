@@ -187,70 +187,78 @@ yview_horz_link         (void)
 }
 
 char
-yview_horz__float       (tPARTS *m, tPARTS *p)
+yview_horz__float       (tPARTS *w, tPARTS *p)
 {
-   /*> p->type = m->type;                                                             <*/
-   p->magn = m->magn;
-   p->wide = m->wide * 0.90;
-   p->left = m->left + (m->wide * 0.05);
-   DEBUG_YVIEW   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, m->left, m->wide, p->wide, p->left);
+   /*> p->type = w->type;                                                             <*/
+   p->magn = w->magn;
+   p->wide = w->wide * 0.90;
+   p->left = w->left + (w->wide * 0.05);
+   DEBUG_YVIEW   yLOG_complex ("horz_float", "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_float, w->left, w->wide, p->wide, p->left);
    return 0;
 }
 
 char
-yview_horz__menus       (tPARTS *m, tPARTS *p)
+yview_horz__menus       (tPARTS *w, tPARTS *p)
 {
-   /*> p->type = m->type;                                                             <*/
-   p->magn = m->magn;
-   DEBUG_YVIEW   yLOG_value   ("a_left"    , m->left);
+   /*> p->type = w->type;                                                             <*/
+   float       x_side      =  0.0;
+   float       x_half      =  0.0;
+   float       x_qtr       =  0.0;
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   p->magn = w->magn;
+   DEBUG_YVIEW   yLOG_value   ("a_left"    , w->left);
    DEBUG_YVIEW   yLOG_value   ("wide"      , p->wide);
    p->wide = p->def_wide;
+   x_side  = p->wide * 0.50;
+   x_half  = w->wide * 0.50;
+   x_qtr   = (x_half - x_side) * 0.60;
    switch (p->anchor) {
    case YVIEW_TOPLEF : case YVIEW_MIDLEF : case YVIEW_BOTLEF :
-      p->left = m->left;
+      p->left = w->left;
       break;
    case YVIEW_UPSBEG : case YVIEW_MIDBEG : case YVIEW_LOWBEG :
-      p->left = m->left + (m->wide * 0.10);
+      p->left = w->left + x_half - x_qtr  - x_side;
       break;
    case YVIEW_TOPCEN : case YVIEW_MIDCEN : case YVIEW_BOTCEN : case YVIEW_UPSCEN : case YVIEW_LOWCEN :
    case YVIEW_TOPALL : case YVIEW_MIDALL : case YVIEW_BOTALL : case YVIEW_UPSALL : case YVIEW_LOWALL :
-      p->left = m->left + (m->wide * 0.50) - (p->wide * 0.50);
+      p->left = w->left + x_half - x_side;
       break;
    case YVIEW_UPSEND : case YVIEW_MIDEND : case YVIEW_LOWEND :
-      p->left = m->left + (m->wide * 0.90) - p->wide;
+      p->left = w->left + x_half + x_qtr - x_side;
       break;
    case YVIEW_TOPRIG : case YVIEW_MIDRIG : case YVIEW_BOTRIG :
-      p->left = m->left + m->wide - p->wide;
+      p->left = w->left + w->wide - p->wide;
       break;
    }
-   DEBUG_YVIEW   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, m->left, m->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_complex ("horz_menu" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_menu, w->left, w->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char
-yview_horz__hist        (tPARTS *m, tPARTS *p)
+yview_horz__hist        (tPARTS *w, tPARTS *p)
 {
-   /*> p->type = m->type;                                                             <*/
-   p->magn = m->magn;
+   /*> p->type = w->type;                                                             <*/
+   p->magn = w->magn;
    switch (p->anchor) {
    case YVIEW_ALLLEF :
-      p->wide = m->wide * 0.45;
-      p->left = m->left + (m->wide * 0.05);
+      p->wide = w->wide * 0.45;
+      p->left = w->left + (w->wide * 0.05);
       break;
    case YVIEW_ALLCEN :
-      p->wide = m->wide * 0.50;
-      p->left = m->left + (m->wide * 0.25);
+      p->wide = w->wide * 0.50;
+      p->left = w->left + (w->wide * 0.25);
       break;
    case YVIEW_ALLRIG :
-      p->wide = m->wide * 0.45;
-      p->left = m->left + (m->wide * 0.50);
+      p->wide = w->wide * 0.45;
+      p->left = w->left + (w->wide * 0.50);
       break;
    case YVIEW_ALLFUL :
-      p->wide = m->wide * 0.80;
-      p->left = m->left + (m->wide * 0.10);
+      p->wide = w->wide * 0.80;
+      p->left = w->left + (w->wide * 0.10);
       break;
    }
-   DEBUG_YVIEW   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, m->left, m->wide, p->wide, p->left);
+   DEBUG_YVIEW   yLOG_complex ("horz_hist" , "%c, %3da, %3ds, %3dw, %3dl", myVIEW.loc_hist, w->left, w->wide, p->wide, p->left);
    return 0;
 }
 
@@ -258,12 +266,12 @@ char
 yview_horz_float        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *m           = NULL;
+   tPARTS     *w           = NULL;
    tPARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
-   yview_by_abbr   (YVIEW_MAIN, &m, NULL);
+   yview_by_abbr   (YVIEW_WINDOW, &w, NULL);
    /*---(walk floats)--------------------*/
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
@@ -275,13 +283,13 @@ yview_horz_float        (void)
       /*---(set)----------------------*/
       switch (p->abbr) {
       case YVIEW_FLOAT    :
-         yview_horz__float  (m, p);
+         yview_horz__float  (w, p);
          break;
       case YVIEW_MENUS    :
-         yview_horz__menus  (m, p);
+         yview_horz__menus  (w, p);
          break;
       case YVIEW_HISTORY  :
-         yview_horz__hist   (m, p);
+         yview_horz__hist   (w, p);
          break;
       default               :
          yview_by_cursor (YDLST_NEXT, &p, NULL);
