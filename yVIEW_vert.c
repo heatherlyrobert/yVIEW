@@ -84,10 +84,12 @@ yview_vert_auto  (cint a_tall)
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
       /*---(filter)-------------------*/
-      if (p->abbr != YVIEW_WINDOW && (p->on != 'y' || p->mgmt != YVIEW_AUTO)) {
-         yview_by_cursor (YDLST_NEXT, &p, NULL);
-         continue;
-      }
+      /*> if (p->abbr != YVIEW_WINDOW && (p->on != 'y' || p->mgmt != YVIEW_AUTO)) {          <* 
+       *>    if (p->abbr != YVIEW_YAXIS && p->abbr != YVIEW_NAV && p->abbr != YVIEW_ALT) {   <* 
+       *>       yview_by_cursor (YDLST_NEXT, &p, NULL);                                      <* 
+       *>       continue;                                                                    <* 
+       *>    }                                                                               <* 
+       *> }                                                                                  <*/
       /*---(set)----------------------*/
       switch (p->abbr) {
       case YVIEW_WINDOW   : p->tall = myVIEW.full_tall;               break;

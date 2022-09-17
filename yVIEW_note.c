@@ -1314,7 +1314,12 @@ yview_note__unit        (char *a_question, int n)
          case 'Ô' : case 'Õ' : case '×' : case 'Ö' : 
             sprintf (s, "%c %4dx %4dy to %4dx:%c %4dy:%c", g_notes [n].c, g_notes [n].xb, g_notes [n].yb, g_notes [n].xe, g_notes [n].xt, g_notes [n].ye, g_notes [n].yt);
             break;
+         case '1' : case '2' : case '3' : case '4' :
+         case '5' : case '6' : case '7' : case '8' :
+            sprintf (s, "%c %4dx %4dy to %4dx:%c %4dy:%c", g_notes [n].c, g_notes [n].xb, g_notes [n].yb, g_notes [n].xe, g_notes [n].xt, g_notes [n].ye, g_notes [n].yt);
+            break;
          default  :
+            /*> sprintf (s, "%c %4dx %4dy to %4dx:%c %4dy:%c", g_notes [n].c, g_notes [n].xb, g_notes [n].yb, g_notes [n].xe, g_notes [n].xt, g_notes [n].ye, g_notes [n].yt);   <*/
             sprintf (s, "%c    ·x    ·y       ·x ·    ·y ·"  , g_notes [n].c);
             break;
          }
