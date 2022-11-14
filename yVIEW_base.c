@@ -55,6 +55,7 @@ yview_init              (void)
    s_prep     = NULL;
    s_cursor   = NULL;
    s_refresh  = NULL;
+   myVIEW.note_line == 'k';
    yview_note_init    ();
    return 0;
 }
@@ -178,13 +179,37 @@ yVIEW_draw              (void)
    /*---(find cursor)--------------------*/
    if (myVIEW.env == YVIEW_CURSES)  s_cursor ();
    /*---(on top of main)-----------------*/
-   DEBUG_YVIEW   yLOG_note    ("OVERLAY SREEN ELEMENTS");
+   DEBUG_YVIEW   yLOG_note    ("--------------------------------------");
+   DEBUG_YVIEW   yLOG_note    ("OVERLAY MAIN ELEMENTS");
    for (i = 0; i < myVIEW.npart; ++i) {
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;
       DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (p->own != OWN_OVERLAY || p->on     != 'y') {
-         DEBUG_YVIEW   yLOG_note    ("skipping, either not on or not overlay");
+      if (p->own != OWN_OVERLAY) {
+         DEBUG_YVIEW   yLOG_note    ("skipping, not main overlay");
+      } else if (p->on != 'y') {
+         DEBUG_YVIEW   yLOG_note    ("hidden, not currently on");
+      } else if (p->drawer == NULL) {
+         DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
+      } else  {
+         DEBUG_YVIEW   yLOG_note    ("ready to go, calling source and drawer");
+         if (s_prep    != NULL)  s_prep (p->abbr);
+         if (p->source != NULL)  p->source (myVIEW.s_size, myVIEW.s_wide, NULL);
+         if (p->drawer != NULL)  p->drawer ();
+      }
+      /*---(done)--------------*/
+   }
+   /*---(on top of window)---------------*/
+   DEBUG_YVIEW   yLOG_note    ("--------------------------------------");
+   DEBUG_YVIEW   yLOG_note    ("OVERLAY WINDOW ELEMENTS");
+   for (i = 0; i < myVIEW.npart; ++i) {
+      yview_by_index (i, &p, NULL);
+      if (p == NULL)  continue;
+      DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
+      if (p->own != OWN_WINDOW && p->own != OWN_FLOAT) {
+         DEBUG_YVIEW   yLOG_note    ("skipping, not window overlay or float");
+      } else if (p->on != 'y') {
+         DEBUG_YVIEW   yLOG_note    ("hidden, not currently on");
       } else if (p->drawer == NULL) {
          DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
       } else  {
@@ -196,6 +221,7 @@ yVIEW_draw              (void)
       /*---(done)--------------*/
    }
    /*---(flush)--------------------------*/
+   DEBUG_YVIEW   yLOG_note    ("--------------------------------------");
    DEBUG_YVIEW   yLOG_point   ("s_refresh" , s_refresh);
    if (s_refresh != NULL) {
       DEBUG_YVIEW   yLOG_note    ("flush and show");
@@ -298,8 +324,8 @@ yVIEW__unit             (char *a_question, char a_index)
       if (rc >= 0) {
          if (p->source != NULL)  strcpy (s, "src");
          if (p->drawer != NULL)  strcpy (t, "drw");
-         snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: %c %4dL %4dW %4dB %4dT  §  %c %c %c %5.2f %2dc %4dx %4dX %4dy %4dY %4dz %4dZ  %-3.3s %s", p->name, p->on, p->left, p->wide, p->bott, p->tall, p->orient, p->type, chrvisible (p->anchor), p->magn, p->color, p->xmin, p->xmin + p->xlen, p->ymin, p->ymin + p->ylen, p->zmin, p->zmin + p->zlen, s, t);
-      } else  snprintf (unit_answer, LEN_FULL, "VIEW n/a         : ·    ·L    ·W    ·B    ·T  §  · · ·     ·f  ·c    ·x    ·X    ·y    ·Y    ·z    ·Z  ··· ···");
+         snprintf (unit_answer, LEN_FULL, "VIEW %-12.12s: %c %4dL %4dW %4dB %4dT  §  %c %c %c %5.2f %2d %1dc %4dx %4dX %4dy %4dY %4dz %4dZ  %-3.3s %s", p->name, p->on, p->left, p->wide, p->bott, p->tall, p->orient, p->type, chrvisible (p->anchor), p->cmajor, p->cminor, p->xmin, p->xmin + p->xlen, p->ymin, p->ymin + p->ylen, p->zmin, p->zmin + p->zlen, s, t);
+      } else  snprintf (unit_answer, LEN_FULL, "VIEW n/a         : ·    ·L    ·W    ·B    ·T  §  · · ·  · ·c    ·x    ·X    ·y    ·Y    ·z    ·Z  ··· ···");
    }
    /*---(complete)-----------------------*/
    return unit_answer;

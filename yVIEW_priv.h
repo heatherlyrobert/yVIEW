@@ -36,8 +36,8 @@
 
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0l"
-#define     P_VERTXT    "all unit tests are passing now"
+#define     P_VERNUM    "2.0m"
+#define     P_VERTXT    "updates to bring unit testing back into alignment"
 
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -100,8 +100,8 @@ struct cPARTS {
    char        type;                        /* ortho vs 3d                    */
    char        mgmt;                        /* auto vs custom setup           */
    uchar       anchor;                      /* fixed point for resizing       */
-   float       magn;                        /* magification factor on coords  */
-   short       color;                       /* background color               */
+   char        cmajor;                      /* major color group              */
+   char        cminor;                      /* color accent                   */
    short       xmin;                        /* x-coord minimum                */
    short       xlen;                        /* x-coord range                  */
    short       ymin;                        /* y-coord minimum                */
@@ -123,7 +123,9 @@ extern tPARTS  g_parts [MAX_PARTS];
 #define      OWN_LITTLE       's'   /* change anything and everything         */
 #define      OWN_MAIN         'm'   /* change anything and everything         */
 #define      OWN_UNDERLAY     'u'   /* drawn before main                      */
-#define      OWN_OVERLAY      'o'   /* drawn after everything else            */
+#define      OWN_OVERLAY      'o'   /* drawn on top of main                   */
+#define      OWN_WINDOW       'w'   /* drawn on top of full window            */
+#define      OWN_FLOAT        'f'   /* drawn over part of full window         */
 #define      OWN_DATA         '-'   /* just a data holder                     */
 
 #define      OWN_SETUP        "ypsm"
@@ -152,6 +154,7 @@ struct cMY {
    char        s_wide;
    char        s_size;
    char        prog_full;
+   char        note_line;
 };
 extern tMY         myVIEW;
 
@@ -164,11 +167,12 @@ extern char           unit_answer [LEN_FULL];
 typedef    struct    cNOTE  tNOTE;
 struct cNOTE {
    char        xr, yr, size;                /* requested pos and size         */
+   char        s;                           /* main vs window on note box     */
    short       x, y;                        /* note top-left pos              */
-   uchar       w, h;                        /* note size                      */
+   short       w, h;                        /* note size                      */
    char       *text;                        /* text to be displayed           */
-   char        s;                           /* main vs window                 */
    char        c;                           /* connector type                 */
+   char        st;                          /* main vs window on target       */
    short       xt, yt;                      /* requested endpoint grid        */
    short       xb, yb;                      /* connector beginning pos        */
    short       xe, ye;                      /* connector ending pos           */
@@ -298,10 +302,11 @@ char        yview_note__size        (char n, char xr, char yr, char a_size);
 char        yview_note__retarg      (char n);
 /*---(driver)---------------*/
 char        yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text);
+char        yview_note_update       (void);
 char        yVIEW_note_direct       (char *a_all);
 /*---(access)---------------*/
 char        yVIEW_note_showing      (void);
-char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, uchar *w, uchar *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
+char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
 /*---(unittest)-------------*/
 char*       yview_note__unit        (char *a_question, int n);
 /*---(done)-----------------*/

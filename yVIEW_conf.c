@@ -49,6 +49,7 @@ yVIEW_defsize           (char a_part, short a_wide, short a_tall)
    if (a_wide > 0)  p->def_wide = a_wide;
    if (a_tall > 0)  p->def_tall = a_tall;
    DEBUG_YVIEW   yLOG_complex ("after"     , "%4dW, %4dT", p->def_wide, p->def_tall);
+   if (a_part == YVIEW_ALT)  myVIEW.alt_wide = p->def_wide;
    /*---(check alt)----------------------*/
    DEBUG_YVIEW   yLOG_point   ("a"         , a);
    if (a != NULL) {
@@ -102,35 +103,45 @@ yview__conf_anchor      (tPARTS *p, char a_anchor)
 }
 
 char
-yview__conf_color       (tPARTS *p, char a_color)
+yview__conf_color       (tPARTS *p, char a_major, char a_minor)
 {
-   DEBUG_YVIEW   yLOG_value   ("a_color"   , a_color);
-   if (p->color == YVIEW_LEAVE) {
-      DEBUG_YVIEW   yLOG_note    ("part must be clear");
+   char        rce         =  -10;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
+   /*---(args)---------------------------*/
+   DEBUG_YVIEW   yLOG_spoint  (p);
+   --rce;  if (p == NULL) {
+      DEBUG_YVIEW   yLOG_snote   ("part is null");
+      DEBUG_YVIEW   yLOG_sexitr  (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_snote   (p->name);
+   DEBUG_YVIEW   yLOG_sint    (p->cmajor);
+   --rce;  if (p->cmajor == YVIEW_LEAVE) {
+      DEBUG_YVIEW   yLOG_snote   ("color must be clear");
+      DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
       return 0;
    }
-   if      (a_color == YVIEW_LEAVE)    return 0;
-   else if (a_color <=  0)             p->color  = 0;
-   else if (a_color >  50)             p->color  = 0;
-   else                                p->color  = a_color;
-   DEBUG_YVIEW   yLOG_value   ("color"     , p->color);
-   return 0;
-}
-
-char
-yview__conf_magn        (tPARTS *p, float a_magn)
-{
-   DEBUG_YVIEW   yLOG_double  ("a_magn"    , a_magn);
-   switch (p->abbr) {
-   case YVIEW_WINDOW  :
-   case YVIEW_MASK    :
-      DEBUG_YVIEW   yLOG_note    ("part can not be magnified");
+   /*---(major color)--------------------*/
+   DEBUG_YVIEW   yLOG_sint    (a_major);
+   if (a_major == YVIEW_LEAVE) {
+      DEBUG_YVIEW   yLOG_snote   ("color change not requested");
+      DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
       return 0;
-      break;
    }
-   if      (a_magn  == YVIEW_LEAVE)    return 0;
-   else if (a_magn >  0.01 && a_magn < 100.0)  p->magn = a_magn;
-   DEBUG_YVIEW   yLOG_double  ("magn"      , p->magn);
+   if      (a_major <   0)             p->cmajor = 0;
+   else if (a_major >  70)             p->cmajor = 0;
+   else if (a_major % 10 != 0)         p->cmajor = 0;
+   else                                p->cmajor = a_major;
+   DEBUG_YVIEW   yLOG_sint    (p->cmajor);
+   /*---(minor color)--------------------*/
+   DEBUG_YVIEW   yLOG_sint    (a_minor);
+   if      (a_minor <   0)             p->cminor = 0;
+   else if (a_minor >   9)             p->cminor = 0;
+   else                                p->cminor = a_minor;
+   DEBUG_YVIEW   yLOG_sint    (p->cminor);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);
    return 0;
 }
 
@@ -207,7 +218,7 @@ yview__system           (char a_part, void *a_drawer)
 char yVIEW_menus    (void *a_drawer) { return yview__system (YVIEW_MENUS   , a_drawer); }
 
 char
-yVIEW_simple            (char a_part, char a_color, void *a_drawer)
+yVIEW_simple            (char a_part, char a_major, char a_minor, void *a_drawer)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -231,7 +242,7 @@ yVIEW_simple            (char a_part, char a_color, void *a_drawer)
    DEBUG_YVIEW   yLOG_info    ("name"      , p->name);
    DEBUG_YVIEW   yLOG_char    ("own"       , p->own);
    /*---(update)-------------------------*/
-   yview__conf_color  (p, a_color);
+   yview__conf_color  (p, a_major, a_minor);
    yview__conf_drawer (p, a_drawer);
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
@@ -239,7 +250,7 @@ yVIEW_simple            (char a_part, char a_color, void *a_drawer)
 }
 
 char
-yVIEW_full              (char a_part, char a_type, char a_anchor, float a_magn, char a_color, void *a_drawer)
+yVIEW_full              (char a_part, char a_type, char a_anchor, char a_major, char a_minor, void *a_drawer)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -265,8 +276,7 @@ yVIEW_full              (char a_part, char a_type, char a_anchor, float a_magn, 
    /*---(update)-------------------------*/
    yview__conf_type   (p, a_type);
    yview__conf_anchor (p, a_anchor);
-   yview__conf_magn   (p, a_magn);
-   yview__conf_color  (p, a_color);
+   yview__conf_color  (p, a_major, a_minor);
    yview__conf_drawer (p, a_drawer);
    /*---(finish up)----------------------*/
    yview_update ();
@@ -353,7 +363,7 @@ yVIEW_curses            (char a_part, char *r_name, char *r_on, char *r_source, 
 }
 
 char
-yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_magn, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
+yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
 {
    char        rc          =    0;
    tPARTS     *p           = NULL;
@@ -365,7 +375,6 @@ yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_mag
       DEBUG_YVIEW   yLOG_note    ("deal with a missing element");
       if (a_type   != NULL)  *a_type   = '-';
       if (a_anchor != NULL)  *a_anchor = '-';
-      if (a_magn   != NULL)  *a_magn   = 0.00;
       if (a_xmin   != NULL)  *a_xmin   = 0;
       if (a_xmax   != NULL)  *a_xmax   = 0;
       if (a_xlen   != NULL)  *a_xlen   = 0;
@@ -378,7 +387,6 @@ yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_mag
    DEBUG_YVIEW   yLOG_note    ("save values for good entry");
    if (a_type   != NULL)  *a_type   = p->type;
    if (a_anchor != NULL)  *a_anchor = p->anchor;
-   if (a_magn   != NULL)  *a_magn   = p->magn;
    if (a_xmin   != NULL)  *a_xmin   = p->xmin;
    if (a_xmax   != NULL)  *a_xmax   = p->xmin + p->xlen;
    if (a_xlen   != NULL)  *a_xlen   = p->xlen;
@@ -390,7 +398,7 @@ yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, float *a_mag
 }
 
 char
-yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *a_type, char *a_anchor, float *a_magn, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
+yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *a_type, char *a_anchor, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
 {
    char        rc          =    0;
    tPARTS     *p           = NULL;
@@ -406,7 +414,6 @@ yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, 
       if (r_text   != NULL)  strlcpy (r_text, "", LEN_RECD);
       if (a_type   != NULL)  *a_type   = '-';
       if (a_anchor != NULL)  *a_anchor = '-';
-      if (a_magn   != NULL)  *a_magn   = 0.00;
       if (a_xmin   != NULL)  *a_xmin   = 0;
       if (a_xmax   != NULL)  *a_xmax   = 0;
       if (a_xlen   != NULL)  *a_xlen   = 0;
@@ -424,7 +431,6 @@ yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, 
    if (r_text   != NULL)  strlcpy (r_text, p->text, LEN_RECD);
    if (a_type   != NULL)  *a_type   = p->type;
    if (a_anchor != NULL)  *a_anchor = p->anchor;
-   if (a_magn   != NULL)  *a_magn   = p->magn;
    if (a_xmin   != NULL)  *a_xmin   = p->xmin;
    if (a_xmax   != NULL)  *a_xmax   = p->xmin + p->xlen;
    if (a_xlen   != NULL)  *a_xlen   = p->xlen;
@@ -451,7 +457,7 @@ yVIEW_anchor            (char a_part)
 {
    char        rc          =    0;
    char        x_anchor    =  '-';
-   rc = yVIEW_bounds (a_part, NULL, &x_anchor, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+   rc = yVIEW_bounds (a_part, NULL, &x_anchor, NULL, NULL, NULL, NULL, NULL, NULL);
    if (rc < 0)       return -1;
    return x_anchor;
 }
@@ -483,13 +489,6 @@ yview_set_anchor        (char a_abbr, char a_anchor)
       if (strchr (YVIEW_LOC_FLOAT, a_anchor) == NULL) {
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
-      }
-      switch (a_anchor) {
-      case 't' : a_anchor = YVIEW_TOPALL;   break;
-      case 'k' : a_anchor = YVIEW_UPSALL;   break;
-      case 'm' : a_anchor = YVIEW_MIDALL;   break;
-      case 'j' : a_anchor = YVIEW_LOWALL;   break;
-      case 'b' : a_anchor = YVIEW_BOTALL;   break;
       }
       myVIEW.loc_float = a_anchor;
       break;
@@ -549,10 +548,17 @@ static void  o___SIZING__________o () { return; }
 char
 yview_update            (void)
 {
+   /*---(locals)-----------+-----+-----+-*/
+   int         x_alt       =    0;
+   tPARTS     *a           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yVIEW_debug_list ();
    yview_clear ();
-   yview_horz  (myVIEW.orig_wide, myVIEW.alt_wide);
+   yVIEW_debug_list ();
+   yview_by_abbr (YVIEW_ALT, &a, NULL);
+   if (a->on != 'y')  x_alt = 0;
+   else               x_alt = a->def_wide;
+   yview_horz  (myVIEW.orig_wide, x_alt);
    yview_vert  (myVIEW.orig_tall);
    yMAP_refresh_disponly ();
    yVIEW_debug_list ();
@@ -574,7 +580,9 @@ yVIEW_resize            (short a_wide, short a_tall, short a_alt)
    if (a_wide > 10)   myVIEW.orig_wide = a_wide;
    if (a_tall > 10)   myVIEW.orig_tall = a_tall;
    if (a_alt  > 10)   myVIEW.alt_wide  = a_alt;
+   DEBUG_YVIEW   yLOG_complex ("new"       , "%4dw, %4dt, %4da", myVIEW.orig_wide, myVIEW.orig_tall, myVIEW.alt_wide);
    yview_update ();
+   yview_note_update ();
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

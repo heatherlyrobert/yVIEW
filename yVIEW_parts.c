@@ -32,45 +32,44 @@ struct cWIN {
 };
 static tWIN   s_win;
 
-
 tPARTS  g_parts [MAX_PARTS] = {
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_TITLE     , "title"       , OWN_FULLY  , 'y',    1, '-', '-', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , 'r', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTRIG  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "left hand title bar"                                },
-   { YVIEW_VERSION   , "version"     , OWN_FULLY  , 'y',    1, '/', '-', 0, 0, 0,    9, '-', 't', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , 'r', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTRIG  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "version display with debugging notice"              },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_BUFFER    , "buffer"      , OWN_FULLY  , '-',    2, '-', '-', 0, 0, 0,    7, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "buffer inventory at top"                            },
-   { YVIEW_FORMULA   , "formula"     , OWN_FULLY  , '-',    2, '-', '-', 0, 0, 0,    6, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "formula and source editing line at top"             },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_NAV       , "nav"         , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "navigation panel to display tags and other links"   },
-   { YVIEW_LAYERS    , "layers"      , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "displays all selected laysers over working"         },
-   { YVIEW_YAXIS     , "yaxis"       , OWN_PARTLY , '-',    3, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "show the y-axis labels left of the main screen"     },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_XAXIS     , "xaxis"       , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    5, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "show the x-axis labels above the main screen"       },
-   { YVIEW_ALT       , "alt"         , OWN_LITTLE , '-',    5, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "alternate working area or view"                     },
-   { YVIEW_PROGRESS  , "progress"    , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    3, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "time and sequencing controls about status line"     },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_DETAILS   , "details"     , OWN_PARTLY , '-',    6, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "display area for critical details to right"         },
-   { YVIEW_RIBBON    , "ribbon"      , OWN_FULLY  , '-',    7, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "menu and icon display for navigation of commands"   },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_MODES     , "modes"       , OWN_FULLY  , 'y',    2, '/', '-', 0, 0, 0,    2, '-', '-', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "informational to display current mode/submode"      },
-   { YVIEW_STATUS    , "status"      , OWN_FULLY  , 'y',    9, '-', 'x', 0, 0, 0,    2, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "informational status bar above command line"        },
-   { YVIEW_COMMAND   , "command"     , OWN_FULLY  , 'y',    2, '-', '-', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "command, search, and help message line at bottom"   },
-   { YVIEW_KEYS      , "keys"        , OWN_FULLY  , 'y',    9, '/', 'c', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "latest keyboard characters typed"                   },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_GRID      , "grid"        , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "overlay main drawing with a grid"                   },
-   { YVIEW_CURSOR    , "cursor"      , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "cursor display on screen"                           },
-   { YVIEW_OVERLAY   , "overlay"     , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_NOTES     , "notes"       , OWN_OVERLAY, 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_TOPLEF  , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "overlay for interactive notation"                   },
-   { YVIEW_FLOAT     , "float"       , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_TOPALL  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
-   { YVIEW_HISTORY   , "history"     , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_ALLFUL  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "list of command/search history"                     },
-   { YVIEW_MENUS     , "menus"       , OWN_OVERLAY, 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_TOPCEN  , 1.00, YCOLOR_CLEAR   , 0, 0, 0, 0, 0, 0,  "interactive menu overlay"                           },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { YVIEW_MAIN      , "main"        , OWN_MAIN   , 'y',    4, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , 1.00, YCOLOR_GRY     , 0, 0, 0, 0, 0, 0,  "main working area in the middle"                    },
-   { YVIEW_MASK      , "mask"        , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , 0             , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "desktop presentation mask for display"              },
-   { YVIEW_WINDOW    , "window"      , OWN_DATA   , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , 0             , 1.00, 0              , 0, 0, 0, 0, 0, 0,  "full screen width and height"                       },
-   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  magn  ---color------- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
-   { 0               , ""            , 0          , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , 0             , 0.00, 0              , 0, 0, 0, 0, 0, 0,  ""                                                   },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_TITLE     , "title"       , OWN_FULLY  , 'y',    1, '-', '-', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , 'r', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTRIG  , YCOLOR_BAS  , YCOLOR_LIG , 0, 0, 0, 0, 0, 0,  "left hand title bar"                                },
+   { YVIEW_VERSION   , "version"     , OWN_FULLY  , 'y',    1, '/', '-', 0, 0, 0,    9, '-', 't', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , 'r', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTRIG  , YCOLOR_BAS  , YCOLOR_DRK , 0, 0, 0, 0, 0, 0,  "version display with debugging notice"              },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_BUFFER    , "buffer"      , OWN_FULLY  , '-',    2, '-', '-', 0, 0, 0,    7, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_LIG , 0, 0, 0, 0, 0, 0,  "buffer inventory at top"                            },
+   { YVIEW_FORMULA   , "formula"     , OWN_FULLY  , '-',    2, '-', '-', 0, 0, 0,    6, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_DRK , 0, 0, 0, 0, 0, 0,  "formula and source editing line at top"             },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_NAV       , "nav"         , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "navigation panel to display tags and other links"   },
+   { YVIEW_LAYERS    , "layers"      , OWN_PARTLY , '-',    2, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "displays all selected laysers over working"         },
+   { YVIEW_YAXIS     , "yaxis"       , OWN_PARTLY , '-',    3, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "show the y-axis labels left of the main screen"     },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_XAXIS     , "xaxis"       , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    5, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "show the x-axis labels above the main screen"       },
+   { YVIEW_ALT       , "alt"         , OWN_LITTLE , '-',    5, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "alternate working area or view"                     },
+   { YVIEW_PROGRESS  , "progress"    , OWN_PARTLY , '-',    3, '/', '-', 0, 0, 0,    3, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "time and sequencing controls about status line"     },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_DETAILS   , "details"     , OWN_PARTLY , '-',    6, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "display area for critical details to right"         },
+   { YVIEW_RIBBON    , "ribbon"      , OWN_FULLY  , '-',    7, '-', '-', 0, 0, 0,    3, '-', '-', 'y', 0, 0, 0,  'w', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "menu and icon display for navigation of commands"   },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_MODES     , "modes"       , OWN_FULLY  , 'y',    2, '/', '-', 0, 0, 0,    2, '-', '-', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_DRK , 0, 0, 0, 0, 0, 0,  "informational to display current mode/submode"      },
+   { YVIEW_STATUS    , "status"      , OWN_FULLY  , 'y',    9, '-', 'x', 0, 0, 0,    2, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_LIG , 0, 0, 0, 0, 0, 0,  "informational status bar above command line"        },
+   { YVIEW_COMMAND   , "command"     , OWN_FULLY  , 'y',    2, '-', '-', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  't', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_LIG , 0, 0, 0, 0, 0, 0,  "command, search, and help message line at bottom"   },
+   { YVIEW_KEYS      , "keys"        , OWN_FULLY  , 'y',    9, '/', 'c', 0, 0, 0,    1, '-', '-', '-', 0, 0, 0,  'B', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_BOTLEF  , YCOLOR_BAS  , YCOLOR_DRK , 0, 0, 0, 0, 0, 0,  "latest keyboard characters typed"                   },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_GRID      , "grid"        , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "overlay main drawing with a grid"                   },
+   { YVIEW_CURSOR    , "cursor"      , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "cursor display on screen"                           },
+   { YVIEW_OVERLAY   , "overlay"     , OWN_OVERLAY, '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_MIDCEN  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_NOTES     , "notes"       , OWN_WINDOW , 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , YVIEW_TOPLEF  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "overlay for interactive notation"                   },
+   { YVIEW_FLOAT     , "float"       , OWN_FLOAT  , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPALL  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "shown over the working screen"                      },
+   { YVIEW_HISTORY   , "history"     , OWN_FLOAT  , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_ALLFUL  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "list of command/search history"                     },
+   { YVIEW_MENUS     , "menus"       , OWN_FLOAT  , 'y',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_TOPCEN  , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "interactive menu overlay"                           },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { YVIEW_MAIN      , "main"        , OWN_MAIN   , 'y',    4, '-', '-', 0, 0, 0,    4, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , YVIEW_MIDCEN  , YCOLOR_BAS  , YCOLOR_NOR , 0, 0, 0, 0, 0, 0,  "main working area in the middle"                    },
+   { YVIEW_MASK      , "mask"        , OWN_WINDOW , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLATISH, YVIEW_AUTO    , 0             , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "desktop presentation mask for display"              },
+   { YVIEW_WINDOW    , "window"      , OWN_DATA   , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , 0             , YCOLOR_CLEAR, 0          , 0, 0, 0, 0, 0, 0,  "full screen width and height"                       },
+   /*---abbr---------   ---name-----   ---own-----  on   horz--nox--tie-dw-wi-le  vert--noy--tie--und-dt-ta-bo   defs source, txt  drawer  ori  type---------  ---mgmt-------  ---anchor-----  --cmajor----  --cminor--- xm xl ym yl zm zl    12345678901234567890123456789012345678901234567890  */
+   { 0               , ""            , 0          , '-',    0, '-', '-', 0, 0, 0,    0, '-', '-', '-', 0, 0, 0,  '-', NULL  , "",  NULL  , '-', YVIEW_FLAT   , YVIEW_AUTO    , 0             , 0           , 0          , 0, 0, 0, 0, 0, 0,  ""                                                   },
 };
 
 /*  lef/rig1----- 2----- 3----- 4----- 5----- 6----- 7-----
@@ -79,9 +78,16 @@ tPARTS  g_parts [MAX_PARTS] = {
  *     6   ´----´ formula--------------------------------->
  *     5   ¨    ¨ ´----´ xaxis--------------> ´----´ ´----´
  *     4   ¨    ¨ ¨    ¨ yaxis´ MAIN-- alt--- ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
+ *     ·   ¨    ¨ ¨    ¨                      ¨    ¨ ¨    ¨
  *     3   ¨    ¨ nav--´ progress------------ detail ribbon
  *     2   ¨    ¨ modes- status--------------------------->
- *     1   title´ command--------------------------> keys->
+ *     1   title´ command--------------------------> keys--
  *
  *     0 in either means do not consider/show
  *     9 means tied to another element, handle width/height special
@@ -422,7 +428,7 @@ yview_parts_name        (cchar n)
 static void  o___DEFAULT_________o () { return; }
 
 char
-yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, short a_ntall, short a_owide, short a_otall, void *a_draw, char a_anchor, char a_color)
+yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, short a_ntall, short a_owide, short a_otall, void *a_draw, char a_anchor, char a_major, char a_minor)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -434,15 +440,19 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
    /*---(set defaults)-------------------*/
    if (a_full == 'y') {
       p->on         = a_on;
-      if (myVIEW.env == YVIEW_CURSES) {
+      switch (myVIEW.env) {
+      case YVIEW_CURSES :
          p->def_wide   = a_nwide;
          p->def_tall   = a_ntall;
-      } else if (myVIEW.env == YVIEW_OPENGL) {
+         break;
+      case YVIEW_OPENGL : 
          p->def_wide   = a_owide;
          p->def_tall   = a_otall;
-      } else {
+         break;
+      default           :
          p->def_wide   = 0;
          p->def_tall   = 0;
+         break;
       }
       if (a_draw != NULL)  p->drawer = a_draw;
    }
@@ -453,12 +463,13 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
    p->bott       = 0;
    /*---(detail)-------------------------*/
    if (a_full == 'y') {
-      if (p->own != OWN_OVERLAY)    p->type       = YVIEW_FLAT;
-      else                          p->type       = YVIEW_FLATISH;
+      if (p->own != OWN_OVERLAY)   p->type  = YVIEW_FLATISH;
+      else                         p->type  = YVIEW_FLAT;
       p->mgmt       = YVIEW_AUTO;
       p->anchor     = a_anchor;
-      p->magn       = 1.0;
-      p->color      = a_color;
+      p->cmajor     = a_major;
+      p->cminor     = a_minor;
+      DEBUG_YVIEW   yLOG_complex ("color"     , "%-12.12s, %3d, %3d", p->name, p->cmajor, p->cminor);
    }
    /*---(pointers)-----------------------*/
    if (a_full == 'y') {
@@ -497,40 +508,40 @@ yview__clear_all        (char a_full, char a_env)
    /*---(default values)-----------------*/
    /*                                       -curses-- -opengl--                       */
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_TITLE   , 'y',   1,   0,  15,   0,  NULL, YVIEW_BOTRIG  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_VERSION , 'y',   1,   5,  15,  40,  NULL, YVIEW_BOTRIG  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_TITLE   , 'y',   1,   0,  15,   0,  NULL, YVIEW_BOTRIG  , YCOLOR_BAS     , YCOLOR_LIG);
+   yview__wipe (a_full, YVIEW_VERSION , 'y',   1,   5,  15,  40,  NULL, YVIEW_BOTRIG  , YCOLOR_BAS     , YCOLOR_DRK);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_BUFFER  , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_FORMULA , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_BUFFER  , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
+   yview__wipe (a_full, YVIEW_FORMULA , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_NAV     , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_LAYERS  , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_NAV     , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_LAYERS  , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_ALT     , '-',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_PROGRESS, '-',   0,  10,   0, 100,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_ALT     , '-',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_PROGRESS, '-',   0,  10,   0, 100,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_DETAILS , '-',  20,   0, 250,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_RIBBON  , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_DETAILS , '-',  20,   0, 250,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_RIBBON  , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_MODES   , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_STATUS  , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_GRY     );
+   yview__wipe (a_full, YVIEW_MODES   , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
+   yview__wipe (a_full, YVIEW_STATUS  , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
+   yview__wipe (a_full, YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
+   yview__wipe (a_full, YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
-   yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_GRY     );
-   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
-   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   );
+   yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_BAS     , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
+   yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -650,6 +661,92 @@ static void  o___ANCHOR__________o () { return; }
  *>    return 0;                                                                                                                                                     <* 
  *> }                                                                                                                                                                <*/
 
+char
+yVIEW_color_set         (char a_abbr, char a_major, char a_minor)
+{
+   char        rce         =  -10;
+   char        rc          =    0;
+   tPARTS     *p           = NULL;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(get part)-----------------------*/
+   DEBUG_YVIEW   yLOG_value   ("a_abbr"    , a_abbr);
+   rc = yview_by_abbr (a_abbr, &p, NULL);
+   --rce;  if (rc < 0) {
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_info    ("name"      , p->name);
+   /*---(call color)---------------------*/
+   p->cmajor = a_major;
+   p->cminor = a_minor;
+   DEBUG_YVIEW   yLOG_value   ("cmajor"    , p->cmajor);
+   DEBUG_YVIEW   yLOG_value   ("cminor"    , p->cminor);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_color             (char a_type, char a_abbr, char a_minor, char a_alpha)
+{
+   char        rce         =  -10;
+   char        rc          =    0;
+   tPARTS     *p           = NULL;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(get part)-----------------------*/
+   DEBUG_YVIEW   yLOG_value   ("a_abbr"    , a_abbr);
+   rc = yview_by_abbr (a_abbr, &p, NULL);
+   DEBUG_YVIEW   yLOG_value   ("by_abbr"   , rc);
+   --rce;  if (rc < 0) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_char    ("a_abbr"    , a_abbr);
+   DEBUG_YVIEW   yLOG_info    ("name"      , p->name);
+   /*---(call color)---------------------*/
+   DEBUG_YVIEW   yLOG_value   ("cmajor"    , p->cmajor);
+   DEBUG_YVIEW   yLOG_value   ("cminor"    , p->cminor);
+   DEBUG_YVIEW   yLOG_char    ("a_type"    , a_type);
+   DEBUG_YVIEW   yLOG_value   ("a_minor"   , a_minor);
+   DEBUG_YVIEW   yLOG_value   ("a_alpha"   , a_alpha);
+   if      (a_type == 'c')  yCOLOR_opengl_clear (p->cmajor, p->cminor);
+   else if (a_type == 'b')  yCOLOR_opengl       (p->cmajor, p->cminor, 1.0);
+   else                     yCOLOR_opengl       (p->cmajor, a_minor, a_alpha);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char yVIEW_color_clear       (char a_abbr) { return yview_color ('c', a_abbr, 0, 0); }
+char yVIEW_color_back        (char a_abbr) { return yview_color ('b', a_abbr, 0, 0); }
+char yVIEW_color             (char a_abbr, char a_minor, float a_alpha) { return yview_color ('-', a_abbr, a_minor, a_alpha); }
+
+char
+yVIEW_color_font        (char a_abbr)
+{
+   char        rce         =  -10;
+   char        rc          =    0;
+   tPARTS     *p           = NULL;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(get part)-----------------------*/
+   DEBUG_YVIEW   yLOG_value   ("a_abbr"    , a_abbr);
+   rc = yview_by_abbr (a_abbr, &p, NULL);
+   DEBUG_YVIEW   yLOG_value   ("by_abbr"   , rc);
+   --rce;  if (rc < 0) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   DEBUG_YVIEW   yLOG_char    ("a_abbr"    , a_abbr);
+   DEBUG_YVIEW   yLOG_info    ("name"      , p->name);
+   /*---(call color)---------------------*/
+   DEBUG_YVIEW   yLOG_value   ("cmajor"    , p->cmajor);
+   DEBUG_YVIEW   yLOG_value   ("cminor"    , p->cminor);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return p->cminor;
+}
 
 char
 yview_get_anchor        (char a_abbr)

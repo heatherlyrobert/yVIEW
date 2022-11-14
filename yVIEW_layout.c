@@ -20,7 +20,7 @@ static const tLAYOUT   s_layouts [] = {
    { "work"        , "tv -- --- -m-- -- xsck - FMH" , "more balanced display of common elements"             },
    { "rob"         , "tv -- --- -m-- -- xsc- - FMH" , "more balanced display of common elements"             },
    { "max"         , "tv bf n-- -m-p dr xsck - FMH" , "everything displays at one time"                      },
-   { "ycolor"      , "tv bf n-- -map -r xsck - FMH" , "more balanced display of common elements"             },
+   { "ycolor"      , "-- -- --- -ma- -- ---- - FMH" , "more balanced display of common elements"             },
    { "gyges"       , "-- bf --Y Xm-- -- xsck - FMH" , "prepared for gyges spreadsheet"                       },
    { "everything"  , "tv bf n-Y Xmap dr xsck - FMH" , "everything displays at one time"                      },
    { ""            , "-- -- --- ---- -- ---- - FMH" , ""                                                     },
