@@ -37,23 +37,7 @@ struct cOPTION  {
    char        desc        [LEN_DESC ];
 };
 tOPTION  s_options [MAX_OPTION ] = {
-   /*---(yMODE)--------------------------*/
-   { YVIEW_STATUS  , "mod"   , "mode"         , yMODE_status           , "display the mode stack"                   },
-   /*---(yKEYS)--------------------------*/
-   { YVIEW_STATUS  , "key"   , "keylog"       , yKEYS_keylog_status    , "displays keystroke history"               },
-   { YVIEW_STATUS  , "log"   , "logger"       , yKEYS_logger_status    , "displays logging statistics"              },
-   { YVIEW_STATUS  , "loo"   , "loop"         , yKEYS_loop_status      , "displays main looping statistics"         },
-   { YVIEW_STATUS  , "repl"  , "replay"       , yKEYS_replay_status    , "displays main looping statistics"         },
-   /*---(yMACRO)-------------------------*/
-   { YVIEW_STATUS  , "rec"   , "record"       , yMACRO_rec_status      , "details of current macro recording"       },
-   { YVIEW_STATUS  , "exe"   , "execute"      , yMACRO_exe_status      , "details of single macro playback"         },
-   { YVIEW_STATUS  , "mex"   , "multiexe"     , yMACRO_mex_status      , "details of layered macro playback"        },
-   /*---(yMAP)---------------------------*/
-   { YVIEW_STATUS  , "vis"   , "visual"       , yMAP_visu_status       , "details of current visual selection"      },
-   { YVIEW_STATUS  , "cur"   , "current"      , yMAP_current_status    , "current map position"                     },
    /*---(ySRC)---------------------------*/
-   { YVIEW_STATUS  , "sreg"  , "sregister"    , ySRC_sreg_status       , "details of current source register"       },
-   { YVIEW_STATUS  , "sel"   , "selection"    , ySRC_select_status     , "displays selection status"                },
    /*> { YVIEW_STATUS  , "script"       , "script"       , yMACRO_script_status   , "details of script playback"               },   <*/
    /*> { YVIEW_STATUS  , "empty"        , "empty"        , VIEW_status_default    , "empty status display"        },                               <* 
     *> { YVIEW_STATUS  , "xmap"         , "xmap"         , yvikeys_map_xstatus    , "x-axis position details"     },                               <* 

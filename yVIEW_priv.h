@@ -3,47 +3,61 @@
 #define yVIEW_priv yes
 
 
-
-/*===[[ BEG_HEADER ]]=========================================================*/
-/*345678901-12345678901-12345678901-12345678901-12345678901-12345678901-12345678901-12345678901-*/
-
-/*===[[ ONE_LINERS ]]=========================================================*/
-
+/*===[[ HEADER BEG ]]=========================================================*/
+/*                      ´·········1·········2·········3·········4·········5·········6·········7*/
+/*--------- 12345678901 ´123456789-123456789-123456789-123456789-123456789-123456789-123456789-*/
+/*········· ··········· ´·····························´········································*/
+#define     P_NAME      "yVIEW"
+/*········· ··········· ´·····························´········································*/
 #define     P_FOCUS     "RS (run-time support)"
 #define     P_NICHE     "us (user control)"
 #define     P_SUBJECT   "windor/view management"
 #define     P_PURPOSE   ""
-
+/*········· ··········· ´·····························´········································*/
 #define     P_NAMESAKE  "iapetus-progonos (progenitor)"
+#define     P_PRONOUNCE ""
 #define     P_HERITAGE  "titan and father of prometheus, protector of mankind"
+#define     P_BRIEFLY   ""
 #define     P_IMAGERY   ""
 #define     P_REASON    ""
-
+/*········· ··········· ´·····························´········································*/
 #define     P_ONELINE   P_NAMESAKE " " P_SUBJECT
-
+/*········· ··········· ´·····························´········································*/
+#define     P_HOMEDIR   "/home/system/yVIEW.vimish_view_management"
 #define     P_BASENAME  "yVIEW"
 #define     P_FULLPATH  "/usr/local/lib64/libyVIEW"
-#define     P_SUFFIX    ""
-#define     P_CONTENT   ""
-
+#define     P_SUFFIX    "···"
+#define     P_CONTENT   "···"
+/*········· ··········· ´·····························´········································*/
 #define     P_SYSTEM    "gnu/linux   (powerful, ubiquitous, technical, and hackable)"
 #define     P_LANGUAGE  "ansi-c      (wicked, limitless, universal, and everlasting)"
+#define     P_COMPILER  "gcc 11.3.0"
 #define     P_CODESIZE  "large       (appoximately 10,000 slocl)"
-#define     P_DEPENDS   "none"
-
+/*········· ··········· ´·····························´········································*/
+#define     P_DEPSTDC   "stdio,stdlib,string,math,time"
+#define     P_DEPEXTEND "···"
+#define     P_DEPCORE   "yURG,yLOG,ySTR"
+#define     P_DEPVIKEYS "yVIHUB,yMODE,yKEYS"
+#define     P_DEPOTHER  "yCOLOR"
+#define     P_DEPSOLO   "yCOLOR,YDLST"
+/*········· ··········· ´·····························´········································*/
 #define     P_AUTHOR    "heatherlyrobert"
 #define     P_CREATED   ""
-
+/*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
-#define     P_VERMINOR  "2.0-, complete and tie yVIKEYS back into it"
-#define     P_VERNUM    "2.0m"
-#define     P_VERTXT    "updates to bring unit testing back into alignment"
-
+#define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
+#define     P_VERNUM    "2.1a"
+#define     P_VERTXT    "fully compliant unit testing and small improvements"
+/*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
 #define     P_REMINDER  "there are many better options, but i *own* every byte of this one"
+/*········· ··········· ´·····························´········································*/
+/*--------- 12345678901 ´123456789-123456789-123456789-123456789-123456789-123456789-123456789-*/
+/*                      ´·········1·········2·········3·········4·········5·········6·········7*/
+/*===[[ HEADER END ]]=========================================================*/
 
-/*===[[ END_HEADER ]]=========================================================*/
+
 
 /*---(ansi-c standard)-------------------*/
 #include    <stdio.h>             /* clibc  standard input/output             */
@@ -55,13 +69,13 @@
 #include    <yURG.h>              /* heatherly urgent processing              */
 #include    <yLOG.h>              /* heatherly program logging                */
 #include    <ySTR.h>              /* heatherly string processing              */
+
+#include    <yVIHUB.h>
 #include    <yKEYS.h>             /* heatherly vi-keys key handling           */
 #include    <yMODE.h>             /* heatherly vi-keys mode tracking          */
-#include    <yMACRO.h>            /* heatherly vi-keys macro processing       */
-#include    <yCMD.h>              /* heatherly vi-keys command processing     */
-#include    <ySRC.h>              /* heatherly vi-keys source editing         */
-#include    <yMAP.h>              /* heatherly vi-keys location management    */
+
 #include    <yCOLOR.h>            /* heatherly opengl color handling          */
+#include    <yCOLOR_solo.h>       /* heatherly opengl color handling          */
 #include    <yDLST_solo.h>        /* heatherly double-double-list             */
 
 

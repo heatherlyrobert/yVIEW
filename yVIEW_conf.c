@@ -560,7 +560,7 @@ yview_update            (void)
    else               x_alt = a->def_wide;
    yview_horz  (myVIEW.orig_wide, x_alt);
    yview_vert  (myVIEW.orig_tall);
-   yMAP_refresh_disponly ();
+   yVIHUB_yMAP_refresh_disponly ();
    yVIEW_debug_list ();
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

@@ -463,8 +463,12 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
    p->bott       = 0;
    /*---(detail)-------------------------*/
    if (a_full == 'y') {
-      if (p->own != OWN_OVERLAY)   p->type  = YVIEW_FLATISH;
-      else                         p->type  = YVIEW_FLAT;
+      switch (p->own) {
+      case OWN_OVERLAY  :  p->type  = YVIEW_FLATISH;  break;
+      case OWN_WINDOW   :  p->type  = YVIEW_FLATISH;  break;
+      default           :  p->type  = YVIEW_FLAT;     break;
+      }
+      DEBUG_YVIEW   yLOG_complex ("type"      , "%-12.12s, %c, %c", p->name, p->own, p->type);
       p->mgmt       = YVIEW_AUTO;
       p->anchor     = a_anchor;
       p->cmajor     = a_major;
@@ -507,38 +511,38 @@ yview__clear_all        (char a_full, char a_env)
    myVIEW.env = a_env;
    /*---(default values)-----------------*/
    /*                                       -curses-- -opengl--                       */
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_TITLE   , 'y',   1,   0,  15,   0,  NULL, YVIEW_BOTRIG  , YCOLOR_BAS     , YCOLOR_LIG);
    yview__wipe (a_full, YVIEW_VERSION , 'y',   1,   5,  15,  40,  NULL, YVIEW_BOTRIG  , YCOLOR_BAS     , YCOLOR_DRK);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_BUFFER  , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
    yview__wipe (a_full, YVIEW_FORMULA , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_NAV     , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_LAYERS  , '-',  20,   0, 150,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_YAXIS   , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_XAXIS   , '-',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_ALT     , '-',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_PROGRESS, '-',   0,  10,   0, 100,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_NOR);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_DETAILS , '-',  20,   0, 250,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_RIBBON  , '-',   5,   0,  40,   0,  NULL, YVIEW_TOPLEF  , YCOLOR_BAS     , YCOLOR_NOR);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_MODES   , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
    yview__wipe (a_full, YVIEW_STATUS  , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
    yview__wipe (a_full, YVIEW_COMMAND , 'y',   0,   1,   0,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_LIG);
    yview__wipe (a_full, YVIEW_KEYS    , 'y',   5,   1,  40,  15,  NULL, YVIEW_BOTLEF  , YCOLOR_BAS     , YCOLOR_DRK);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_GRID    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_CURSOR  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_OVERLAY , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_FLOAT   , 'y',   0,   1,   0,  15,  NULL, YVIEW_TOPALL  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_HISTORY , 'y',   0,   0,   0,   0,  NULL, YVIEW_ALLFUL  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_MENUS   , 'y',  41,  14, 280, 180,  NULL, YVIEW_TOPCEN  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_NOTES   , 'y',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
-   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------ */
+   /*----------------- ---part--------- -on- wide tall wide tall ---drawer------------  ---color-------------------  */
    yview__wipe (a_full, YVIEW_MAIN    , 'y',   0,   0,   0,   0,  NULL, YVIEW_MIDCEN  , YCOLOR_BAS     , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_MASK    , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
    yview__wipe (a_full, YVIEW_WINDOW  , '-',   0,   0,   0,   0,  NULL, YVIEW_BOTLEF  , YCOLOR_CLEAR   , YCOLOR_NOR);
@@ -710,9 +714,9 @@ yview_color             (char a_type, char a_abbr, char a_minor, char a_alpha)
    DEBUG_YVIEW   yLOG_char    ("a_type"    , a_type);
    DEBUG_YVIEW   yLOG_value   ("a_minor"   , a_minor);
    DEBUG_YVIEW   yLOG_value   ("a_alpha"   , a_alpha);
-   if      (a_type == 'c')  yCOLOR_opengl_clear (p->cmajor, p->cminor);
-   else if (a_type == 'b')  yCOLOR_opengl       (p->cmajor, p->cminor, 1.0);
-   else                     yCOLOR_opengl       (p->cmajor, a_minor, a_alpha);
+   /*> if      (a_type == 'c')  yCOLOR_opengl_clear (p->cmajor, p->cminor);           <* 
+    *> else if (a_type == 'b')  yCOLOR_opengl       (p->cmajor, p->cminor, 1.0);      <* 
+    *> else                     yCOLOR_opengl       (p->cmajor, a_minor, a_alpha);    <*/
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

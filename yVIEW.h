@@ -46,9 +46,6 @@ typedef  const int            cint;
 #define      YVIEW_NOTES       'N'
 #define      YVIEW_MASK        'Z'
 
-#define      YVIEW_RIGHT       'r'
-#define      YVIEW_OFFICE      'o'
-
 #define      YVIEW_FULLSCR     "FHMNZ"
 
 /*
@@ -124,6 +121,7 @@ typedef  const int            cint;
 /*---(base)-----------------*/
 char*       yVIEW_version           (void);
 char        yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse, void *a_prep, void *a_cursor, void *a_refresh);
+char        yVIEW_init_after        (void);
 char        yVIEW_resize            (short a_wide, short a_tall, short a_alt);
 char        yVIEW_wrap              (void);
 char*       yVIEW__unit             (char *a_question, char a_index);
