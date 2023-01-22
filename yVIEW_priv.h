@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1a"
-#define     P_VERTXT    "fully compliant unit testing and small improvements"
+#define     P_VERNUM    "2.1b"
+#define     P_VERTXT    "updated to yURG_by_name after yURG_change"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"

@@ -29,12 +29,12 @@ yview__unit_loud         (void)
    char       *x_args [20]  = {"yVIEW_unit" };
    yURG_logger   (x_narg, x_args);
    yURG_urgs     (x_narg, x_args);
-   yURG_name  ("kitchen"      , YURG_ON);
-   yURG_name  ("ystr"         , YURG_ON);
-   yURG_name  ("ymode"        , YURG_ON);
-   yURG_name  ("ycmd"         , YURG_ON);
-   yURG_name  ("ysrc"         , YURG_ON);
-   yURG_name  ("yview"        , YURG_ON);
+   yURG_by_name  ("kitchen"      , YURG_ON);
+   yURG_by_name  ("ystr"         , YURG_ON);
+   yURG_by_name  ("ymode"        , YURG_ON);
+   yURG_by_name  ("ycmd"         , YURG_ON);
+   yURG_by_name  ("ysrc"         , YURG_ON);
+   yURG_by_name  ("yview"        , YURG_ON);
    DEBUG_YVIEW  yLOG_info     ("yVIEW"     , yVIEW_version   ());
    yview_init ();
    return 0;
