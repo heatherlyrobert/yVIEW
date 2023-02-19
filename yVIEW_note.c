@@ -200,6 +200,7 @@ yview_note__remove      (char n)
    int         i           =    0;
    --rce;  if (n < 0 || n > MAX_NOTES)  return rce;
    --rce;  if (n >= g_nnote)            return rce;
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    if (g_notes [n].text != NULL)  free (g_notes [n].text);
    for (i = n; i < g_nnote; ++i) {
       /*---(master)---------*/
@@ -226,6 +227,7 @@ yview_note__remove      (char n)
       if (i + 1 < MAX_NOTES)  yview_note__wipe ('y', i + 1);
    }
    --g_nnote;
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -236,6 +238,8 @@ yview_note__totop       (char n)
    int         i           =    0;
    --rce;  if (n < 0 || n > MAX_NOTES)  return rce;
    --rce;  if (n >= g_nnote)            return rce;
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   yVIEW_notes_debug  ();
    /*---(master)------------*/
    g_notes [g_nnote].xr   = g_notes [n].xr;
    g_notes [g_nnote].yr   = g_notes [n].yr;
@@ -260,6 +264,8 @@ yview_note__totop       (char n)
    g_notes [n].text = NULL;
    ++g_nnote;
    yview_note__remove   (n);
+   yVIEW_notes_debug  ();
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -1057,6 +1063,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
    g_notes [n].text = strdup (x_text);
    if (n == g_nnote)  ++g_nnote;
    rc = yview_note__totop   (n);
+   n = g_nnote - 1;
    /*---(targeting)----------------------*/
    yview_note__untarget (n);
    if (v == NULL) {
@@ -1237,12 +1244,14 @@ yview_note__direct      (char *a_all, char a_part)
       return 0;
    }
    /*---(add a note)---------------------*/
+   yVIEW_notes_debug  ();
    rc = yview_note_add (a_part, xr, yr, x_size, u);
    DEBUG_YVIEW   yLOG_value   ("add"       , rc);
    --rce;  if (rc < 0) {
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
+   yVIEW_notes_debug  ();
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

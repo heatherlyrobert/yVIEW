@@ -166,6 +166,7 @@ char        yVIEW_note_directw      (char *a_all);
 char        yVIEW_note_showing      (void);
 char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
 char        yVIEW_note_line         (void);
+char        yVIEW_notes_debug       (void);
 
 #endif
 /*============================----end-of-source---============================*/
