@@ -120,7 +120,7 @@ char   g_nnote     = 0;
 #define     DEG2RAD  (3.1415927 / 180.0)
 #define     RAD2DEG  (180.0 / 3.1415927)
 
-static char  *s_size       = ".,:;^-)!=+";
+static char  *s_size       = ".,:;^-)!=+Š";
 static char  *s_norm       = "123456789";
 static char  *s_fine       = "ZYXWVUTSRQPONMLKJIHGFEDCBA*abcdefghijklmnopqrstuvwxyz";
 static char  *s_targ       = "ÔÕ×Öˆ‰†‡";
@@ -589,6 +589,7 @@ yview_note__size        (char n, char xr, char yr, char a_size)
    DEBUG_YVIEW   yLOG_complex  ("size"      , "%4dw, %4dh", g_notes [n].w, g_notes [n].h);
    /*---(note window)--------------------*/
    DEBUG_YVIEW   yLOG_char    ("a_size"    , a_size);
+   DEBUG_YVIEW   yLOG_info    ("s_size"    , s_size);
    --rce;  if (strchr (s_size, a_size) == NULL) {
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
@@ -608,6 +609,16 @@ yview_note__size        (char n, char xr, char yr, char a_size)
    }
    if (myVIEW.env == YVIEW_CURSES)  x_bott += 1;
    DEBUG_YVIEW   yLOG_complex  ("area"      , "%c, %4dl, %4dw, %4db, %4dt", s_part, x_left, x_wide, x_bott, x_tall);
+   if (a_size == 'Š') {
+      g_notes [n].x    = x_left;
+      g_notes [n].w    = x_wide;
+      g_notes [n].h    = x_tall;
+      g_notes [n].size = a_size;
+      if (myVIEW.env == YVIEW_OPENGL) g_notes [n].y    = x_bott;
+      else                            g_notes [n].y    = x_bott - x_tall - 1;
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 0;
+   }
    /*---(vertical)-----------------------*/
    DEBUG_YVIEW   yLOG_value   ("yr"        , yr);
    rc  = yview_note__y (x_bott, x_tall, g_notes [n].h, yr, &y);
@@ -1013,7 +1024,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
    }
    l = strlen (a_text);
    DEBUG_YVIEW   yLOG_point   ("l"         , l);
-   --rce;  if (l < 1) {
+   --rce;  if (a_size != 'Š' && l < 1) {
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
@@ -1175,6 +1186,12 @@ yview_note__direct      (char *a_all, char a_part)
       case '%'  :
          DEBUG_YVIEW   yLOG_note    ("hide all notes");
          s_noting = '-';
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return 0;
+         break;
+      case 'Š'  :
+         DEBUG_YVIEW   yLOG_note    ("show note guidelines");
+         yview_note_add (a_part, '0', '0', 'Š', "");
          DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
          return 0;
          break;
