@@ -2,6 +2,7 @@
 #ifndef yVIEW
 #define yVIEW yes
 
+#include    <ySTR_solo.h>
 
 
 typedef  unsigned char        uchar;
@@ -164,9 +165,10 @@ char        yVIEW_debug_list        (void);
 char        yVIEW_note_direct       (char *a_all);
 char        yVIEW_note_directw      (char *a_all);
 char        yVIEW_note_showing      (void);
-char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
-char        yVIEW_note_line         (void);
+char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar t [LEN_HUND], uchar *c, short *xb, short *yb, short *xe, short *ye);
+char        yVIEW_note_colors       (char *a_curr, char *a_prev, char *a_lcurr, char *a_lprev);
 char        yVIEW_notes_debug       (void);
+char*       yVIEW_note_entry        (char n);
 
 #endif
 /*============================----end-of-source---============================*/

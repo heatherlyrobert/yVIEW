@@ -1,0 +1,227 @@
+.TH :note 6 2013-Jan "linux" "interactive system usage and navigation"
+
+.SH NAME
+yVIEW - shared library to drive visual screen layout
+
+.SH PATRON
+iapetus-progonos (progenitor) titan protector of mankind
+
+.SH IMAGERY
+tbd
+
+.SH SUMMARY
+notes are a visual overlay layer that provides floating text boxes and
+connectors to convey temporary information to the user to drive learning
+and understanding.
+
+.SH SERIOUS DISCLAIMER
+i am a crazy, naive, dog-fooding c programmer.  i am not trying to be best.
+i optimize for learning, transparency, and ease of maintenance.  if i wanted
+awesome, fast, and cutting-edge, i'd use yours ;)
+
+.SH DOCUMENTATION FILES (see also)
+.nf
+yVIEW (3)           interfacing applications with library
+yVIEW (7)           decision rationale, scope, and objectives
+:note (6)······´´´´·interactive system usage and navigation
+
+.SH TABLE OF CONTENTS
+.nf  
+a) synopsis         explanation
+b) sizes            standard note sizes
+c) positions        standard note x, y positions
+d) request          requesting a note
+e) targets          connection/target lines
+f) changes          changes to existing notes
+g) overall          large/overall capabilities
+h) formatting       limited, but useful config
+i) debugging        helpful capabilities
+
+.SH A) SYNOPSIS
+all user interfaces provided by yVIEW, both opengl or ncurses, automatically
+have a note layer.  notes are displayed above all content to gain the users
+attention.  they are intended to be short-lived and attention getting.
+i initially thought they would be helpful, but turned out to be vital,
+especially for demos (eliminating post-recording software needs).  who knew ;)
+
+.SH B) SIZES
+notes come in ten (12) variations, sizes measured in characters since so many
+screen configurations are available.
+   t  --name-------  --size--    ---example text use---------------------
+   .  bullet         1h x  3w    1
+   ,  word                 9w    point
+   ;  call-out            14w    insert here
+   :  long-call           25w    enter commands on line
+   ^  command             56w    type ¶:script test¦¶ on the command line 
+
+   -  small          2h x 15w    enter their last name
+   )  title               31w    this is a demonstration of macros
+
+   !  warning        3h x 19w    never attempt to scroll beyond this point
+   =  normal              25w    integrated ¶type check¶ into the table
+
+   +  large          4h x 41w    (huge ton of text)
+
+   ~  stealth        1h x  1w    (invisible box, connector only)
+   x  test-only      0h x  0w    (easy to calculate sizes, points)
+
+.SH C) POSITIONS
+normal note and target positions are kept simple 1-9 for both x and y as
+shown on the sample screen below.  the letters are the ¶fine¶ controls
+from [Z-A] 5 [a-z] which is about as granular as i can ever use ;)
+
+        |------------------------- x -------------------------|
+      - · · · · · ·  · · · · · · · · · · · · · · · · · · · · ··
+      | ·                         1z                          ·
+      | ·                          v                          ·
+      | ·                         2s                          ·
+      | ·                          p                          ·
+      | ·                         3m                          ·
+      | ·                          i                          ·
+      | ·                         4f                          ·
+        ·1      2     3      4     c     6      7     8      9·
+      y ·ZYXWVUTSRQPONMLKJIHGFEDCBA5abcdefghijklmnopqrstuvwxyz·
+        ·                          C                          ·
+      | ·                         6F                          ·
+      | ·                          I                          ·
+      | ·                         !M                          ·
+      | ·                          P                          ·
+      | ·                         8S                          ·
+      | ·                          V                          ·
+      | ·                         9Z                          ·
+      - · · · · · ·  · · · · · · · · · · · · · · · · · · · · ··
+
+the box will be centered at the location specified and adjusted
+for the box size as it moves from the center in order to have
+a smooth evenly spaced set of locations.
+
+NOTE: by default, notes are positioned relative to the main area, not the
+full window.  if you which to use the whole window, use ¶notew¶ as the
+command name.
+
+.SH D) REQUEST
+notes are requested at the command line using the command ":note".  the
+format is ¶:note xys<text>¦¶.
+      x        [1-9] or [Z-A5a-Z] position on x-axis
+      y        [1-9] or [Z-A5a-Z] position on y-axis
+      s        size is one of the ten (10) variants
+      <text>   requested content
+
+.nf
+example   :note 53=this is an example note¦
+example   :note tV:long call out box¦
+
+text will word wrap inside the box, but not using advanced algorithms ;)
+wrapping only occures at spaces.  i just edit until i get the desired result.
+for me, its not worth the cycles to over-code the capability.
+
+.SH E) TARGETS
+notes can also include a leader line going to a target spot to increase
+the note's clarity.  the target uses the same positions as notes.  the
+target is appended to the note command after a space.  below are the
+eight general flows of a leader line.
+  
+                          8----    ----1
+                     7         |  |         2
+                     |         |  |         |
+                     |       --------       |
+                      ------|  text  |------ 
+                      ------|        |------ 
+                     |       --------       |
+                     |         |  |         |
+                     6         |  |         3
+                          5----    ----4
+
+the target has the format ¶ dxy¶ and comes after the <text>.
+      d        indicates which direction the line starts Ö Õ × Ô
+      x        [1-9] or [Z-A5a-Z] position on x-axis
+      y        [1-9] or [Z-A5a-Z] position on y-axis
+
+target arrows are suggestions.  if the direction does not make sense, the
+connector will be routed in a logical manner anyway.  if the target is under
+the note box, the connector will not be shown only a red dot for the end-point.
+
+NOTE: by default, targets are positioned relative to the main area, not the
+full window.  if you which to use the whole window, use the á symbol before
+the direction arrow.  this is to help reach some of the bigger vikeys areas
+like progress or nav.
+
+.nf
+example   :note 53,text Ö88¦   looks like 3 type above
+example   :note 53,text Õ88¦   looks like 4 type above
+example   :note 53,text áÕ88¦  ... within the entire window
+
+.SH F) CHANGES
+since it is error prone to retype an entire note to make a little change,
+there are some shortcuts.  you must always identify a note by its xy location.
+
+example   :note 53,text Ö88¦
+
+to change the size only, ¶:note 53= ´¦¶ make the note bigger, while leaving
+the text and targeting the same.
+
+to change the text only, ¶:note 53´new text ´¦¶ updates the text, while
+leaving the size and target the same.
+
+to add to the text only, ¶:note 53&more ´¦¶ appends the new text with a
+connecting space, while leaving the size and target the same.
+
+to change the target only, ¶:note 53´ Ö77¦¶ retargets the note, while
+leaving the size and text the same.
+
+to remove the target only, ¶:note 53´¶ removes the target, while
+leaving the size and text the same.
+
+.SH G) OVERALL CAPABILITIES
+
+to delete all notes, ¶:note #¦¶
+
+to delete all notes except titles, ¶:note /¦¶
+
+to delete a specific note, ¶:note 55#¦¶
+
+to move a specific note to a new position, ¶:note 55>65¦¶
+
+to bring a specific to the top/focus, ¶:note 55¦¶
+
+to temporarily hide all notes, ¶:note %¦¶
+
+to unhide all notes, ¶:note !¦¶
+
+to show targeting guidelines, ¶:note |¦¶, imaginary note at position 00
+
+to hide targeting guidelines, ¶:note 00#¦¶
+
+.SH H) FORMATTING
+notes have a few color formatting options to help with visibility.  notes are
+meant to be clear and useful, not focus on being pretty.  for colors, i use
+16 color terminal as a standard.  capital letter is bright, lower is dark.
+   W  w  brown
+   R  r  red
+   O  o  orange
+   Y  y  yellow             this is my theia custom
+   G  g  green              colorset
+   B  b  blue
+   P  p  purple
+   C  c  crimson
+
+lines can be confusing with several notes overlapping.  they can be
+configured slightly using the ":note ln ··" command.  the two dots are
+current line color and previous (all other) line color.
+   :note ln ~~¦     set do default of YY
+   :note ln Yy¦     current is bright yellow, others dim yellow
+   :note ln Cy¦     makes current line bright crimson, prev dim yellow
+   :note ln Y:¦     colon makes non-current lines dotted (nice)
+
+boxes are not really an issue as the current is bright and others are dimmed.
+but, sometimes they don't stand out enought.  use ":note by ··" to set
+global box colors.  current will be bright with dim text and others will be
+dim with bright text.  upper (bright) vs lower (dim) do not matter.
+   :note bg ~~¦     set do default of Yy
+   :note bg yc¦     current bright yellow and others dim crimson
+
+
+.SH I) DEBUGGING
+use ":dump notes¦" to generate a full data inventory of notes to the
+vi_clip.txt file.
+

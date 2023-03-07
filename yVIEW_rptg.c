@@ -4,6 +4,7 @@
 #include    "yVIEW_priv.h"
 
 
+static char s_entry  [LEN_FULL] = "";
 
 char
 yVIEW_debug_list        (void)
@@ -32,9 +33,13 @@ yVIEW_notes_debug        (void)
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    for (i = 0; i < g_nnote; ++i) {
-      l = strlen (g_notes [i].text);
-      if (l > 60)  sprintf (t, "%2då%-.60s>", l, g_notes [i].text);
-      else         sprintf (t, "%2då%-.60sæ", l, g_notes [i].text);
+      if (g_notes [i].text != NULL) {
+         l = strlen (g_notes [i].text);
+         if (l > 60)  sprintf (t, "%2då%-.60s>", l, g_notes [i].text);
+         else         sprintf (t, "%2då%-.60sæ", l, g_notes [i].text);
+      } else {
+         strcpy (t, " ·åæ");
+      }
       DEBUG_YVIEW   yLOG_complex ("note"      , "%2d  %c %c %c %c  %4dx %4dy %4dw %4dh  %-64.64s  %c %c  %4dx %4dy  %4dx %4dy  %4dx %4dy  "   , i, g_notes [i].s, g_notes [i].xr, g_notes [i].yr, g_notes [i].size, g_notes [i].x, g_notes [i].y, g_notes [i].w, g_notes [i].h, t, g_notes [i].c, g_notes [i].st, g_notes [i].xt, g_notes [i].yt, g_notes [i].xb, g_notes [i].yb, g_notes [i].xe, g_notes [i].ye);
    }
    /*---(complete)-----------------------*/
@@ -42,8 +47,32 @@ yVIEW_notes_debug        (void)
    return 0;
 }
 
+char*
+yVIEW_note_entry     (char n)
+{
+   char        t           [LEN_HUND]  = "";
+   char        s           [LEN_HUND]  = "";
+   int         l           =    0;
+   strcpy (s_entry, "(not-exist)");
+   if (n < 0  || n >= g_nnote)   return s_entry;
+   sprintf (s, "%2d  %c %c %c %c  "   , n, g_notes [n].s, g_notes [n].xr, g_notes [n].yr, g_notes [n].size);
+   strlcpy (s_entry, s, LEN_FULL);
+   sprintf (s, "%4dx %4dy %4dw %4dh  ", g_notes [n].x, g_notes [n].y, g_notes [n].w, g_notes [n].h);
+   strlcat (s_entry, s, LEN_FULL);
+   l = strlen (g_notes [n].text);
+   if (l > 60)  sprintf (t, "%2då%-.60s>", l, g_notes [n].text);
+   else         sprintf (t, "%2då%-.60sæ", l, g_notes [n].text);
+   sprintf (s, "%-64.64s  ", t);
+   strlcat (s_entry, s, LEN_FULL);
+   sprintf (s, "%c %c %c %c %c  "   , g_notes [n].q, g_notes [n].c, g_notes [n].st, g_notes [n].xt, g_notes [n].yt);
+   strlcat (s_entry, s, LEN_FULL);
+   sprintf (s, "%4dx %4dy  %4dx %4dy", g_notes [n].xb, g_notes [n].yb, g_notes [n].xe, g_notes [n].ye);
+   strlcat (s_entry, s, LEN_FULL);
+   return s_entry;
+}
+
 char 
-yVIEW_notes_dump         (void *f)
+yview_notes_dump         (void *f)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rc          =    0;
@@ -53,24 +82,33 @@ yVIEW_notes_dump         (void *f)
    char        t           [LEN_HUND]  = "";
    /*---(prepare)------------------------*/
    x_file = f;
+   /*---(hints)--------------------------*/
+   fprintf (f, "## vikeys note detail inventory\n");
+   fprintf (f, "\n");
+   fprintf (f, "#@ parsing    åÏ-··Ï·Ï·Ï·Ï··Ï---··Ï---··Ï---··Ï---···Ï---------------------------------------------------------------··Ï·Ï·Ï·Ï·Ï··Ï---··Ï---···Ï---··Ï---·æ\n");
+   fprintf (f, "#@ titles     åno··m·x·y·s··x·····y·····w·····h······content···························································q·c·m·x·y··xb····yb·····xe····ye···æ\n");
+   fprintf (f, "\n");
+   /*---(header)-------------------------*/
+   fprintf (f, "##··---note-------------------------------------------------------------------------------------------··---target--------------------------\n");
+   fprintf (f, "##··m·x·y·s··-xpos·-ypos·-wide·-tall··---content------------------------------------------------------··q·c·m·x·y··-xbeg·-ybeg··-xend·-yend\n");
    /*---(print)--------------------------*/
-   /*> fprintf (f, "#@ parsing    åÏ--··Ï··Ï-------------------··Ï------··Ï------··æ\n");   <*/
-   /*> fprintf (f, "#@ titles     åseq··k··name··················title····content··æ\n");   <*/
-   /*> fprintf (f, "\n");                                                             <*/
-   /*> fprintf (f, "## count = %d\n" , s_nvar);                                       <*/
    for (i = 0; i < g_nnote; ++i) {
       /*> if (i % 25 == 0)  fprintf (f, "\n#--  k  name----------------  title--  content  ´\n");   <*/
-      /*> if (i %  5 == 0)  fprintf (f, "\n");                                        <*/
+      if (i %  5 == 0)  fprintf (f, "\n");
       fprintf (f, "%2d  %c %c %c %c  "   , i, g_notes [i].s, g_notes [i].xr, g_notes [i].yr, g_notes [i].size);
       fprintf (f, "%4dx %4dy %4dw %4dh  ", g_notes [i].x, g_notes [i].y, g_notes [i].w, g_notes [i].h);
       l = strlen (g_notes [i].text);
       if (l > 60)  sprintf (t, "%2då%-.60s>", l, g_notes [i].text);
       else         sprintf (t, "%2då%-.60sæ", l, g_notes [i].text);
-      fprintf (f, "%64.64s  ", t);
-      fprintf (f, "%c %c  %4dx %4dy  "   , g_notes [i].c, g_notes [i].st, g_notes [i].xt, g_notes [i].yt);
-      fprintf (f, "%4dx %4dy  %4dx %4dy  %4dx %4dy", g_notes [i].xb, g_notes [i].yb, g_notes [i].xe, g_notes [i].ye);
+      fprintf (f, "%-64.64s  ", t);
+      fprintf (f, "%c %c %c %c %c  "   , g_notes [i].q, g_notes [i].c, g_notes [i].st, g_notes [i].xt, g_notes [i].yt);
+      fprintf (f, "%4dx %4dy  %4dx %4dy", g_notes [i].xb, g_notes [i].yb, g_notes [i].xe, g_notes [i].ye);
       fprintf (f, "\n");
    }
+   /*---(footer)-------------------------*/
+   fprintf (f, "\n");
+   fprintf (f, "##··m·x·y·s··-xpos·-ypos·-wide·-tall··---content------------------------------------------------------··q·c·m·x·y··-xbeg·-ybeg··-xend·-yend\n");
+   fprintf (f, "##··---note-------------------------------------------------------------------------------------------··---target--------------------------\n");
    /*---(complete)-----------------------*/
    return 0;
 }

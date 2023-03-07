@@ -41,6 +41,9 @@ include /usr/local/sbin/make_program
 #install_post       :
 #remove_post        :
 
+man_post           :
+	cp -f /usr/local/man/man6/yVIEW_note.6.bz2 /usr/local/man/man6/:note.6.bz2
+	printf "installing alternate manual name\n"
 
 
 #================================[[ end-code ]]================================#

@@ -55,7 +55,10 @@ yview_init              (void)
    s_prep     = NULL;
    s_cursor   = NULL;
    s_refresh  = NULL;
-   myVIEW.note_line == 'k';
+   myVIEW.note_curr  = 'Y';
+   myVIEW.note_prev  = 'y';
+   myVIEW.note_lcurr = 'Y';
+   myVIEW.note_lprev = 'Y';
    yview_note_init    ();
    return 0;
 }
@@ -149,6 +152,7 @@ yVIEW_init_after        (void)
    char        rc          =    0;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   yVIHUB_yFILE_dump_add      ("notes", "", "inventory of screen notes", yview_notes_dump);
    yMODE_after_set  (FMOD_VIEW);
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
@@ -196,7 +200,7 @@ yVIEW_draw              (void)
    if (myVIEW.env == YVIEW_CURSES)  s_cursor ();
    /*---(on top of main)-----------------*/
    DEBUG_YVIEW   yLOG_note    ("--------------------------------------");
-   DEBUG_YVIEW   yLOG_note    ("OVERLAY MAIN ELEMENTS");
+   DEBUG_YVIEW   yLOG_note    ("MAIN OVERLAY ELEMENTS");
    for (i = 0; i < myVIEW.npart; ++i) {
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;
@@ -217,7 +221,7 @@ yVIEW_draw              (void)
    }
    /*---(on top of window)---------------*/
    DEBUG_YVIEW   yLOG_note    ("--------------------------------------");
-   DEBUG_YVIEW   yLOG_note    ("OVERLAY WINDOW ELEMENTS");
+   DEBUG_YVIEW   yLOG_note    ("WINDOW OVERLAY ELEMENTS");
    for (i = 0; i < myVIEW.npart; ++i) {
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;

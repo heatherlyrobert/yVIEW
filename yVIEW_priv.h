@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1d"
-#define     P_VERTXT    "note can create reliable target gridlines (Š).  and remove them"
+#define     P_VERNUM    "2.1e"
+#define     P_VERTXT    "many updates to note to make more clear and relaible"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -168,7 +168,10 @@ struct cMY {
    char        s_wide;
    char        s_size;
    char        prog_full;
-   char        note_line;
+   char        note_curr;
+   char        note_prev;
+   char        note_lcurr;
+   char        note_lprev;
 };
 extern tMY         myVIEW;
 
@@ -185,11 +188,12 @@ struct cNOTE {
    short       x, y;                        /* note top-left pos              */
    short       w, h;                        /* note size                      */
    char       *text;                        /* text to be displayed           */
-   char        c;                           /* connector type                 */
    char        st;                          /* main vs window on target       */
-   short       xt, yt;                      /* requested endpoint grid        */
+   char        xt, yt;                      /* requested endpoint grid        */
    short       xb, yb;                      /* connector beginning pos        */
    short       xe, ye;                      /* connector ending pos           */
+   char        q;                           /* connector end quad             */
+   char        c;                           /* connector type                 */
 };
 extern tNOTE  g_notes [MAX_NOTES];
 extern char   g_nnote;
@@ -312,7 +316,17 @@ char        yview_note__purgeish    (void);
 char        yview_note__resize      (void);
 char        yview_note_init         (void);
 /*---(content)--------------*/
-char        yview_note__size        (char n, char xr, char yr, char a_size);
+char        yview_note__pct         (char a_type, char a_code, float *r_pct);
+char        yview_note__x           (char a_env, short a_left, short a_wide, short w, char xr, short *x);
+char        yview_note__y           (char a_env, short a_bott, short a_tall, short h, char yr, short *y);
+char        yview_note__sizer       (char a_env, char a_size, char *r_size, short *r_wide, short *r_high);
+char        yview_note__position    (char a_env, char a_part, char a_size, short *b_wide, short *b_high, char xr, char yr, char *r_part, char *r_xr, char *r_yr, short *r_x, short *r_y);
+/*> char        yview_note__size        (char n, char xr, char yr, char a_size);      <*/
+char        yview_note__end         (char a_type, char a_xt, char a_yt, char *r_scope, short *r_xe, short *r_ye);
+char        yview_note__quad        (short a_x, short a_y, short a_wide, short a_tall, short a_xe, short a_ye, char *r_quad, short *a_cen, short *a_mid);
+char        yview_note__dir         (char a_type, char a_quad, short a_cen, short a_mid, short a_xe, short a_ye, char *r_dir);
+/*> char        yview_note__dir_OLD     (char a_type, short a_x, short a_y, short w, short h, short a_xe, short a_ye, char *r_dir);   <*/
+char        yview_note__begin       (char n, char a_dir, short x_cen, short x_mid, short *r_xb, short *r_yb);
 char        yview_note__retarg      (char n);
 /*---(driver)---------------*/
 char        yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text);
@@ -321,10 +335,14 @@ char        yVIEW_note_direct       (char *a_all);
 /*---(access)---------------*/
 char        yVIEW_note_showing      (void);
 char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar *t, uchar *c, short *xb, short *yb, short *xe, short *ye);
+char        yview_note_line         (char a_curr, char a_prev);
+char        yview_note_notes        (char a_curr, char a_prev);
+char        yVIEW_note_colors       (char *a_curr, char *a_prev, char *a_lcurr, char *a_lprev);
 /*---(unittest)-------------*/
 char*       yview_note__unit        (char *a_question, int n);
 /*---(done)-----------------*/
 
+char        yview_notes_dump        (void *f);
 
 
 #endif
