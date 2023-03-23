@@ -102,7 +102,7 @@ yVIEW_layout            (char *a_name)
    int         x_len       =    0;
    uchar       x_ch        =    0;
    uchar       x_key       =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*> DEBUG_YVIEW   yLOG_complex ("origs"     , "%3dw, %3dt, %3da", s_orig_wide, s_orig_tall, s_alt_wide);   <*/
@@ -182,7 +182,7 @@ yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source
    char        x_on        =  '-';
    char        i           =    0;
    char        a           =   -1;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(defense)------------------------*/
@@ -237,11 +237,11 @@ yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source
 }
 
 char
-yview__switch_linked    (tPARTS *p)
+yview__switch_linked    (tYVIEW_PARTS *p)
 {
-   tPARTS     *a           = NULL;
-   tPARTS     *x_ind       = NULL;
-   tPARTS     *x_dep       = NULL;
+   tYVIEW_PARTS     *a           = NULL;
+   tYVIEW_PARTS     *x_ind       = NULL;
+   tYVIEW_PARTS     *x_dep       = NULL;
    DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(get alternate)------------------*/
    switch (p->abbr) {
@@ -283,7 +283,7 @@ yVIEW_switch            (char *a_name, char *a_opt)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    char        x_on        =  '-';
    char        i           =    0;
    char        n           =   -1;

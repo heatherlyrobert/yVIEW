@@ -84,7 +84,7 @@ char*        /*-> tbd --------------------------------[ leaf   [gs.520.202.40]*/
 yVIEW__unit             (char *a_question, char a_index)
 {
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    char        s           [LEN_SHORT] = "···";
    char        t           [LEN_SHORT] = "···";
    /*---(preprare)-----------------------*/

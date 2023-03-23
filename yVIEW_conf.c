@@ -16,8 +16,8 @@ yVIEW_defsize           (char a_part, short a_wide, short a_tall)
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
-   tPARTS     *a           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
+   tYVIEW_PARTS     *a           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(identify part)------------------*/
@@ -75,7 +75,7 @@ yVIEW_defsize           (char a_part, short a_wide, short a_tall)
 static void      o___CONFIG__________________o (void) {;}
 
 char
-yview__conf_type        (tPARTS *p, char a_type)
+yview__conf_type        (tYVIEW_PARTS *p, char a_type)
 {
    DEBUG_YVIEW   yLOG_char    ("a_type"    , a_type);
    if      (a_type == YVIEW_LEAVE)     return 0;
@@ -87,7 +87,7 @@ yview__conf_type        (tPARTS *p, char a_type)
 }
 
 char
-yview__conf_anchor      (tPARTS *p, char a_anchor)
+yview__conf_anchor      (tYVIEW_PARTS *p, char a_anchor)
 {
    DEBUG_YVIEW   yLOG_value   ("a_anchor"  , a_anchor);
    if (p->anchor == 0) {
@@ -103,7 +103,7 @@ yview__conf_anchor      (tPARTS *p, char a_anchor)
 }
 
 char
-yview__conf_color       (tPARTS *p, char a_major, char a_minor)
+yview__conf_color       (tYVIEW_PARTS *p, char a_major, char a_minor)
 {
    char        rce         =  -10;
    /*---(header)-------------------------*/
@@ -146,7 +146,7 @@ yview__conf_color       (tPARTS *p, char a_major, char a_minor)
 }
 
 char
-yview__conf_drawer      (tPARTS *p, void *a_drawer)
+yview__conf_drawer      (tYVIEW_PARTS *p, void *a_drawer)
 {
    DEBUG_YVIEW   yLOG_point   ("a_drawer"  , a_drawer);
    switch (p->abbr) {
@@ -165,7 +165,7 @@ yview_conf_text         (char a_part, char *a_text)
 {
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_point   ("a_text"    , a_text);
    if (a_text == NULL) {
@@ -190,7 +190,7 @@ yview__system           (char a_part, void *a_drawer)
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(identify part)------------------*/
@@ -223,7 +223,7 @@ yVIEW_simple            (char a_part, char a_major, char a_minor, void *a_drawer
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(identify part)------------------*/
@@ -255,7 +255,7 @@ yVIEW_full              (char a_part, char a_type, char a_anchor, char a_major, 
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(identify part)------------------*/
@@ -300,7 +300,7 @@ char
 yVIEW_size              (char a_part, char *a_on, short *a_left, short *a_wide, short *a_bott, short *a_tall)
 {
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_char    ("a_part"    , a_part);
    rc = yview_by_abbr (a_part, &p, NULL);
@@ -329,7 +329,7 @@ char
 yVIEW_curses            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *r_orient, short *r_left, short *r_wide, short *r_bott, short *r_tall)
 {
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_char    ("a_part"    , a_part);
    rc = yview_by_abbr (a_part, &p, NULL);
@@ -366,7 +366,7 @@ char
 yVIEW_bounds            (char a_part, char *a_type, char *a_anchor, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
 {
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_char    ("a_part"    , a_part);
    rc = yview_by_abbr (a_part, &p, NULL);
@@ -401,7 +401,7 @@ char
 yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, char *r_text, char *a_type, char *a_anchor, short *a_xmin, short *a_xmax, short *a_xlen, short *a_ymin, short *a_ymax, short *a_ylen)
 {
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_char    ("a_part"    , a_part);
    rc = yview_by_abbr (a_part, &p, NULL);
@@ -475,7 +475,7 @@ yview_set_anchor        (char a_abbr, char a_anchor)
 {
    char        rce         =  -10;
    char        rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    DEBUG_YVIEW   yLOG_char    ("a_abbr"    , a_abbr);
    DEBUG_YVIEW   yLOG_char    ("a_anchor"  , a_anchor);
@@ -550,7 +550,7 @@ yview_update            (void)
 {
    /*---(locals)-----------+-----+-----+-*/
    int         x_alt       =    0;
-   tPARTS     *a           = NULL;
+   tYVIEW_PARTS     *a           = NULL;
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yVIEW_debug_list ();
    yview_clear ();

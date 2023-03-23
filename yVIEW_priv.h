@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1e"
-#define     P_VERTXT    "many updates to note to make more clear and relaible"
+#define     P_VERNUM    "2.1f"
+#define     P_VERTXT    "globals overlap with gregg.  BOOM!  fixed global names in yVIEW to gVIEW"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -80,9 +80,9 @@
 
 
 
-#define      MAX_PARTS         30
-typedef  struct  cPARTS     tPARTS;
-struct cPARTS {
+#define      YVIEW_MAX_PARTS         30
+typedef  struct  cYVIEW_PARTS     tYVIEW_PARTS;
+struct cYVIEW_PARTS {
    /*---(main)-----------------*/
    cchar       abbr;                        /* short name of screen element   */
    cchar       name        [LEN_LABEL];     /* name of screen element         */
@@ -126,33 +126,33 @@ struct cPARTS {
    cchar       desc        [LEN_DESC ];     /* explanation of element         */
    /*---(done)-----------------*/
 };
-extern tPARTS  g_parts [MAX_PARTS];
+extern tYVIEW_PARTS  gVIEW_parts [YVIEW_MAX_PARTS];
 
 
-#define      OVER_FULL        "GCO"
-#define      OVER_WIND        "NZ"
+#define      YVIEW_OVER_FULL        "GCO"
+#define      YVIEW_OVER_WIND        "NZ"
 
-#define      OWN_FULLY        'y'   /* only change color, text, and hiding    */
-#define      OWN_PARTLY       'p'   /* change hiding, color, and drawing      */
-#define      OWN_LITTLE       's'   /* change anything and everything         */
-#define      OWN_MAIN         'm'   /* change anything and everything         */
-#define      OWN_UNDERLAY     'u'   /* drawn before main                      */
-#define      OWN_OVERLAY      'o'   /* drawn on top of main                   */
-#define      OWN_WINDOW       'w'   /* drawn on top of full window            */
-#define      OWN_FLOAT        'f'   /* drawn over part of full window         */
-#define      OWN_DATA         '-'   /* just a data holder                     */
+#define      YVIEW_OWN_FULLY        'y'   /* only change color, text, and hiding    */
+#define      YVIEW_OWN_PARTLY       'p'   /* change hiding, color, and drawing      */
+#define      YVIEW_OWN_LITTLE       's'   /* change anything and everything         */
+#define      YVIEW_OWN_MAIN         'm'   /* change anything and everything         */
+#define      YVIEW_OWN_UNDERLAY     'u'   /* drawn before main                      */
+#define      YVIEW_OWN_OVERLAY      'o'   /* drawn on top of main                   */
+#define      YVIEW_OWN_WINDOW       'w'   /* drawn on top of full window            */
+#define      YVIEW_OWN_FLOAT        'f'   /* drawn over part of full window         */
+#define      YVIEW_OWN_DATA         '-'   /* just a data holder                     */
 
-#define      OWN_SETUP        "ypsm"
-#define      OWN_HIDE         "ypso"
-#define      OWN_REANCHOR     "yp"
+#define      YVIEW_OWN_SETUP        "ypsm"
+#define      YVIEW_OWN_HIDE         "ypso"
+#define      YVIEW_OWN_REANCHOR     "yp"
 
-#define      OWN_COMPLEX      "mso"
-#define      OWN_MODERATE     "msp"
-#define      OWN_SIMPLE       "po"
+#define      YVIEW_OWN_COMPLEX      "mso"
+#define      YVIEW_OWN_MODERATE     "msp"
+#define      YVIEW_OWN_SIMPLE       "po"
 
 
-typedef    struct    cMY    tMY;
-struct cMY {
+typedef    struct    cYVIEW_MY    tYVIEW_MY;
+struct cYVIEW_MY {
    char        env;                         /* curses vs opengl               */
    char        npart;                       /* total number of window parts   */
    short       orig_wide;
@@ -173,16 +173,16 @@ struct cMY {
    char        note_lcurr;
    char        note_lprev;
 };
-extern tMY         myVIEW;
+extern tYVIEW_MY         myVIEW;
 
 
 extern char           unit_answer [LEN_FULL];
 
 
 
-#define      MAX_NOTES     20
-typedef    struct    cNOTE  tNOTE;
-struct cNOTE {
+#define      YVIEW_MAX_NOTES     20
+typedef    struct    cYVIEW_NOTE  tYVIEW_NOTE;
+struct cYVIEW_NOTE {
    char        xr, yr, size;                /* requested pos and size         */
    char        s;                           /* main vs window on note box     */
    short       x, y;                        /* note top-left pos              */
@@ -195,8 +195,8 @@ struct cNOTE {
    char        q;                           /* connector end quad             */
    char        c;                           /* connector type                 */
 };
-extern tNOTE  g_notes [MAX_NOTES];
-extern char   g_nnote;
+extern tYVIEW_NOTE  gVIEW_notes [YVIEW_MAX_NOTES];
+extern char   gVIEW_nnote;
 
 
 
@@ -225,10 +225,10 @@ char        yview__unit_refresh     (void);
 /*---(program)--------------*/
 char        yview_parts_init        (void);
 /*---(search)---------------*/
-char        yview_by_abbr           (cchar  a_abbr, tPARTS **r_part, tPARTS **r_link);
-char        yview_by_index          (int n, tPARTS **r_part, tPARTS **r_link);
-char        yview_by_name           (cchar *a_name, tPARTS **r_part, tPARTS **r_link);
-char        yview_by_cursor         (cchar  a_move, tPARTS **r_part, tPARTS **r_link);
+char        yview_by_abbr           (cchar  a_abbr, tYVIEW_PARTS **r_part, tYVIEW_PARTS **r_link);
+char        yview_by_index          (int n, tYVIEW_PARTS **r_part, tYVIEW_PARTS **r_link);
+char        yview_by_name           (cchar *a_name, tYVIEW_PARTS **r_part, tYVIEW_PARTS **r_link);
+char        yview_by_cursor         (cchar  a_move, tYVIEW_PARTS **r_part, tYVIEW_PARTS **r_link);
 char*       yview_parts_name        (cchar n);
 /*---(defaults)-------------*/
 char        yview_factory           (cchar a_env);
@@ -249,9 +249,9 @@ char        yview_horz_fixed        (void);
 char        yview_horz_auto         (cint a_wide, cint a_alt);
 char        yview_horz_var          (void);
 char        yview_horz_link         (void);
-char        yview_horz__float       (tPARTS *m, tPARTS *p);
-char        yview_horz__menus       (tPARTS *m, tPARTS *p);
-char        yview_horz__hist        (tPARTS *m, tPARTS *p);
+char        yview_horz__float       (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
+char        yview_horz__menus       (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
+char        yview_horz__hist        (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
 char        yview_horz_float        (void);
 char        yview_horz_final        (void);
 /*---(coords)---------------*/
@@ -270,9 +270,9 @@ char        yview_vert_fixed        (void);
 char        yview_vert_auto         (cint a_tall);
 char        yview_vert_var          (void);
 char        yview_vert_link         (void);
-char        yview_vert__float       (tPARTS *m, tPARTS *p);
-char        yview_vert__menus       (tPARTS *m, tPARTS *p);
-char        yview_vert__hist        (tPARTS *m, tPARTS *p);
+char        yview_vert__float       (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
+char        yview_vert__menus       (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
+char        yview_vert__hist        (tYVIEW_PARTS *m, tYVIEW_PARTS *p);
 char        yview_vert_float        (void);
 char        yview_vert_final        (void);
 char        yview_vert_flip         (void);

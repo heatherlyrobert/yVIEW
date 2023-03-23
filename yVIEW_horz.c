@@ -21,7 +21,7 @@ yview_horz_fixed        (void)
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
    int         x_max       =    0;          /* widest at level                */
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(prepare)------------------------*/
@@ -59,7 +59,7 @@ char
 yview_horz_auto         (cint a_wide, cint a_alt)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    int         x_float     = 40;
    int         x_hist      = 60;
    /*---(header)-------------------------*/
@@ -120,7 +120,7 @@ yview_horz_var          (void)
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
    int         x_max       =    0;          /* widest at level                */
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(set lefts)----------------------*/
@@ -154,8 +154,8 @@ yview_horz_link         (void)
 {
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
-   tPARTS     *p           = NULL;
-   tPARTS     *a           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
+   tYVIEW_PARTS     *a           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(find var widths)----------------*/
@@ -198,7 +198,7 @@ yview_horz_link         (void)
 }
 
 char
-yview_horz__float       (tPARTS *w, tPARTS *p)
+yview_horz__float       (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    /*---(locals)-----------+-----+-----+-*/
    float       x_big       =  0.0;
@@ -264,7 +264,7 @@ yview_horz__float       (tPARTS *w, tPARTS *p)
 }
 
 char
-yview_horz__menus       (tPARTS *w, tPARTS *p)
+yview_horz__menus       (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    /*> p->type = w->type;                                                             <*/
    float       x_side      =  0.0;
@@ -304,7 +304,7 @@ yview_horz__menus       (tPARTS *w, tPARTS *p)
 }
 
 char
-yview_horz__hist        (tPARTS *w, tPARTS *p)
+yview_horz__hist        (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    /*> p->type = w->type;                                                             <*/
    switch (p->anchor) {
@@ -333,8 +333,8 @@ char
 yview_horz_float        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *w           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *w           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
@@ -376,7 +376,7 @@ char
 yview_horz_final         (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(walk floats)--------------------*/
@@ -412,7 +412,7 @@ yview_horz_coords       (void)
    /*---(locals)-----------+-----+-----+-*/
    short       x_len       =    0;
    short       x_max       =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(check for opengl)---------------*/
@@ -425,7 +425,7 @@ yview_horz_coords       (void)
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
       /*---(non-overlays)----------------*/
-      if (p->own  != OWN_OVERLAY && p->own  != OWN_FLOAT && p->own  != OWN_WINDOW) {
+      if (p->own  != YVIEW_OWN_OVERLAY && p->own  != YVIEW_OWN_FLOAT && p->own  != YVIEW_OWN_WINDOW) {
          /*---(display)------------------*/
          DEBUG_YVIEW   yLOG_complex ("handling"  , "%c %-12.12s", p->abbr, p->name);
          /*---(easy first)---------------*/
@@ -465,9 +465,9 @@ char
 yview_horz_overlay      (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *w           = NULL;
-   tPARTS     *m           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *w           = NULL;
+   tYVIEW_PARTS     *m           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(check for opengl)---------------*/
@@ -486,7 +486,7 @@ yview_horz_overlay      (void)
       /*---(skip non-auto)---------------*/
       /*> if (p->mgmt != YVIEW_AUTO)  continue;                                       <*/
       /*---(main overlays)---------------*/
-      if (p->own  == OWN_OVERLAY) {
+      if (p->own  == YVIEW_OWN_OVERLAY) {
          DEBUG_YVIEW   yLOG_complex ("main over" , "%c %-12.12s", p->abbr, p->name);
          p->left = m->left;
          p->wide = m->wide;
@@ -496,7 +496,7 @@ yview_horz_overlay      (void)
          }
       }
       /*---(window overlays)-------------*/
-      else if (p->own  == OWN_WINDOW) {
+      else if (p->own  == YVIEW_OWN_WINDOW) {
          DEBUG_YVIEW   yLOG_complex ("wind over" , "%c %-12.12s", p->abbr, p->name);
          p->left = w->left;
          p->wide = w->wide;
@@ -506,7 +506,7 @@ yview_horz_overlay      (void)
          }
       }
       /*---(ignore floaters)-------------*/
-      else if (p->own  == OWN_FLOAT) {
+      else if (p->own  == YVIEW_OWN_FLOAT) {
          DEBUG_YVIEW   yLOG_complex ("not float" , "%c %-12.12s", p->abbr, p->name);
       }
       /*---(display)---------------------*/
@@ -523,7 +523,7 @@ char
 yview_horz_status       (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    yview_by_abbr   (YVIEW_STATUS, &p, NULL);
@@ -545,8 +545,8 @@ char
 yview_horz_source       (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *f           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *f           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    short       x_formula   =    0;
    short       x_command   =    0;
    /*---(header)----------------------*/
@@ -572,8 +572,8 @@ char
 yview_horz_xaxis        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *b           = NULL;
-   tPARTS     *m           = NULL;
+   tYVIEW_PARTS     *b           = NULL;
+   tYVIEW_PARTS     *m           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(set)-------------------------*/

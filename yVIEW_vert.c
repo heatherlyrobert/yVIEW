@@ -22,7 +22,7 @@ yview_vert_fixed (void)
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
    int         x_max       =    0;          /* widest at level                */
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    char        x_skip      =  '-';
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
@@ -65,7 +65,7 @@ char
 yview_vert_auto  (cint a_tall)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    int         x_other     =    0;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
@@ -118,7 +118,7 @@ yview_vert_var   (void)
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
    int         x_max       =    0;          /* widest at level                */
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    char        x_skip      =  '-';
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
@@ -158,8 +158,8 @@ yview_vert_link  (void)
 {
    /*---(locals)-----------+-----+-----+-*/
    int         x_lvl       =    0;          /* evaluation level               */
-   tPARTS     *p           = NULL;
-   tPARTS     *a           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
+   tYVIEW_PARTS     *a           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(find var widths)----------------*/
@@ -186,7 +186,7 @@ yview_vert_link  (void)
 }
 
 char
-yview__vert_float       (tPARTS *w, tPARTS *p)
+yview__vert_float       (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    /*> p->type   = w->type;                                                           <*/
    p->tall   = p->def_tall;
@@ -222,7 +222,7 @@ yview__vert_float       (tPARTS *w, tPARTS *p)
 }
 
 char
-yview__vert_menu        (tPARTS *w, tPARTS *p)
+yview__vert_menu        (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    short       x_bott      =    0;
    short       x_bottm     =    0;
@@ -269,7 +269,7 @@ yview__vert_menu        (tPARTS *w, tPARTS *p)
 }
 
 char
-yview__vert_hist        (tPARTS *w, tPARTS *p)
+yview__vert_hist        (tYVIEW_PARTS *w, tYVIEW_PARTS *p)
 {
    /*> p->type = w->type;                                                             <*/
    p->tall = w->tall * 0.90;
@@ -284,8 +284,8 @@ char
 yview_vert_float        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *w           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *w           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(get main info)------------------*/
@@ -332,7 +332,7 @@ char         /*-> flip bottoms for ncurses -----------[ ------ [gz.742.001.01]*/
 yview_vert_final        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(fill in widths)-----------------*/
@@ -353,7 +353,7 @@ char         /*-> flip bottoms for ncurses -----------[ ------ [gz.742.001.01]*/
 yview_vert_flip         (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    if (myVIEW.env == YVIEW_OPENGL) {
@@ -389,7 +389,7 @@ yview_vert_coords       (void)
    /*---(locals)-----------+-----+-----+-*/
    short       y_len       =    0;
    short       y_max       =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(check for opengl)---------------*/
@@ -402,7 +402,7 @@ yview_vert_coords       (void)
    yview_by_cursor (YDLST_HEAD, &p, NULL);
    while (p != NULL) {
       /*---(non-overlays)----------------*/
-      if (p->own  != OWN_OVERLAY && p->own  != OWN_FLOAT && p->own  != OWN_WINDOW) {
+      if (p->own  != YVIEW_OWN_OVERLAY && p->own  != YVIEW_OWN_FLOAT && p->own  != YVIEW_OWN_WINDOW) {
          /*---(display)------------------*/
          DEBUG_YVIEW   yLOG_complex ("handling"  , "%c %-12.12s", p->abbr, p->name);
          /*---(easy first)---------------*/
@@ -442,9 +442,9 @@ char
 yview_vert_overlay      (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *w           = NULL;
-   tPARTS     *m           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *w           = NULL;
+   tYVIEW_PARTS     *m           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(check for opengl)---------------*/
@@ -456,7 +456,7 @@ yview_vert_overlay      (void)
    /*---(walk all)-----------------------*/
    yview_by_cursor (YDLST_HEAD  , &p, NULL);
    while (p != NULL) {
-      if (p->own  == OWN_OVERLAY) {
+      if (p->own  == YVIEW_OWN_OVERLAY) {
          DEBUG_YVIEW   yLOG_complex ("main over" , "%c %-12.12s", p->abbr, p->name);
          p->bott = m->bott;
          p->tall = m->tall;
@@ -466,7 +466,7 @@ yview_vert_overlay      (void)
          }
       }
       /*---(window overlays)-------------*/
-      else if (p->own  == OWN_WINDOW) {
+      else if (p->own  == YVIEW_OWN_WINDOW) {
          DEBUG_YVIEW   yLOG_complex ("wind over" , "%c %-12.12s", p->abbr, p->name);
          p->bott = w->bott;
          p->tall = w->tall;
@@ -476,7 +476,7 @@ yview_vert_overlay      (void)
          }
       }
       /*---(ignore floaters)-------------*/
-      else if (p->own  == OWN_FLOAT) {
+      else if (p->own  == YVIEW_OWN_FLOAT) {
          DEBUG_YVIEW   yLOG_complex ("not float" , "%c %-12.12s", p->abbr, p->name);
       }
       /*---(display)---------------------*/
@@ -493,7 +493,7 @@ char
 yview_vert_yaxis        (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *m           = NULL;
+   tYVIEW_PARTS     *m           = NULL;
    /*---(header)----------------------*/
    DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(set)-------------------------*/
@@ -509,11 +509,11 @@ char
 yview_vert_progress     (void)
 {
    /*---(locals)-----------+-----+-----+-*/
-   tPARTS     *m           = NULL;
-   tPARTS     *a           = NULL;
-   tPARTS     *x           = NULL;
-   tPARTS     *y           = NULL;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *m           = NULL;
+   tYVIEW_PARTS     *a           = NULL;
+   tYVIEW_PARTS     *x           = NULL;
+   tYVIEW_PARTS     *y           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    int         x_max       =    0;
    int         x_theo      =    0;
    int         x_rem       =    0;

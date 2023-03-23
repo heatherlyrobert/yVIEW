@@ -5,7 +5,7 @@
 
 
 
-tMY         myVIEW;
+tYVIEW_MY   myVIEW;
 
 
 static char   (*s_cursor)  (void) = NULL;
@@ -49,6 +49,8 @@ static void  o___PROGRAM_________o () { return; }
 char
 yview_init              (void)
 {
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yview_parts_init   ();
    yview_layout_init  ();
    s_cleanse  = NULL;
@@ -58,8 +60,9 @@ yview_init              (void)
    myVIEW.note_curr  = 'Y';
    myVIEW.note_prev  = 'y';
    myVIEW.note_lcurr = 'Y';
-   myVIEW.note_lprev = 'Y';
+   myVIEW.note_lprev = ':';
    yview_note_init    ();
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -166,7 +169,7 @@ yVIEW_draw              (void)
 {
    /*---(locals)-----------+-----+-----+-*/
    int         rc          =    0;
-   tPARTS     *p           = NULL;
+   tYVIEW_PARTS     *p           = NULL;
    short       x_cur, y_cur;
    int         i           =    0;
    /*---(header)-------------------------*/
@@ -184,7 +187,7 @@ yVIEW_draw              (void)
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;
       DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (strchr (OWN_SETUP, p->own) == NULL || p->on   != 'y') {
+      if (strchr (YVIEW_OWN_SETUP, p->own) == NULL || p->on   != 'y') {
          DEBUG_YVIEW   yLOG_note    ("skipping, either not on or not independent");
       } else if (p->drawer == NULL) {
          DEBUG_YVIEW   yLOG_note    ("bupkiss, turned-on but not drawer assigned");
@@ -205,7 +208,7 @@ yVIEW_draw              (void)
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;
       DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (p->own != OWN_OVERLAY) {
+      if (p->own != YVIEW_OWN_OVERLAY) {
          DEBUG_YVIEW   yLOG_note    ("skipping, not main overlay");
       } else if (p->on != 'y') {
          DEBUG_YVIEW   yLOG_note    ("hidden, not currently on");
@@ -226,7 +229,7 @@ yVIEW_draw              (void)
       yview_by_index (i, &p, NULL);
       if (p == NULL)  continue;
       DEBUG_YVIEW   yLOG_complex ("part"      , "%-12.12s, %c, %c, %c, %-10.10p", p->name, p->own, p->on, p->type, p->drawer);
-      if (p->own != OWN_WINDOW && p->own != OWN_FLOAT) {
+      if (p->own != YVIEW_OWN_WINDOW && p->own != YVIEW_OWN_FLOAT) {
          DEBUG_YVIEW   yLOG_note    ("skipping, not window overlay or float");
       } else if (p->on != 'y') {
          DEBUG_YVIEW   yLOG_note    ("hidden, not currently on");
