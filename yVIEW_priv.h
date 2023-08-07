@@ -38,7 +38,7 @@
 #define     P_DEPEXTEND "···"
 #define     P_DEPCORE   "yURG,yLOG,ySTR"
 #define     P_DEPVIKEYS "yVIHUB,yMODE,yKEYS"
-#define     P_DEPOTHER  "yCOLOR"
+#define     P_DEPOTHER  ""
 #define     P_DEPSOLO   "yCOLOR,YDLST"
 /*········· ··········· ´·····························´········································*/
 #define     P_AUTHOR    "heatherlyrobert"
@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1f"
-#define     P_VERTXT    "globals overlap with gregg.  BOOM!  fixed global names in yVIEW to gVIEW"
+#define     P_VERNUM    "2.1g"
+#define     P_VERTXT    "solved an opengl requirement in curses environment issue"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -74,7 +74,6 @@
 #include    <yKEYS.h>             /* heatherly vi-keys key handling           */
 #include    <yMODE.h>             /* heatherly vi-keys mode tracking          */
 
-#include    <yCOLOR.h>            /* heatherly opengl color handling          */
 #include    <yCOLOR_solo.h>       /* heatherly opengl color handling          */
 #include    <yDLST_solo.h>        /* heatherly double-double-list             */
 
