@@ -100,6 +100,8 @@
  *
  *     + large       4  x  40
  *
+ *     ° post-it     8  x  25
+ *
  *   colors
  *     ) title       white letters on magenta
  *     ! warning     white letters on red
@@ -155,7 +157,8 @@ static struct {
    {  '=', "normal"   ,     3,  25,  25,    48, 160, 190  },
    /*  a    terse----     ----curses----   ----opengl---- */
    {  '+', "large"    ,     4,  40,  41,    62, 260, 250  },
-   {  '|', "gridline" ,     0,   0,   0,     0,   0,   0  }, /* pseudo overlay          */
+   {  '$', "post-it"  ,    12,  30,  31,    30, 190, 190  },
+   {  '|', "guides"   ,     0,   0,   0,     0,   0,   0  }, /* pseudo overlay          */
    /*  a    terse----     ----curses----   ----opengl---- */
    {  'x', "testing"  ,     0,   0,   0,     0,   0,   0  },
    {   0 , ""         ,     0,   0,   0,     0,   0,   0  },
@@ -568,7 +571,7 @@ yview_note__x           (char a_env, short a_left, short a_wide, short w, char x
       return rc;
    }
    /*---(adjust range)-------------------*/
-   --a_wide;
+   /*> --a_wide;                                                                      <*/
    /*---(final)--------------------------*/
    DEBUG_YVIEW   yLOG_value   ("a_left"    , a_left);
    DEBUG_YVIEW   yLOG_value   ("a_wide"    , a_wide);
@@ -599,7 +602,8 @@ yview_note__y           (char a_env, short a_bott, short a_tall, short h, char y
       return rc;
    }
    /*---(adjust range)-------------------*/
-   --a_tall;
+   ++a_bott;
+   /*> --a_tall;                                                                      <*/
    /*---(final)--------------------------*/
    b = 1 - a;
    DEBUG_YVIEW   yLOG_value   ("a_bott"    , a_bott);
@@ -1316,15 +1320,23 @@ yview_note__retarg      (char n)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
+   char        x_dir       =  '·';
    char        t           [LEN_LABEL] = "";
    switch (gVIEW_notes [n].c) {
-   case '´' :
-      sprintf (t, "%c%c%c", gVIEW_notes [n].c, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
-      break;
-   case ' ' :
-      sprintf (t, "%c%d%c", gVIEW_notes [n].c, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
-      break;
+   case '2' : case '3' : x_dir = 'Ö';  break;
+   case '4' : case '5' : x_dir = 'Õ';  break;
+   case '6' : case '7' : x_dir = '×';  break;
+   case '8' : case '1' : x_dir = 'Ô';  break;
    }
+   if (gVIEW_notes [n].st == YVIEW_WINDOW) {
+      switch (x_dir) {
+      case 'Ö'  :  x_dir = '‡';  break;
+      case 'Õ'  :  x_dir = '‰';  break;
+      case '×'  :  x_dir = '†';  break;
+      case 'Ô'  :  x_dir = 'ˆ';  break;
+      }
+   }
+   sprintf (t, "%c%c%c", x_dir, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
    yview_note__settarg (n, t);
    return 0;
 }
@@ -1337,7 +1349,214 @@ yview_note__retarg      (char n)
 static void  o___DRIVER__________o () { return; }
 
 char
-yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text)
+yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [LEN_RECD], char *r_scope, char r_target [LEN_TERSE])
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    0;
+   char        x_concat    =  '·';
+   char        x_text      [LEN_RECD]  = "";
+   char        x_scope     = YVIEW_MAIN;
+   char        x_target    [LEN_TERSE] = "";
+   char        t           [LEN_RECD]  = "";
+   char       *p           = NULL;
+   int         l           =    0;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(default)------------------------*/
+   if (r_concat != NULL)  *r_concat = '·';
+   if (r_text   != NULL)  strcpy  (r_text  , "");
+   if (r_scope  != NULL)  *r_scope  = '·';
+   if (r_target != NULL)  strcpy  (r_target, "");
+   /*---(defense)------------------------*/
+   DEBUG_YVIEW   yLOG_point   ("a_source"  , a_source);
+   --rce;  if (a_source == NULL) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   /*---(prepare)------------------------*/
+   strlcpy  (x_text, a_source, LEN_RECD);
+   strltrim (x_text, ySTR_BOTH, LEN_RECD);
+   p = strrchr (x_text, ' ');
+   DEBUG_YVIEW   yLOG_point   ("p"         , p);
+   /*---(get target)---------------------*/
+   if (p == NULL) {                       /* single word text */
+      DEBUG_YVIEW   yLOG_note    ("no target found");
+      strcpy  (x_target, "");
+   } else if (strcmp (p + 1, "´") == 0) { /* leave symbol     */
+      DEBUG_YVIEW   yLOG_info    ("p"         , p);
+      DEBUG_YVIEW   yLOG_note    ("target remains the same (´)");
+      strcpy  (x_target, "´");
+      p [0] = '\0';
+   } else {                               /* potential target */
+      DEBUG_YVIEW   yLOG_info    ("p"         , p);
+      DEBUG_YVIEW   yLOG_note    ("potential target");
+      ++p;
+      l = strlen (p);
+      DEBUG_YVIEW   yLOG_value   ("l"         , l);
+      if (l == 4 && p [0] == 'á') {
+         DEBUG_YVIEW   yLOG_note    ("targeted to window");
+         x_scope = YVIEW_WINDOW;
+         ++p; --l;
+      }
+      if (l == 3) {
+         if        (strchr (s_targ, p [0]) == NULL) {
+            DEBUG_YVIEW   yLOG_note    ("char 1 not direction [×ÔÕÖ]");
+         } else if (strchr (YSTR_CHARS, p [1]) == NULL) {
+            DEBUG_YVIEW   yLOG_note    ("char 2 not x position [a-zA-Z1-9]");
+         } else if (strchr (YSTR_CHARS, p [2]) == NULL) {
+            DEBUG_YVIEW   yLOG_note    ("char 3 not y position [a-zA-Z1-9]");
+         } else {
+            strlcpy (x_target, p, LEN_TERSE);
+            p [-1] = '\0';
+            if (x_scope == YVIEW_WINDOW) {
+               p [-2] = '\0';
+               switch (x_target [0]) {
+               case 'Ö'  :  x_target [0] = '‡';  break;
+               case 'Õ'  :  x_target [0] = '‰';  break;
+               case '×'  :  x_target [0] = '†';  break;
+               case 'Ô'  :  x_target [0] = 'ˆ';  break;
+               }
+            }
+         }
+      } else {
+         DEBUG_YVIEW   yLOG_note    ("wrong length for target (3)");
+      }
+   }
+   if (strcmp (x_target, "") == 0)  x_scope = YVIEW_MAIN;
+   /*---(finalize text)------------------*/
+   strltrim (x_text, ySTR_BOTH, LEN_RECD);
+   if (x_text [0] == '&') {
+      x_concat = '&';
+      strlcpy (t, x_text + 1, LEN_RECD);
+   } else {
+      strlcpy (t, x_text    , LEN_RECD);
+   }
+   /*---(save back)----------------------*/
+   DEBUG_YVIEW   yLOG_char    ("x_concat"  , x_concat);
+   if (r_concat != NULL)  *r_concat = x_concat;
+   DEBUG_YVIEW   yLOG_info    ("x_text"    , t);
+   if (r_text   != NULL)  strlcpy (r_text  , t       , LEN_RECD);
+   DEBUG_YVIEW   yLOG_char    ("x_scope"   , x_scope);
+   if (r_scope  != NULL)  *r_scope  = x_scope;
+   DEBUG_YVIEW   yLOG_info    ("x_target"  , x_target);
+   if (r_target != NULL)  strlcpy (r_target, x_target, LEN_TERSE);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char a_text [LEN_RECD])
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    0;
+   char        x_concat    =  '·';
+   char        x_text      [LEN_RECD]  = "";
+   char        x_scope     =  '·';
+   char        x_target    [LEN_TERSE] = "";
+   char        t           [LEN_RECD]  = "";
+   char        s           [LEN_TERSE] = "";
+   char       *v           = NULL;
+   char       *p           = NULL;
+   int         l           =    0;
+   char        n           =   -1;
+   char        x_dir       =  'Ö';
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_complex ("args"      , "%c %c %c %c %p", a_part, a_xr, a_yr, a_size, a_text);
+   /*---(parse the text)-----------------*/
+   if (a_text != NULL) {
+      if (a_size == '~')  sprintf (t, "() %s", a_text);
+      else                strlcpy (t, a_text, LEN_RECD);
+   }
+   DEBUG_YVIEW   yLOG_info    ("t"         , t);
+   rc = yview_note__parse_text (t, &x_concat, x_text, &x_scope, x_target);
+   DEBUG_YVIEW   yLOG_value   ("parse"     , rc);
+   --rce;  if (rc < 0) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   /*---(find note)----------------------*/
+   n  = yview_note__find (a_xr, a_yr);
+   DEBUG_YVIEW   yLOG_complex ("note"      , "%c, %c, %2d", a_xr, a_yr, n);
+   --rce;  if (n <  0) {
+      if (a_size == '´' || strcmp (x_text, "´") == 0 || strcmp (x_target, "´") == 0) {
+         DEBUG_YVIEW   yLOG_note    ("source note not found");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      n = gVIEW_nnote;
+   }
+   DEBUG_YVIEW   yLOG_value   ("n"         , n);
+   /*---(save context)-------------------*/
+   s_part = a_part;
+   /*---(handle size)--------------------*/
+   if (a_size != '´') {
+      rc = yview_note__sizer    (myVIEW.env, a_size, &(gVIEW_notes [n].size), &(gVIEW_notes [n].w), &(gVIEW_notes [n].h));
+      DEBUG_YVIEW   yLOG_value   ("sizer"     , rc);
+      --rce;  if (rc < 0) {
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      rc = yview_note__position (myVIEW.env, a_part, a_size, &(gVIEW_notes [n].w), &(gVIEW_notes [n].h), a_xr, a_yr, &(gVIEW_notes [n].s), &(gVIEW_notes [n].xr), &(gVIEW_notes [n].yr), &(gVIEW_notes [n].x), &(gVIEW_notes [n].y));
+      DEBUG_YVIEW   yLOG_value   ("position"  , rc);
+      --rce;  if (rc < 0) {
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+   } 
+   /*---(handle text)--------------------*/
+   l = strlen (x_text);
+   --rce;  if (x_concat == '&' && l > 0) {
+      DEBUG_YVIEW   yLOG_note    ("concatinate text");
+      DEBUG_YVIEW   yLOG_point   ("text"      , gVIEW_notes [n].text);
+      if (gVIEW_notes [n].text != NULL) {
+         sprintf (t, "%s%s", gVIEW_notes [n].text, x_text);
+         strlcpy (x_text, t, LEN_RECD);
+      }
+      gVIEW_notes [n].text = strdup (x_text);
+   } else if (strcmp (x_text, "´") != 0) {
+      DEBUG_YVIEW   yLOG_note    ("replace text");
+      if (gVIEW_notes [n].text != NULL)  free (gVIEW_notes [n].text);
+      gVIEW_notes [n].text = strdup (x_text);
+   }
+   /*---(move to top)--------------------*/
+   if (n == gVIEW_nnote)  ++gVIEW_nnote;
+   rc = yview_note__totop   (n);
+   n = gVIEW_nnote - 1;
+   /*---(default targeting)--------------*/
+   if (strcmp (x_target, "´") == 0) {
+      DEBUG_YVIEW   yLOG_note    ("leave targeting alone");
+      switch (gVIEW_notes [n].c) {
+      case '2' : case '3' : x_dir = 'Ö';  break;
+      case '4' : case '5' : x_dir = 'Õ';  break;
+      case '6' : case '7' : x_dir = '×';  break;
+      case '8' : case '1' : x_dir = 'Ô';  break;
+      }
+      if (gVIEW_notes [n].st == YVIEW_MAIN) {
+         sprintf (x_target, "%c%c%c", x_dir, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
+      } else {
+         sprintf (x_target, "á%c%c%c", x_dir, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
+      }
+   }
+   /*---(targeting)----------------------*/
+   --rce;  if (strcmp (x_target, "") != 0) {
+      rc = yview_note__settarg (n, x_target);
+      DEBUG_YVIEW   yLOG_char    ("settarg"   , rc);
+      if (rc < 0) {
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a_text)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
@@ -1365,8 +1584,8 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   if (a_size == '|')  strlcpy (x_text, "guidelines", LEN_RECD);
-   else                strlcpy (x_text, a_text, LEN_RECD);
+   /*---(intial text handling)-----------*/
+   strlcpy (x_text, a_text, LEN_RECD);
    DEBUG_YVIEW   yLOG_info    ("x_text"    , x_text);
    /*---(check context)------------------*/
    --rce;  switch (a_part) {
@@ -1379,7 +1598,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
       return rce;
       break;
    }
-   /*---(prepare)------------------------*/
+   /*---(prepare targeting)--------------*/
    p = strrchr (x_text, ' ');
    DEBUG_YVIEW   yLOG_point   ("p"         , p);
    if (p != NULL) {
@@ -1412,7 +1631,14 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
    /*---(find note)----------------------*/
    n  = yview_note__find (a_xr, a_yr);
    DEBUG_YVIEW   yLOG_complex ("note"      , "%c, %c, %2d", a_xr, a_yr, n);
-   if (n <  0)  n = gVIEW_nnote;
+   --rce;  if (n <  0) {
+      if (strchr ("&´", a_size) != NULL) {
+         DEBUG_YVIEW   yLOG_note    ("source note not found");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      n = gVIEW_nnote;
+   }
    DEBUG_YVIEW   yLOG_value   ("n"         , n);
    /*---(append/change note)-------------*/
    if (strchr ("&´", a_size) == NULL) {
@@ -1433,6 +1659,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
    strltrim (x_text, ySTR_BOTH, LEN_RECD);
    l = strlen (x_text);
    DEBUG_YVIEW   yLOG_complex ("text"      , "%2d å%sæ", l, x_text);
+   /*---(leave targeting the same)-------*/
    if (a_size != '|' && v == NULL && l > 1 && x_text [l - 1] == '´') {
       DEBUG_YVIEW   yLOG_note    ("leave targeting alone");
       x_leave = 'y';
@@ -1453,7 +1680,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
       DEBUG_YVIEW   yLOG_info    ("s"         , s);
       v = s;
    }
-   /*---(update text)--------------------*/
+   /*---(concatinate text)---------------*/
    --rce;  if (a_size == '&' && l > 0) {
       DEBUG_YVIEW   yLOG_note    ("concatinate text");
       DEBUG_YVIEW   yLOG_point   ("text"      , gVIEW_notes [n].text);
@@ -1462,17 +1689,18 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a
          strlcpy (x_text, t, LEN_RECD);
       }
    }
+   /*---(update text)--------------------*/
    else if (strcmp (x_text, "") != 0) {
       DEBUG_YVIEW   yLOG_note    ("replace text");
       DEBUG_YVIEW   yLOG_point   ("text"      , gVIEW_notes [n].text);
       if (gVIEW_notes [n].text != NULL)  free (gVIEW_notes [n].text);
       gVIEW_notes [n].text = strdup (x_text);
    }
+   /*---(move to top)--------------------*/
    if (n == gVIEW_nnote)  ++gVIEW_nnote;
    rc = yview_note__totop   (n);
    n = gVIEW_nnote - 1;
    /*---(targeting)----------------------*/
-   /*> yview_note__untarget (n);                                                      <*/
    if (v == NULL) {
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
@@ -1548,6 +1776,7 @@ yview_note__direct      (char *a_all, char a_part)
    char        x_size      =  '=';
    short       xt          =  '-';
    short       yt          =  '-';
+   char        x_grid      =  '-';
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(defense)------------------------*/
@@ -1559,6 +1788,35 @@ yview_note__direct      (char *a_all, char a_part)
    DEBUG_YVIEW   yLOG_info    ("a_all"     , a_all);
    x_len = strlen (a_all);
    DEBUG_YVIEW   yLOG_value   ("x_len"     , x_len);
+   /*---(big ones)-----------------------*/
+   if (strcmp (a_all, "purge") == 0) {
+      DEBUG_YVIEW   yLOG_note    ("selected a full purge");
+      rc = yview_note__purge ('-');
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return rc;
+   }
+   /*---(special)------------------------*/
+   if (a_all [0] == '|') {
+      if (strcmp (a_all, "|#") == 0) {
+         DEBUG_YVIEW   yLOG_note    ("remove guidelines");
+         n  = yview_note__find ('0', '0');
+         if (n >= 0)  rc = yview_note__remove   (n);
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return rc;
+      } else {
+         DEBUG_YVIEW   yLOG_note    ("show note guidelines");
+         switch (a_all [1]) {
+         case 'n' :  x_grid = '-';  break;
+         case 'f' :  x_grid = '2';  break;
+         case 'a' :  x_grid = '3';  break;
+         default  :  x_grid = '-';  break;
+         }
+         sprintf (u, "%c guidelines", x_grid);
+         yview_note_add (a_part, '0', '0', '|', u);
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return 0;
+      }
+   }
    /*---(singles)------------------------*/
    --rce;  if (x_len == 1) {
       DEBUG_YVIEW   yLOG_char    ("single"    , a_all [0]);
@@ -1589,7 +1847,8 @@ yview_note__direct      (char *a_all, char a_part)
          break;
       case '|'  :
          DEBUG_YVIEW   yLOG_note    ("show note guidelines");
-         yview_note_add (a_part, '0', '0', '|', "");
+         sprintf (u, "%c guidelines", x_grid);
+         yview_note_add (a_part, '0', '0', '|', u);
          DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
          return 0;
          break;
@@ -1607,17 +1866,27 @@ yview_note__direct      (char *a_all, char a_part)
    DEBUG_YVIEW   yLOG_complex ("note"      , "%c, %c, %2d", xr, yr, n);
    /*---(doubles)------------------------*/
    --rce;  if (x_len == 2) {
+      DEBUG_YVIEW   yLOG_note    ("checking twos");
       if (n <  0) {
          DEBUG_YVIEW   yLOG_note    ("note not found for on-top");
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
-      rc = yview_note__totop   (n);
-      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return rc;
+      if (x_size == '|') {
+         DEBUG_YVIEW   yLOG_note    ("show note guidelines");
+         sprintf (u, "%c guidelines", x_grid);
+         yview_note_add (a_part, '0', '0', '|', u);
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return 0;
+      } else {
+         rc = yview_note__totop   (n);
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return rc;
+      }
    }
    /*---(triples)------------------------*/
    --rce;  if (x_len == 3) {
+      DEBUG_YVIEW   yLOG_note    ("checking threes");
       if (n <  0) {
          DEBUG_YVIEW   yLOG_note    ("note not found for deletion");
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -1630,12 +1899,6 @@ yview_note__direct      (char *a_all, char a_part)
          DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
          return rc;
          break;
-         /*> default  :                                                                  <* 
-          *>    rc = yview_note_add (a_part, xr, yr, x_size, u);                         <* 
-          *>    DEBUG_YVIEW   yLOG_note    ("unknown triple char option");               <* 
-          *>    DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);                          <* 
-          *>    return rce;                                                              <* 
-          *>    break;                                                                   <*/
       }
    }
    /*---(prepare)------------------------*/
@@ -1643,6 +1906,7 @@ yview_note__direct      (char *a_all, char a_part)
    strlcpy (u, a_all + 3, LEN_RECD);
    /*---(triples)------------------------*/
    --rce;  if (x_len == 5) {
+      DEBUG_YVIEW   yLOG_note    ("checking fives");
       if (a_all [2] == '>') {
          if (n <  0) {
             DEBUG_YVIEW   yLOG_note    ("note not found for moving");
@@ -1655,11 +1919,13 @@ yview_note__direct      (char *a_all, char a_part)
          return rc;
       } else {
          if (strncmp (a_all, "ln", 2) == 0) {
+            DEBUG_YVIEW   yLOG_note    ("note line color");
             rc = yview_note_line  (a_all [3], a_all [4]);
             DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
             return rc;
          }
          if (strncmp (a_all, "bg", 2) == 0) {
+            DEBUG_YVIEW   yLOG_note    ("note background color");
             rc = yview_note_notes (a_all [3], a_all [4]);
             DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
             return rc;
@@ -1713,14 +1979,14 @@ char yVIEW_note_directw (char *a_all)  { return yview_note__direct (a_all, YVIEW
 static void  o___ACCESSS_________o () { return; }
 
 char
-yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar t [LEN_HUND], uchar *c, short *xb, short *yb, short *xe, short *ye)
+yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *w, short *h, uchar t [LEN_RECD], uchar *c, short *xb, short *yb, short *xe, short *ye)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        x_name      [LEN_LABEL] = "";
    /*---(defense)------------------------*/
    --rce;  if (n < 0 || n > YVIEW_MAX_NOTES)  return rce;
-   --rce;  if (n >= gVIEW_nnote)            return rce;
+   --rce;  if (n >= gVIEW_nnote)              return rce;
    /*---(top note)-----------------------*/
    if (m   != NULL)  *m  = gVIEW_nnote - 1;
    /*---(top-left)-----------------------*/
@@ -1732,8 +1998,8 @@ yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *
    if (h   != NULL)  *h  = gVIEW_notes [n].h;
    /*---(text)---------------------------*/
    if (t   != NULL) {
-      if (gVIEW_notes [n].text == NULL)  strlcpy (t, ""              , LEN_HUND);
-      else                           strlcpy (t, gVIEW_notes [n].text, LEN_HUND);
+      if (gVIEW_notes [n].text == NULL)  strlcpy (t, ""              , LEN_RECD);
+      else                               strlcpy (t, gVIEW_notes [n].text, LEN_RECD);
    }
    /*---(target)-------------------------*/
    if (c   != NULL)  *c  = gVIEW_notes [n].c;
@@ -1769,12 +2035,12 @@ yview_note_line          (char a_curr, char a_prev)
    }
    switch (a_prev) {
    case '~'  :
-      myVIEW.note_lprev = 'Y';
+      myVIEW.note_lprev = ':';
       break;
-   case '-'  :
-      myVIEW.note_lprev = tolower (myVIEW.note_lcurr);
-      myVIEW.note_lcurr = toupper (myVIEW.note_lcurr);
-      break;
+      /*> case '-'  :                                                                    <* 
+       *>    myVIEW.note_lprev = tolower (myVIEW.note_lcurr);                            <* 
+       *>    myVIEW.note_lcurr = toupper (myVIEW.note_lcurr);                            <* 
+       *>    break;                                                                      <*/
    default   :
       myVIEW.note_lprev = a_prev;
       break;
@@ -1787,6 +2053,8 @@ char
 yview_note_notes         (char a_curr, char a_prev)
 {
    char        rce         =  -10;
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_complex ("args"      , "curr = %c, prev == %c", a_curr, a_prev);
    --rce;  if (strchr ("~" YSTR_COLORS, a_curr)  == NULL) {
       DEBUG_YVIEW   yLOG_note    ("note curr color not å~wrgybpocWRGYBPOCæ"); 
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -1797,6 +2065,7 @@ yview_note_notes         (char a_curr, char a_prev)
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
+   DEBUG_YVIEW   yLOG_complex ("before"    , "curr = %c, prev == %c", myVIEW.note_curr, myVIEW.note_prev);
    switch (a_curr) {
    case '~'  :
       myVIEW.note_curr = 'Y';
@@ -1809,24 +2078,34 @@ yview_note_notes         (char a_curr, char a_prev)
    case '~'  :
       myVIEW.note_prev = 'y';
       break;
-   case '-'  :
-      myVIEW.note_prev = tolower (myVIEW.note_curr);
-      break;
+      /*> case '-'  :                                                                    <* 
+       *>    myVIEW.note_prev = tolower (myVIEW.note_curr);                              <* 
+       *>    break;                                                                      <*/
    default   :
       myVIEW.note_prev = toupper (a_prev);
       break;
    }
+   myVIEW.redraw = 'y';
+   DEBUG_YVIEW   yLOG_complex ("after"     , "curr = %c, prev == %c", myVIEW.note_curr, myVIEW.note_prev);
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char
-yVIEW_note_colors (char *a_curr, char *a_prev, char *a_lcurr, char *a_lprev)
+yVIEW_note_colors (char *r_curr, char *r_prev, char *r_lcurr, char *r_lprev)
 {
-   if (a_curr  != NULL)  *a_curr  = myVIEW.note_curr;
-   if (a_prev  != NULL)  *a_prev  = myVIEW.note_prev;
-   if (a_lcurr != NULL)  *a_lcurr = myVIEW.note_lcurr;
-   if (a_lprev != NULL)  *a_lprev = myVIEW.note_lprev;
+   if (r_curr   != NULL)  *r_curr   = myVIEW.note_curr;
+   if (r_prev   != NULL)  *r_prev   = myVIEW.note_prev;
+   if (r_lcurr  != NULL)  *r_lcurr  = myVIEW.note_lcurr;
+   if (r_lprev  != NULL)  *r_lprev  = myVIEW.note_lprev;
+   return 0;
+}
+
+char
+yVIEW_redraw      (char *r_redraw)
+{
+   if (r_redraw != NULL)  *r_redraw = myVIEW.redraw;
+   myVIEW.redraw = '-';
    return 0;
 }
 

@@ -157,7 +157,7 @@ yVIEW_init_after        (void)
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yVIHUB_yFILE_dump_add      ("notes", "", "inventory of screen notes", yview_notes_dump);
    yMODE_after_set  (FMOD_VIEW);
-   rc = yPARSE_handler_max (UMOD_MARK    , "loc_mark"  , 7.1, "cL----------", -1, yMARK_mark_reader , yMARK_mark_writer_all  , "------------" , "a,label", "vikeys location marks"    );
+   /*> rc = yPARSE_handler_max (UMOD_MARK    , "loc_mark"  , 7.1, "cL----------", -1, yMARK_mark_reader , yMARK_mark_writer_all  , "------------" , "a,label", "vikeys location marks"    );   <*/
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;

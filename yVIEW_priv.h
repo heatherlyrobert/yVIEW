@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1h"
-#define     P_VERTXT    "brought back loc_mark handler for saving to files"
+#define     P_VERNUM    "2.1i"
+#define     P_VERTXT    "many notes improvements and fixes"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -173,6 +173,7 @@ struct cYVIEW_MY {
    char        note_prev;
    char        note_lcurr;
    char        note_lprev;
+   char        redraw;
 };
 extern tYVIEW_MY         myVIEW;
 
@@ -181,7 +182,7 @@ extern char           unit_answer [LEN_FULL];
 
 
 
-#define      YVIEW_MAX_NOTES     20
+#define      YVIEW_MAX_NOTES     30
 typedef    struct    cYVIEW_NOTE  tYVIEW_NOTE;
 struct cYVIEW_NOTE {
    char        xr, yr, size;                /* requested pos and size         */
@@ -330,7 +331,9 @@ char        yview_note__dir         (char a_type, char a_quad, short a_cen, shor
 char        yview_note__begin       (char n, char a_dir, short x_cen, short x_mid, short *r_xb, short *r_yb);
 char        yview_note__retarg      (char n);
 /*---(driver)---------------*/
-char        yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char *a_text);
+char        yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [LEN_RECD], char *r_scope, char r_target [LEN_TERSE]);
+char        yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char a_text [LEN_RECD]);
+char        yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a_text);
 char        yview_note_update       (void);
 char        yVIEW_note_direct       (char *a_all);
 /*---(access)---------------*/
@@ -339,6 +342,7 @@ char        yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short
 char        yview_note_line         (char a_curr, char a_prev);
 char        yview_note_notes        (char a_curr, char a_prev);
 char        yVIEW_note_colors       (char *a_curr, char *a_prev, char *a_lcurr, char *a_lprev);
+char        yVIEW_redraw            (char *a_redraw);
 /*---(unittest)-------------*/
 char*       yview_note__unit        (char *a_question, int n);
 /*---(done)-----------------*/
