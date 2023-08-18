@@ -53,6 +53,7 @@ yview_init              (void)
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yview_parts_init   ();
    yview_layout_init  ();
+   yview_hist_init    ();
    s_cleanse  = NULL;
    s_prep     = NULL;
    s_cursor   = NULL;
@@ -94,10 +95,11 @@ yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse
       return rce;
    }
    /*---(hook to yVIHUB)-----------------*/
-   yVIHUB_from_yVIEW (yVIEW_keys, yVIEW_modes, yVIEW_switch_add);
+   yVIHUB_from_yVIEW (yVIEW_keys, yVIEW_modes, yVIEW_switch_add, yVIEW_hist_new, yVIEW_hist_direct);
    /*---(globals)------------------------*/
    myVIEW.env       = a_env;
    myVIEW.prog_full = '-';
+   yview_init ();
    yview_init ();
    /*---(defaults)-----------------------*/
    rc = yview_factory (a_env);

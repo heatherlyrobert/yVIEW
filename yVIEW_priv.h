@@ -39,15 +39,15 @@
 #define     P_DEPCORE   "yURG,yLOG,ySTR"
 #define     P_DEPVIKEYS "yVIHUB,yMODE,yKEYS"
 #define     P_DEPOTHER  ""
-#define     P_DEPSOLO   "yCOLOR,YDLST"
+#define     P_DEPSOLO   "yCOLOR,yDLST"
 /*········· ··········· ´·····························´········································*/
 #define     P_AUTHOR    "heatherlyrobert"
 #define     P_CREATED   ""
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1i"
-#define     P_VERTXT    "many notes improvements and fixes"
+#define     P_VERNUM    "2.1j"
+#define     P_VERTXT    "command history is working again, needs more work"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -349,6 +349,38 @@ char*       yview_note__unit        (char *a_question, int n);
 
 char        yview_notes_dump        (void *f);
 
+
+
+/*===[[ yVIEW_note.c ]]=======================================================*/
+/*··········>·······················>·········································*/
+/*---(support)--------------*/
+char        yview_hist__switcher    (char a_mode, char a_force);
+/*---(marks)----------------*/
+char        yview_hist__valid       (char a_abbr);
+char        yview_hist__unmark      (uchar a_mark);
+char        yview_hist__mark        (uchar a_mark);
+/*---(memory)---------------*/
+char        yVIEW_hist_new          (char a_mode, uchar *a_text);
+char        yview_hist__purge       (char a_mode);
+/*---(program)--------------*/
+char        yview_hist_init         (void);
+/*---(search)---------------*/
+char        yVIEW_hist_cursor      (char a_move, int *r_index);
+char        yview_hist__index       (int a_index);
+char        yview_hist__find        (uchar *a_text);
+char        yview_hist__marked      (uchar a_mark);
+char        yview_hist__roll        (void);
+/*---(display)--------------*/
+char        yVIEW_hist_header       (short a_wide, char *a_entry);
+char        yVIEW_hist_footer       (short a_wide, char *a_entry);
+char        yVIEW_hist_entry        (short a_wide, char *a_entry);
+char        yview_hist__force       (int a_count, int a_ran, int a_found);
+/*---(mode)-----------------*/
+char        yview_hist_prepper      (void);
+char        yview_hist_umode        (char a_major, char a_minor);
+/*---(unittest)-------------*/
+char*       yview_hist__unit        (char *a_question, int n);
+/*---(done)-----------------*/
 
 #endif
 
