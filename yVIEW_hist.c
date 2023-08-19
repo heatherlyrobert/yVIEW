@@ -340,6 +340,7 @@ yview_hist_init         (void)
    /*---(macro abbrev list)--------------*/
    DEBUG_YVIEW   yLOG_note    ("initialize hist list");
    strlcpy (S_HIST_LIST, ""         , S_HIST_MAX);
+   strlcat (S_HIST_LIST, YSTR_NUMBER, S_HIST_MAX);
    strlcat (S_HIST_LIST, YSTR_LOWER , S_HIST_MAX);
    strlcat (S_HIST_LIST, YSTR_UPPER , S_HIST_MAX);
    strlcat (S_HIST_LIST, YSTR_GREEK , S_HIST_MAX);
@@ -966,62 +967,136 @@ char         /*-> allow selection of older entries ---[ ------ [ge.TQ5.25#.F9]*/
 yview_hist_prepper      (void)
 {
    if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
+   yview_hist__escaped (NULL, NULL);
    return 0;
 }
 
-char         /*-> allow selection of older entries ---[ ------ [ge.TQ5.25#.F9]*/ /*-[03.0000.122.R]-*/ /*-[--.---.---.--]-*/
-yview_hist_umode        (char a_major, char a_minor)
+char
+yview_hist__biggies     (char a_major, char a_minor)
+{
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(handle)-------------------------*/
+   switch (a_minor) {
+   case G_KEY_ESCAPE :
+      DEBUG_YVIEW   yLOG_note    ("escape, return to map mode");
+      yVIHUB_ySRC_swap ("");
+      yMODE_exit ();
+      yMODE_exit ();
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 1;
+      break;
+   case G_KEY_RETURN :
+      DEBUG_YVIEW   yLOG_note    ("return, return to source mode");
+      yMODE_exit ();
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 2;
+      break;
+   }
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_hist__escaped     (char a_major, char *b_minor)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   static char x_escaping  =  ' ';
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
+   --rce;  if (b_minor == NULL) {
+      x_escaping = ' ';
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   /*---(normal)-------------------------*/
+   if (x_escaping == ' ') {
+      if (*b_minor == '\\') {
+         DEBUG_YVIEW   yLOG_note    ("found a leading backslash");
+         x_escaping = 'µ';
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return 1;
+      }
+   }
+   /*---(backslashed)--------------------*/
+   if (x_escaping == 'µ') {
+      if (*b_minor == '_') {
+         DEBUG_YVIEW   yLOG_note    ("found a leading backslash/underscore");
+         x_escaping = '_';
+         return 2;
+      }
+      DEBUG_YVIEW   yLOG_note    ("converting backslash character");
+      *b_minor = chrslashed (*b_minor);
+   }
+   /*---(backslash/more)-----------------*/
+   if (x_escaping == '_') {
+      DEBUG_YVIEW   yLOG_note    ("converting backslash/underscore");
+      *b_minor = chrslashed_more (*b_minor);
+   }
+   /*---(reset)--------------------------*/
+   x_escaping = ' ';
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_hist__marking     (char a_major, char a_minor)
 {
    /*---(locals)-----------+-----+-----+-*/
    char        rce         =  -10;
    char        rc          =    0;
-   int         x_pos       =    0;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
-   DEBUG_YVIEW   yLOG_char    ("a_major"   , a_major);
-   DEBUG_YVIEW   yLOG_char    ("a_minor"   , chrvisible (a_minor));
-   /*---(defenses)-----------------------*/
-   DEBUG_YVIEW   yLOG_char    ("mode"      , yMODE_curr ());
-   --rce;  if (yMODE_not (UMOD_HISTORY)) {
-      DEBUG_YVIEW   yLOG_note    ("not the correct mode");
+   /*---(handle first key)---------------*/
+   if (a_minor != 0 && strchr ("mu'", a_minor)  != NULL) {
+      DEBUG_YVIEW   yLOG_note    ("first char of mark/unmark request");
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return rce;
+      return 1;
    }
-   /*---(mode changes)-------------------*/
-   if (a_minor == G_KEY_ESCAPE) {
-      DEBUG_YVIEW   yLOG_note    ("escape, return to source mode");
-      yVIHUB_ySRC_swap ("");
-      yMODE_exit ();
-      yMODE_exit ();
-      /*> myVIKEYS.cursor = 'y';                                                      <*/
-      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return 0;
-   }
-   if (a_minor == G_KEY_RETURN) {
-      DEBUG_YVIEW   yLOG_note    ("return, return to source mode");
-      yMODE_exit ();
-      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return 0;
-   }
-   /*---(handle keys)--------------------*/
+   /*---(handle second key)--------------*/
    if (a_major != 0 && strchr ("mu'", a_major)  != NULL) {
       DEBUG_YVIEW   yLOG_note    ("second char of mark/unmark request");
       switch (a_major) {
       case 'm' :
-         yview_hist__mark   (a_minor);
+         rc = yview_hist__mark   (a_minor);
          break;
       case 'u' :
-         yview_hist__unmark (a_minor);
+         if (a_minor == '.')   rc = yview_hist__unmark ((*s_curr)->h_mark);
+         else                  rc = yview_hist__unmark (a_minor);
          break;
       case '\'' :
-         yview_hist__marked (a_minor);
+         rc = yview_hist__marked (a_minor);
          break;
       }
+      DEBUG_YVIEW   yLOG_value   ("rc"        , rc);
+      if (rc < 0)  yKEYS_set_error ();
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return 0;
+      return 2;
    }
-   /*---(handle keys)--------------------*/
-   switch (a_minor) {
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_hist__cursoring   (char a_major, char a_minor)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    1;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
+   --rce;  if (a_major != 0 && strchr ("· ", a_major) == NULL) {
+      DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
+   /*---(handle cursoring)---------------*/
+   --rce;  switch (a_minor) {
    case '_' :
       yVIEW_hist_cursor (YDLST_HEAD , NULL);
       break;
@@ -1040,14 +1115,63 @@ yview_hist_umode        (char a_major, char a_minor)
    case '~' :
       yVIEW_hist_cursor (YDLST_TAIL , NULL);
       break;
-   case 'm' : case 'u' : case '\'' :
-      DEBUG_YVIEW   yLOG_note    ("first char of mark/unmark request");
-      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return a_minor;
+   default  :
+      rc = 0;
+      break;
    }
-   /*---(update)-------------------------*/
-   if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
-   /*> yvikeys_hist__bounds ();                                                       <*/
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return rc;
+}
+
+char         /*-> allow selection of older entries ---[ ------ [ge.TQ5.25#.F9]*/ /*-[03.0000.122.R]-*/ /*-[--.---.---.--]-*/
+yview_hist_umode        (char a_major, char a_minor)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    0;
+   int         x_pos       =    0;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   DEBUG_YVIEW   yLOG_complex ("a_major"   , "%4d, %c, %c", a_major, a_major, chrvisible (a_major));
+   DEBUG_YVIEW   yLOG_complex ("a_minor"   , "%4d, %c, %c", a_minor, a_minor, chrvisible (a_minor));
+   /*---(defenses)-----------------------*/
+   DEBUG_YVIEW   yLOG_char    ("mode"      , yMODE_curr ());
+   --rce;  if (yMODE_not (UMOD_HISTORY)) {
+      DEBUG_YVIEW   yLOG_note    ("not the correct mode");
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return rce;
+   }
+   /*---(biggies)------------------------*/
+   rc = yview_hist__biggies (a_major, a_minor);
+   DEBUG_YVIEW   yLOG_value   ("biggies"   , rc);
+   if (rc > 0) {
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 0;
+   }
+   /*---(escaped chars)------------------*/
+   rc = yview_hist__escaped (a_major, &a_minor);
+   DEBUG_YVIEW   yLOG_value   ("escaped"   , rc);
+   if (rc > 0) {
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return a_major;
+   }
+   /*---(handle keys)--------------------*/
+   rc = yview_hist__marking (a_major, a_minor);
+   DEBUG_YVIEW   yLOG_value   ("marking"   , rc);
+   if (rc > 0) {
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      if (rc == 1)  return a_minor;
+      return 0;
+   }
+   /*---(handle curoring)----------------*/
+   rc = yview_hist__cursoring (a_major, a_minor);
+   DEBUG_YVIEW   yLOG_value   ("cursoring" , rc);
+   if (rc > 0) {
+       if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 0;
+   }
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -1102,6 +1226,7 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
       DEBUG_YVIEW   yLOG_info    ("t"         , t);
       yVIEW_hist_new (x_mode, t);
       yview_hist__mark (b_text [2]);
+      --((*s_curr)->h_count);
       strlcpy (b_text, "", LEN_RECD);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
