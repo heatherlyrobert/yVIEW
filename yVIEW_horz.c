@@ -562,6 +562,12 @@ yview_horz_source       (void)
    if (p->on == 'y')    x_command = p->wide;
    else                 x_command = f->wide;
    /*---(update ySCR)--------------------*/
+   switch (myVIEW.p_formula) {
+   case '-' :  x_formula -=  2;  break;
+   case 's' :  x_formula -=  6;  break;
+   case 'l' :  x_formula -= 14;  break;
+   case 'x' :  x_formula -= 20;  break;
+   }
    yVIHUB_ySRC_size (x_formula, x_command);
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_sexit   (__FUNCTION__);

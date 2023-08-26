@@ -95,7 +95,7 @@ yVIEW_init              (char a_env, char *a_title, char *a_ver, void *a_cleanse
       return rce;
    }
    /*---(hook to yVIHUB)-----------------*/
-   yVIHUB_from_yVIEW (yVIEW_keys, yVIEW_modes, yVIEW_switch_add, yVIEW_hist_new, yVIEW_hist_direct);
+   yVIHUB_from_yVIEW (yVIEW_keys, yVIEW_modes, yVIEW_switch_add, yVIEW_hist_new, yVIEW_hist_stats, yVIEW_hist_direct);
    /*---(globals)------------------------*/
    myVIEW.env       = a_env;
    myVIEW.prog_full = '-';
@@ -158,6 +158,7 @@ yVIEW_init_after        (void)
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    yVIHUB_yFILE_dump_add      ("notes", "", "inventory of screen notes", yview_notes_dump);
+   yview_formula_init  ();
    yMODE_after_set  (FMOD_VIEW);
    /*> rc = yPARSE_handler_max (UMOD_MARK    , "loc_mark"  , 7.1, "cL----------", -1, yMARK_mark_reader , yMARK_mark_writer_all  , "------------" , "a,label", "vikeys location marks"    );   <*/
    /*---(complete)-----------------------*/

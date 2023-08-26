@@ -171,6 +171,7 @@ char        yVIEW_notes_debug       (void);
 char*       yVIEW_note_entry        (char n);
 
 char        yVIEW_hist_new          (char a_mode, uchar *a_text);
+char        yVIEW_hist_stats        (char a_rc, short a_found);
 char        yVIEW_hist_header       (short a_wide, char *a_entry);
 char        yVIEW_hist_footer       (short a_wide, char *a_entry);
 char        yVIEW_hist_entry        (short a_wide, char *a_entry);
@@ -179,6 +180,8 @@ char        yVIEW_hist_pop          (void);
 int         yVIEW_hist_count        (void);
 char        yVIEW_hist_cursor       (char a_move, int *r_index);
 char        yVIEW_hist_direct       (char b_text [LEN_RECD]);
+
+char        yVIEW_formula           (void);
 
 #endif
 /*============================----end-of-source---============================*/

@@ -219,7 +219,7 @@ yVIEW_hist_new          (char a_mode, uchar *a_text)
       return rce;
    }
    /*---(quick-out)----------------------*/
-   if (a_text [1] != ':') {
+   if (strchr (":/", a_text [1]) == NULL) {
       --rce;  IF_MACRO_ANYTHING {
          DEBUG_YVIEW   yLOG_note    ("nothing goes to history during macros");
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -265,7 +265,7 @@ yVIEW_hist_new          (char a_mode, uchar *a_text)
    x_new->h_mark     = '-';
    x_new->h_text     = strdup (x_text);
    x_new->h_count    = 1;
-   x_new->h_ran      = 0;
+   x_new->h_ran      = '·';
    x_new->h_found    = 0;
    x_new->h_next   = NULL;
    x_new->h_prev   = NULL;
@@ -289,6 +289,51 @@ yVIEW_hist_new          (char a_mode, uchar *a_text)
    *s_index = *s_count - 1;
    DEBUG_YVIEW   yLOG_point   ("*s_curr"   , *s_curr);
    DEBUG_YVIEW   yLOG_value   ("*s_index"  , *s_index);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char 
+yview_hist__free_curr   (void)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   char        rc          =    0;
+   tVIEW_HIST *x_next      = NULL;
+   /*---(defense)------------------------*/
+   if (*s_curr == NULL)  return rce;
+   x_next = (*s_curr)->h_next;
+   if (x_next == NULL)   x_next = (*s_curr)->h_prev;
+   /*---(clear data)---------------------*/
+   free ((*s_curr)->h_text);
+   /*---(out of linked list)-------------*/
+   if ((*s_curr)->h_next != NULL)   (*s_curr)->h_next->h_prev = (*s_curr)->h_prev;
+   else                             *s_tail                   = (*s_curr)->h_prev;
+   if ((*s_curr)->h_prev != NULL)   (*s_curr)->h_prev->h_next = (*s_curr)->h_next;
+   else                             *s_head                   = (*s_curr)->h_next;
+   /*---(update counts)------------------*/
+   --(*s_count);
+   --s_nall;
+   /*---(reposition)---------------------*/
+   *s_curr = x_next;
+   /*---(complete)-----------------------*/
+   return 0;
+}
+
+char 
+yVIEW_hist_stats        (char a_rc, short a_found)
+{
+   /*---(locals)-----------+-----+-----+-*/
+   char        rce         =  -10;
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
+   if (*s_curr != NULL) {
+      if (a_rc >= 0)  (*s_curr)->h_ran = 'y';
+      else            (*s_curr)->h_ran = '-';
+      (*s_curr)->h_found = a_found;
+   }
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -921,14 +966,15 @@ yVIEW_hist_entry        (short a_wide, char *a_entry)
    /*---(formatting)---------------------*/
    strlpadn (*s_index          , i, '.', '>', 3);
    strlpadn ((*s_curr)->h_count, c, '.', '>', 3);
-   strlpadn ((*s_curr)->h_ran  , r, '.', '>', 3);
    strlpadn (x_found           , f, '.', '>', 3);
+   if (strcmp (f, "··0") == 0)  strcpy (f, "···");
    strlpad  ((*s_curr)->h_text , t, '.', '<', w);
    /*---(create)-------------------------*/
    switch (x_size) {
    case 'l'  :
       sprintf (x_pref, "%s %s"         , i, t);
-      sprintf (x_suff, "%sc %sr %sf %c", c, r, f, (*s_curr)->h_mark);
+      sprintf (x_suff, "%sc  %c  %sf  %c", c, (*s_curr)->h_ran, f, (*s_curr)->h_mark);
+      if (strcmp (c, "··0") == 0)  sprintf (x_suff, "····  ·  ····  %c", (*s_curr)->h_mark);
       break;
    case 'm'  :
       sprintf (x_pref, "%s %s"         , i, t);
@@ -958,6 +1004,77 @@ yview_hist__force       (int a_count, int a_ran, int a_found)
 }
 
 
+
+/*====================------------------------------------====================*/
+/*===----                     export/import                           ----===*/
+/*====================------------------------------------====================*/
+static void  o___EXIM____________o () { return; }
+
+/*> char                                                                              <* 
+ *> yview_hist_export       (uchar a_abbr)                                            <* 
+ *> {                                                                                 <* 
+ *>    /+---(locals)-----------+-----+-----+-+/                                       <* 
+ *>    char        rce         =  -10;                                                <* 
+ *>    char        rc          =    0;                                                <* 
+ *>    char        n           =   -1;                                                <* 
+ *>    /+---(header)-------------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_enter   (__FUNCTION__);                                     <* 
+ *>    /+---(defense)------------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_char    ("a_abbr"    , a_abbr);                             <* 
+ *>    n = yview_srch_index  (a_abbr);                                                <* 
+ *>    --rce;  if (n <  0)  {                                                         <* 
+ *>       DEBUG_YMARK   yLOG_exitr   (__FUNCTION__, rce);                             <* 
+ *>       return rce;                                                                 <* 
+ *>    }                                                                              <* 
+ *>    /+---(write)--------------------------+/                                       <* 
+ *>    rc = strlexport (0, S_SRCHS [n]->text);                                        <* 
+ *>    /+---(complete)-----------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_exit    (__FUNCTION__);                                     <* 
+ *>    return rc;                                                                     <* 
+ *> }                                                                                 <*/
+
+/*> char                                                                              <* 
+ *> yview_srch_import       (uchar a_abbr)                                            <* 
+ *> {                                                                                 <* 
+ *>    /+---(locals)-----------+-----+-----+-+/                                       <* 
+ *>    char        rce         =  -10;                                                <* 
+ *>    char        rc          =    0;                                                <* 
+ *>    char        x_recd      [LEN_RECD];                                            <* 
+ *>    int         n           =    0;                                                <* 
+ *>    tSRCH      *x_new       = NULL;                                                <* 
+ *>    /+---(header)-------------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_enter   (__FUNCTION__);                                     <* 
+ *>    /+---(defense)------------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_char    ("a_abbr"    , a_abbr);                             <* 
+ *>    n = ymark_srch_index  (a_abbr);                                                <* 
+ *>    DEBUG_YMARK   yLOG_value   ("n"         , n);                                  <* 
+ *>    --rce;  if (n < 0) {                                                           <* 
+ *>       DEBUG_YMARK   yLOG_exitr   (__FUNCTION__, rce);                             <* 
+ *>       return rce;                                                                 <* 
+ *>    }                                                                              <* 
+ *>    /+---(read)---------------------------+/                                       <* 
+ *>    rc = strlimport  (0, x_recd, NULL);                                            <* 
+ *>    DEBUG_YMARK   yLOG_value   ("read"      , rc);                                 <* 
+ *>    --rce;  if (rc < 0) {                                                          <* 
+ *>       DEBUG_YMARK   yLOG_exitr   (__FUNCTION__, rce);                             <* 
+ *>       return rce;                                                                 <* 
+ *>    }                                                                              <* 
+ *>    DEBUG_YMARK   yLOG_info    ("x_recd"    , x_recd);                             <* 
+ *>    /+---(save search to history)---------+/                                       <* 
+ *>    rc = ymark_srch_new (x_recd, '-', &x_new);                                     <* 
+ *>    DEBUG_YMARK   yLOG_point   ("x_new"     , x_new);                              <* 
+ *>    --rce;  if (x_new == NULL) {                                                   <* 
+ *>       DEBUG_YMARK   yLOG_exitr   (__FUNCTION__, rce);                             <* 
+ *>       return rce;                                                                 <* 
+ *>    }                                                                              <* 
+ *>    S_SRCHS [n] = x_new;                                                           <* 
+ *>    /+---(complete)-----------------------+/                                       <* 
+ *>    DEBUG_YMARK   yLOG_exit    (__FUNCTION__);                                     <* 
+ *>    return rc;                                                                     <* 
+ *> }                                                                                 <*/
+
+
+
 /*====================------------------------------------====================*/
 /*===----                      mode handling                          ----===*/
 /*====================------------------------------------====================*/
@@ -966,14 +1083,27 @@ static void  o___MODE____________o () { return; }
 char         /*-> allow selection of older entries ---[ ------ [ge.TQ5.25#.F9]*/ /*-[03.0000.122.R]-*/ /*-[--.---.---.--]-*/
 yview_hist_prepper      (void)
 {
+   char        x_mode      =  '-';
+   /*---(header)-------------------------*/
+   DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(switcher)-----------------------*/
+   x_mode = yMODE_curr ();
+   DEBUG_YVIEW   yLOG_char    ("x_mode"    , x_mode);
+   yview_hist__switcher (x_mode, '-');
+   /*---(current entry)------------------*/
+   DEBUG_YVIEW   yLOG_point   ("*s_curr"   , *s_curr);
    if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
+   /*---(clear escaping)-----------------*/
    yview_hist__escaped (NULL, NULL);
+   /*---(complete)-----------------------*/
+   DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char
 yview_hist__biggies     (char a_major, char a_minor)
 {
+   char        t           [LEN_RECD]  = "";
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(handle)-------------------------*/
@@ -988,6 +1118,16 @@ yview_hist__biggies     (char a_major, char a_minor)
       break;
    case G_KEY_RETURN :
       DEBUG_YVIEW   yLOG_note    ("return, return to source mode");
+      yMODE_exit ();
+      DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+      return 2;
+      break;
+   case '.'          :
+      DEBUG_YVIEW   yLOG_note    ("return, but force recordable if in macro mode");
+      if (*s_curr != NULL) {
+         sprintf (t, "/%s", (*s_curr)->h_text);
+         yVIHUB_ySRC_swap (t);
+      }
       yMODE_exit ();
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 2;
@@ -1168,9 +1308,14 @@ yview_hist_umode        (char a_major, char a_minor)
    rc = yview_hist__cursoring (a_major, a_minor);
    DEBUG_YVIEW   yLOG_value   ("cursoring" , rc);
    if (rc > 0) {
-       if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
+      if (*s_curr != NULL)   yVIHUB_ySRC_swap ((*s_curr)->h_text);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
+   }
+   /*---(delete)-------------------------*/
+   if (a_minor == '#') {
+      DEBUG_YVIEW   yLOG_note    ("delete current");
+      rc = yview_hist__free_curr   ();
    }
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
@@ -1185,7 +1330,9 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
    int         l           =    0;
    char        x_mode      =  ' ';
    char        t           [LEN_RECD]  = "";
+   /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
+   /*---(defense)------------------------*/
    DEBUG_YVIEW   yLOG_point   ("b_text"    , b_text);
    --rce;  if (b_text == NULL) {
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
@@ -1198,16 +1345,24 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   if (strncmp (b_text, "::", 2) == 0)   x_mode = MODE_COMMAND;
-   if (strncmp (b_text, "//", 2) == 0)   x_mode = MODE_SEARCH;
+   /*---(check mode)---------------------*/
+   if      (strncmp (b_text, "::", 2) == 0)  x_mode = MODE_COMMAND;
+   else if (strncmp (b_text, "//", 2) == 0)  x_mode = MODE_SEARCH;
    --rce;  if (x_mode == ' ')  {
       DEBUG_YVIEW   yLOG_note    ("does not have :: or // prefix");
       DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
       return rce;
    }
-   if (l == 3) {
+   yview_hist__switcher (x_mode, '-');
+   /*---(execution on mark)--------------*/
+   if (l == 3 || (l == 4 && b_text [3] == '!')) {
       DEBUG_YVIEW   yLOG_note    ("three-letter short-cut");
-      rc = yview_hist__switcher (x_mode, '-');
+      if (b_text [2] == '#') {
+         DEBUG_YVIEW   yLOG_note    ("requested purge");
+         yview_hist__purge (x_mode);
+         DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
+         return 0;
+      }
       rc = yview_hist__marked (b_text [2]);
       --rce;  if (rc < 0) {
          DEBUG_YVIEW   yLOG_note    ("can not find mark");
@@ -1219,8 +1374,11 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
-      strlcpy (b_text, (*s_curr)->h_text, LEN_RECD);
-   } else if (b_text [3] == '=') {
+      if (b_text [3] == '!')  sprintf (b_text, "%c%s", b_text [0], (*s_curr)->h_text, LEN_RECD);
+      else                    strlcpy (b_text, (*s_curr)->h_text, LEN_RECD);
+   }
+   /*---(direct save)--------------------*/
+   else if (b_text [3] == '=') {
       DEBUG_YVIEW   yLOG_note    ("direct save");
       sprintf (t, "%c%c%s", b_text [0], b_text [1], b_text + 4);
       DEBUG_YVIEW   yLOG_info    ("t"         , t);
@@ -1230,24 +1388,35 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
       strlcpy (b_text, "", LEN_RECD);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
-   } else if (l == 4  && strchr ("mu", b_text [2]) != NULL) {
-      switch (b_text [2]) {
-      case 'm' :
-         DEBUG_YVIEW   yLOG_note    ("quick mark");
-         yview_hist__mark (b_text [3]);
-         break;
-      case 'u' :
-         DEBUG_YVIEW   yLOG_note    ("quick unmark");
-         yview_hist__unmark (b_text [3]);
-         break;
+   }
+   /*---(mark and unmark)----------------*/
+   else if (strchr ("ÐÔÑÕÒÓ", b_text [2]) != NULL && (l == 4  || (l == 5 && b_text [4] == '!'))) {
+      DEBUG_YVIEW   yLOG_note    ("compounding search");
+      rc = yview_hist__marked (b_text [3]);
+      --rce;  if (rc < 0) {
+         DEBUG_YVIEW   yLOG_note    ("can not find mark");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
       }
-      strlcpy (b_text, "", LEN_RECD);
+      --rce;  if (*s_curr == NULL) {
+         DEBUG_YVIEW   yLOG_note    ("current is null");
+         DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
+         return rce;
+      }
+      if (b_text [4] == '!')  sprintf (t, "%c%c%c%s", b_text [0], b_text [0], b_text [2], (*s_curr)->h_text + 1);
+      else                    sprintf (t, "%c%c%s"  , b_text [0], b_text [2], (*s_curr)->h_text + 1);
+      DEBUG_YVIEW   yLOG_info    ("t"         , t);
+      strlcpy (b_text, t, LEN_RECD);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
-      return 0;
-   } else {
+      return 2;
+   }
+   /*---(macro forced save)--------------*/
+   else {
       DEBUG_YVIEW   yLOG_note    ("macro time, but requested to history");
    }
+   /*---(report-out)---------------------*/
    DEBUG_YVIEW   yLOG_info    ("b_text"    , b_text);
+   /*---(ocmplete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 1;
 }

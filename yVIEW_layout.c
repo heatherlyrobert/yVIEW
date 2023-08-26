@@ -151,6 +151,62 @@ yVIEW_layout            (char *a_name)
 /*====================------------------------------------====================*/
 /*===----                      individual elements                     ----===*/
 /*====================------------------------------------====================*/
+static void  o___FORMULA_________o () { return; }
+
+char
+yview_formula_init      (void)
+{
+   yview_formula_small ();
+   yVIEW_switch_add (YVIEW_FORMULA, "min"  , "", yview_formula_min  , "minimal formula display");
+   yVIEW_switch_add (YVIEW_FORMULA, "small", "", yview_formula_small, "formula display with length");
+   yVIEW_switch_add (YVIEW_FORMULA, "label", "", yview_formula_label, "formula display with label and length");
+   yVIEW_switch_add (YVIEW_FORMULA, "max"  , "", yview_formula_max  , "detailed formula display");
+   return 0;
+}
+
+char
+yview_formula_min       (void)
+{
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   myVIEW.p_formula = '-';
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_formula_small     (void)
+{
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   myVIEW.p_formula = 's';
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_formula_label     (void)
+{
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   myVIEW.p_formula = 'l';
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yview_formula_max       (void)
+{
+   DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
+   myVIEW.p_formula = 'x';
+   DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char yVIEW_formula           (void) { return myVIEW.p_formula; }
+
+
+
+/*====================------------------------------------====================*/
+/*===----                      individual elements                     ----===*/
+/*====================------------------------------------====================*/
 static void  o___ELEMENTS________o () { return; }
 
 char

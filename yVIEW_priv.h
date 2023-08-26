@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1k"
-#define     P_VERTXT    "command history unit testing is clean and decent"
+#define     P_VERNUM    "2.1l"
+#define     P_VERTXT    "small modifications to drive demos"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -173,6 +173,7 @@ struct cYVIEW_MY {
    char        note_prev;
    char        note_lcurr;
    char        note_lprev;
+   char        p_formula;
    char        redraw;
 };
 extern tYVIEW_MY         myVIEW;
@@ -386,6 +387,15 @@ char        yVIEW_hist_direct       (char b_text [LEN_RECD]);
 /*---(unittest)-------------*/
 char*       yview_hist__unit        (char *a_question, int n);
 /*---(done)-----------------*/
+
+
+
+char        yview_formula_init      (void);
+char        yview_formula_min       (void);
+char        yview_formula_small     (void);
+char        yview_formula_label     (void);
+char        yview_formula_max       (void);
+
 
 #endif
 
