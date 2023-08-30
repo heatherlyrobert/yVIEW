@@ -169,6 +169,7 @@ yview_formula_min       (void)
 {
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    myVIEW.p_formula = '-';
+   yview_horz_source ();
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }
@@ -178,6 +179,7 @@ yview_formula_small     (void)
 {
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    myVIEW.p_formula = 's';
+   yview_horz_source ();
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }
@@ -187,6 +189,7 @@ yview_formula_label     (void)
 {
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    myVIEW.p_formula = 'l';
+   yview_horz_source ();
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }
@@ -196,6 +199,7 @@ yview_formula_max       (void)
 {
    DEBUG_GRAF   yLOG_enter   (__FUNCTION__);
    myVIEW.p_formula = 'x';
+   yview_horz_source ();
    DEBUG_GRAF   yLOG_exit    (__FUNCTION__);
    return 0;
 }

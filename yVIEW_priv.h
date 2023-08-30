@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1l"
-#define     P_VERTXT    "small modifications to drive demos"
+#define     P_VERNUM    "2.1m"
+#define     P_VERTXT    "another small mod to get formula bar properly sized in ySRC"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
