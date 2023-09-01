@@ -46,8 +46,8 @@
 /*········· ··········· ´·····························´········································*/
 #define     P_VERMAJOR  "2.--, clean, improve, and expand"
 #define     P_VERMINOR  "2.1-, convert to yVIHUB and new way"
-#define     P_VERNUM    "2.1m"
-#define     P_VERTXT    "another small mod to get formula bar properly sized in ySRC"
+#define     P_VERNUM    "2.1n"
+#define     P_VERTXT    "improved formula bar sizing and another option for it"
 /*········· ··········· ´·····························´········································*/
 #define     P_PRIORITY  "direct, simple, brief, vigorous, and lucid (h.w. fowler)"
 #define     P_PRINCIPAL "[grow a set] and build your wings on the way down (r. bradbury)"
@@ -394,6 +394,7 @@ char        yview_formula_init      (void);
 char        yview_formula_min       (void);
 char        yview_formula_small     (void);
 char        yview_formula_label     (void);
+char        yview_formula_format    (void);
 char        yview_formula_max       (void);
 
 

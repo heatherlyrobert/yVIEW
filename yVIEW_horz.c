@@ -566,7 +566,8 @@ yview_horz_source       (void)
    case '-' :  x_formula -=  2;  break;
    case 's' :  x_formula -=  6;  break;
    case 'l' :  x_formula -= 14;  break;
-   case 'x' :  x_formula -= 20;  break;
+   case 'f' :  x_formula -= 20;  break;
+   case 'x' :  x_formula -= 24;  break;
    }
    yVIHUB_ySRC_size (x_formula, x_command);
    /*---(complete)-----------------------*/
