@@ -286,8 +286,8 @@ yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source
          return rce;
       }
       DEBUG_YVIEW   yLOG_info    ("a_terse"   , a_terse);
-      --rce;  if (strlen (a_terse) > 3) {
-         DEBUG_YVIEW   yLOG_note    ("a_terse is more than 3 characters");
+      --rce;  if (strlen (a_terse) > 5) {
+         DEBUG_YVIEW   yLOG_note    ("a_terse is more than 5 characters");
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
