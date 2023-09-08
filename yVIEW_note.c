@@ -1360,6 +1360,7 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
    char        x_target    [LEN_TERSE] = "";
    char        t           [LEN_RECD]  = "";
    char       *p           = NULL;
+   char        x_ch        =  '-';
    int         l           =    0;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
@@ -1377,52 +1378,99 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
    /*---(prepare)------------------------*/
    strlcpy  (x_text, a_source, LEN_RECD);
    strltrim (x_text, ySTR_BOTH, LEN_RECD);
-   p = strrchr (x_text, ' ');
-   DEBUG_YVIEW   yLOG_point   ("p"         , p);
    /*---(get target)---------------------*/
-   if (p == NULL) {                       /* single word text */
-      DEBUG_YVIEW   yLOG_note    ("no target found");
-      strcpy  (x_target, "");
-   } else if (strcmp (p + 1, "ґ") == 0) { /* leave symbol     */
-      DEBUG_YVIEW   yLOG_info    ("p"         , p);
-      DEBUG_YVIEW   yLOG_note    ("target remains the same (ґ)");
-      strcpy  (x_target, "ґ");
-      p [0] = '\0';
-   } else {                               /* potential target */
-      DEBUG_YVIEW   yLOG_info    ("p"         , p);
-      DEBUG_YVIEW   yLOG_note    ("potential target");
-      ++p;
-      l = strlen (p);
-      DEBUG_YVIEW   yLOG_value   ("l"         , l);
-      if (l == 4 && p [0] == 'б') {
-         DEBUG_YVIEW   yLOG_note    ("targeted to window");
-         x_scope = YVIEW_WINDOW;
-         ++p; --l;
-      }
-      if (l == 3) {
-         if        (strchr (s_targ, p [0]) == NULL) {
-            DEBUG_YVIEW   yLOG_note    ("char 1 not direction [ЧФХЦ]");
-         } else if (strchr (YSTR_CHARS, p [1]) == NULL) {
-            DEBUG_YVIEW   yLOG_note    ("char 2 not x position [a-zA-Z1-9]");
-         } else if (strchr (YSTR_CHARS, p [2]) == NULL) {
-            DEBUG_YVIEW   yLOG_note    ("char 3 not y position [a-zA-Z1-9]");
-         } else {
-            strlcpy (x_target, p, LEN_TERSE);
-            p [-1] = '\0';
-            if (x_scope == YVIEW_WINDOW) {
-               p [-2] = '\0';
-               switch (x_target [0]) {
-               case 'Ц'  :  x_target [0] = '‡';  break;
-               case 'Х'  :  x_target [0] = '‰';  break;
-               case 'Ч'  :  x_target [0] = '†';  break;
-               case 'Ф'  :  x_target [0] = '€';  break;
-               }
+   l = strlen (x_text);
+   DEBUG_YVIEW   yLOG_value   ("len"       , l);
+   if (l >= 4) {
+      DEBUG_YVIEW   yLOG_note    ("checking for target");
+      x_ch = x_text [l - 3];
+      DEBUG_YVIEW   yLOG_char    ("x_ch"      , x_ch);
+      /*---(specific target)-------------*/
+      if (strchr (s_targ, x_ch) != NULL) {
+         DEBUG_YVIEW   yLOG_note    ("specific target provided");
+         x_ch = x_text [l - 4];
+         DEBUG_YVIEW   yLOG_char    ("x_ch (2)"  , x_ch);
+         if (x_ch == 'б') {
+            DEBUG_YVIEW   yLOG_note    ("targeted to window");
+            x_scope = YVIEW_WINDOW;
+            p = x_text + l - 4;
+            p [0] = '\0';
+            ++p;
+         }
+         else {
+            DEBUG_YVIEW   yLOG_note    ("targeted to main");
+            x_scope = YVIEW_MAIN;
+            p = x_text + l - 3;
+         }
+         strlcpy (x_target, p, LEN_TERSE);
+         p [0] = '\0';
+         if (x_scope == YVIEW_WINDOW) {
+            switch (x_target [0]) {
+            case 'Ц'  :  x_target [0] = '‡';  break;
+            case 'Х'  :  x_target [0] = '‰';  break;
+            case 'Ч'  :  x_target [0] = '†';  break;
+            case 'Ф'  :  x_target [0] = '€';  break;
             }
          }
-      } else {
-         DEBUG_YVIEW   yLOG_note    ("wrong length for target (3)");
       }
+      /*---(keep old target)-------------*/
+      else if (x_text [l - 2] == ' ' && x_text [l - 1] == 'ґ') {
+         DEBUG_YVIEW   yLOG_note    ("target remains the same (ґ)");
+         strcpy  (x_target, "ґ");
+         p = x_text [l - 1];
+         p [0] = '\0';
+      }
+      /*---(specific target)-------------*/
+      else {
+         DEBUG_YVIEW   yLOG_note    ("no target found");
+         strcpy  (x_target, "");
+      }
+      /*---(done)-------------s----------*/
    }
+   /*---(get target)---------------------*/
+   /*> if (p == NULL) {                       /+ single word text +/                  <* 
+    *>    DEBUG_YVIEW   yLOG_note    ("no target found");                             <* 
+    *>    strcpy  (x_target, "");                                                     <* 
+    *> } else if (strcmp (p, "ґ") == 0) { /+ leave symbol     +/                      <* 
+    *>    DEBUG_YVIEW   yLOG_info    ("p"         , p);                               <* 
+    *>    DEBUG_YVIEW   yLOG_note    ("target remains the same (ґ)");                 <* 
+    *>    strcpy  (x_target, "ґ");                                                    <* 
+    *>    p [0] = '\0';                                                               <* 
+    *> } else {                               /+ potential target +/                  <* 
+    *>    DEBUG_YVIEW   yLOG_info    ("p"         , p);                               <* 
+    *>    DEBUG_YVIEW   yLOG_note    ("potential target");                            <* 
+    *>    ++p;                                                                        <* 
+    *>    l = strlen (p);                                                             <* 
+    *>    DEBUG_YVIEW   yLOG_value   ("l"         , l);                               <* 
+    *>    if (l == 4 && p [0] == 'б') {                                               <* 
+    *>       DEBUG_YVIEW   yLOG_note    ("targeted to window");                       <* 
+    *>       x_scope = YVIEW_WINDOW;                                                  <* 
+    *>       ++p; --l;                                                                <* 
+    *>    }                                                                           <* 
+    *>    if (l == 3) {                                                               <* 
+    *>       if        (strchr (s_targ, p [0]) == NULL) {                             <* 
+    *>          DEBUG_YVIEW   yLOG_note    ("char 1 not direction [ЧФХЦ]");           <* 
+    *>       } else if (strchr (YSTR_CHARS, p [1]) == NULL) {                         <* 
+    *>          DEBUG_YVIEW   yLOG_note    ("char 2 not x position [a-zA-Z1-9]");     <* 
+    *>       } else if (strchr (YSTR_CHARS, p [2]) == NULL) {                         <* 
+    *>          DEBUG_YVIEW   yLOG_note    ("char 3 not y position [a-zA-Z1-9]");     <* 
+    *>       } else {                                                                 <* 
+    *>          strlcpy (x_target, p, LEN_TERSE);                                     <* 
+    *>          p [-1] = '\0';                                                        <* 
+    *>          if (x_scope == YVIEW_WINDOW) {                                        <* 
+    *>             p [-2] = '\0';                                                     <* 
+    *>             switch (x_target [0]) {                                            <* 
+    *>             case 'Ц'  :  x_target [0] = '‡';  break;                           <* 
+    *>             case 'Х'  :  x_target [0] = '‰';  break;                           <* 
+    *>             case 'Ч'  :  x_target [0] = '†';  break;                           <* 
+    *>             case 'Ф'  :  x_target [0] = '€';  break;                           <* 
+    *>             }                                                                  <* 
+    *>          }                                                                     <* 
+    *>       }                                                                        <* 
+    *>    } else {                                                                    <* 
+    *>       DEBUG_YVIEW   yLOG_note    ("wrong length for target (3)");              <* 
+    *>    }                                                                           <* 
+    *> }                                                                              <*/
    if (strcmp (x_target, "") == 0)  x_scope = YVIEW_MAIN;
    /*---(finalize text)------------------*/
    strltrim (x_text, ySTR_BOTH, LEN_RECD);
