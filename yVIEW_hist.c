@@ -1169,12 +1169,12 @@ yview_hist__escaped     (char a_major, char *b_minor)
          return 2;
       }
       DEBUG_YVIEW   yLOG_note    ("converting backslash character");
-      *b_minor = chrslashed (*b_minor);
+      *b_minor = ychrslashed (*b_minor);
    }
    /*---(backslash/more)-----------------*/
    if (x_escaping == '_') {
       DEBUG_YVIEW   yLOG_note    ("converting backslash/underscore");
-      *b_minor = chrslashed_more (*b_minor);
+      *b_minor = ychrslashed_more (*b_minor);
    }
    /*---(reset)--------------------------*/
    x_escaping = ' ';
@@ -1273,8 +1273,8 @@ yview_hist_umode        (char a_major, char a_minor)
    int         x_pos       =    0;
    /*---(header)-------------------------*/
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
-   DEBUG_YVIEW   yLOG_complex ("a_major"   , "%4d, %c, %c", a_major, a_major, chrvisible (a_major));
-   DEBUG_YVIEW   yLOG_complex ("a_minor"   , "%4d, %c, %c", a_minor, a_minor, chrvisible (a_minor));
+   DEBUG_YVIEW   yLOG_complex ("a_major"   , "%4d, %c, %c", a_major, a_major, ychrvisible (a_major));
+   DEBUG_YVIEW   yLOG_complex ("a_minor"   , "%4d, %c, %c", a_minor, a_minor, ychrvisible (a_minor));
    /*---(defenses)-----------------------*/
    DEBUG_YVIEW   yLOG_char    ("mode"      , yMODE_curr ());
    --rce;  if (yMODE_not (UMOD_HISTORY)) {
