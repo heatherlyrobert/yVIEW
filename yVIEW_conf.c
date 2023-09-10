@@ -179,7 +179,7 @@ yview_conf_text         (char a_part, char *a_text)
       return rce;
    }
    DEBUG_YVIEW   yLOG_value   ("search"    , rc);
-   strlcpy (p->text, a_text, LEN_RECD);
+   ystrlcpy (p->text, a_text, LEN_RECD);
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
 }
@@ -336,10 +336,10 @@ yVIEW_curses            (char a_part, char *r_name, char *r_on, char *r_source, 
    DEBUG_YVIEW   yLOG_value   ("search"    , rc);
    if (rc < 0) {
       DEBUG_YVIEW   yLOG_note    ("deal with a missing element");
-      if (r_name   != NULL)  strlcpy (r_name, "", LEN_LABEL);
+      if (r_name   != NULL)  ystrlcpy (r_name, "", LEN_LABEL);
       if (r_on     != NULL)  *r_on     = '-';
       if (r_source != NULL)  *r_source = NULL;
-      if (r_text   != NULL)  strlcpy (r_text, "", LEN_RECD);
+      if (r_text   != NULL)  ystrlcpy (r_text, "", LEN_RECD);
       if (r_orient != NULL)  *r_orient = '-';
       if (r_left   != NULL)  *r_left   = 0;
       if (r_bott   != NULL)  *r_bott   = 0;
@@ -349,10 +349,10 @@ yVIEW_curses            (char a_part, char *r_name, char *r_on, char *r_source, 
       return rc;
    }
    DEBUG_YVIEW   yLOG_note    ("save values for good entry");
-   if (r_name   != NULL)  strlcpy (r_name, p->name, LEN_LABEL);
+   if (r_name   != NULL)  ystrlcpy (r_name, p->name, LEN_LABEL);
    if (r_on     != NULL)  *r_on     = p->on;
    if (r_source != NULL)  *r_source = p->source;
-   if (r_text   != NULL)  strlcpy (r_text, p->text, LEN_RECD);
+   if (r_text   != NULL)  ystrlcpy (r_text, p->text, LEN_RECD);
    if (r_orient != NULL)  *r_orient = p->orient;
    if (r_left   != NULL)  *r_left   = p->left;
    if (r_bott   != NULL)  *r_bott   = p->bott;
@@ -408,10 +408,10 @@ yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, 
    DEBUG_YVIEW   yLOG_value   ("search"    , rc);
    if (rc < 0) {
       DEBUG_YVIEW   yLOG_note    ("deal with a missing element");
-      if (r_name   != NULL)  strlcpy (r_name, "", LEN_LABEL);
+      if (r_name   != NULL)  ystrlcpy (r_name, "", LEN_LABEL);
       if (r_on     != NULL)  *r_on     = '-';
       if (r_source != NULL)  *r_source = NULL;
-      if (r_text   != NULL)  strlcpy (r_text, "", LEN_RECD);
+      if (r_text   != NULL)  ystrlcpy (r_text, "", LEN_RECD);
       if (a_type   != NULL)  *a_type   = '-';
       if (a_anchor != NULL)  *a_anchor = '-';
       if (a_xmin   != NULL)  *a_xmin   = 0;
@@ -425,10 +425,10 @@ yVIEW_opengl            (char a_part, char *r_name, char *r_on, char *r_source, 
    }
    DEBUG_YVIEW   yLOG_note    ("save values for good entry");
    DEBUG_GRAF   yLOG_complex (p->name, "%c on %c, xmin %4d, xlen %4d, ymin %4d, ylen %4d", a_part, p->on, p->xmin, p->xlen, p->ymin, p->ylen);
-   if (r_name   != NULL)  strlcpy (r_name, p->name, LEN_LABEL);
+   if (r_name   != NULL)  ystrlcpy (r_name, p->name, LEN_LABEL);
    if (r_on     != NULL)  *r_on     = p->on;
    if (r_source != NULL)  *r_source = p->source;
-   if (r_text   != NULL)  strlcpy (r_text, p->text, LEN_RECD);
+   if (r_text   != NULL)  ystrlcpy (r_text, p->text, LEN_RECD);
    if (a_type   != NULL)  *a_type   = p->type;
    if (a_anchor != NULL)  *a_anchor = p->anchor;
    if (a_xmin   != NULL)  *a_xmin   = p->xmin;

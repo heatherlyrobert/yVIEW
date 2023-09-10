@@ -294,12 +294,12 @@ yVIEW_switch_add        (char a_part, char *a_opt, char *a_terse, void *a_source
    }
    /*---(add)----------------------------*/
    s_options [s_noption].part   = a_part;
-   strlcpy (s_options [s_noption].opt  , a_opt  , LEN_LABEL);
-   if (a_terse != NULL)  strlcpy (s_options [s_noption].terse, a_terse, LEN_SHORT);
-   else                  strlcpy (s_options [s_noption].terse, ""     , LEN_SHORT);
+   ystrlcpy (s_options [s_noption].opt  , a_opt  , LEN_LABEL);
+   if (a_terse != NULL)  ystrlcpy (s_options [s_noption].terse, a_terse, LEN_SHORT);
+   else                  ystrlcpy (s_options [s_noption].terse, ""     , LEN_SHORT);
    s_options [s_noption].source = a_source;
-   if (a_desc != NULL)  strlcpy (s_options [s_noption].desc, a_desc, LEN_LABEL);
-   else                 strlcpy (s_options [s_noption].desc, ""    , LEN_LABEL);
+   if (a_desc  != NULL)  ystrlcpy (s_options [s_noption].desc, a_desc, LEN_LABEL);
+   else                  ystrlcpy (s_options [s_noption].desc, ""    , LEN_LABEL);
    ++s_noption;
    DEBUG_YVIEW   yLOG_value   ("s_noption" , s_noption);
    /*---(complete)-----------------------*/

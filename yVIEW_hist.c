@@ -119,7 +119,7 @@ yview_hist__valid       (char a_abbr)
    DEBUG_YVIEW   yLOG_senter  (__FUNCTION__);
    /*---(check)--------------------------*/
    DEBUG_YVIEW   yLOG_snote   ("check");
-   rc = strlchr (S_HIST_LIST, a_abbr, S_HIST_MAX);
+   rc = ystrlchr (S_HIST_LIST, a_abbr, S_HIST_MAX);
    DEBUG_YVIEW   yLOG_sint    (rc);
    --rce;  if (rc < 0) {
       DEBUG_YVIEW   yLOG_sexitr  (__FUNCTION__, rce);
@@ -225,12 +225,12 @@ yVIEW_hist_new          (char a_mode, uchar *a_text)
          DEBUG_YVIEW   yLOG_exitr   (__FUNCTION__, rce);
          return rce;
       }
-      strlcpy (x_text, a_text, LEN_RECD);
+      ystrlcpy (x_text, a_text, LEN_RECD);
    } else {
-      strlcpy (x_text, a_text + 1, LEN_RECD);
+      ystrlcpy (x_text, a_text + 1, LEN_RECD);
    }
    /*---(prepare)------------------------*/
-   strldchg (x_text, '²', ' ', LEN_RECD);
+   ystrldchg (x_text, '²', ' ', LEN_RECD);
    DEBUG_YVIEW   yLOG_info    ("x_text"    , x_text);
    x_len = strlen (x_text);
    DEBUG_YVIEW   yLOG_value   ("x_len"     , x_len);
@@ -384,11 +384,11 @@ yview_hist_init         (void)
    DEBUG_YVIEW   yLOG_enter   (__FUNCTION__);
    /*---(macro abbrev list)--------------*/
    DEBUG_YVIEW   yLOG_note    ("initialize hist list");
-   strlcpy (S_HIST_LIST, ""         , S_HIST_MAX);
-   strlcat (S_HIST_LIST, YSTR_NUMBER, S_HIST_MAX);
-   strlcat (S_HIST_LIST, YSTR_LOWER , S_HIST_MAX);
-   strlcat (S_HIST_LIST, YSTR_UPPER , S_HIST_MAX);
-   strlcat (S_HIST_LIST, YSTR_GREEK , S_HIST_MAX);
+   ystrlcpy (S_HIST_LIST, ""         , S_HIST_MAX);
+   ystrlcat (S_HIST_LIST, YSTR_NUMBER, S_HIST_MAX);
+   ystrlcat (S_HIST_LIST, YSTR_LOWER , S_HIST_MAX);
+   ystrlcat (S_HIST_LIST, YSTR_UPPER , S_HIST_MAX);
+   ystrlcat (S_HIST_LIST, YSTR_GREEK , S_HIST_MAX);
    DEBUG_YVIEW   yLOG_info    ("LIST"      , S_HIST_LIST);
    /*---(switchable)--------------*/
    yview_hist__switcher (MODE_COMMAND, 'y');
@@ -428,42 +428,42 @@ yview_hist__unit        (char *a_question, int n)
    tVIEW_HIST *x_curr      = NULL;
    int         c           =    0;
    /*---(preprare)-----------------------*/
-   strlcpy  (unit_answer, "HIST unit        : question not understood", LEN_FULL);
+   ystrlcpy  (unit_answer, "HIST unit        : question not understood", LEN_FULL);
    /*---(dependency list)----------------*/
    if      (strcmp (a_question, "switch"         )   == 0) {
-      if      (s_head  == NULL    )  strlcat (t, "h=----"  , LEN_HUND);
-      else if (s_head  == &s_hrun )  strlcat (t, "h=CMDS"  , LEN_HUND);
-      else if (s_head  == &s_hpass)  strlcat (t, "h=SRCH"  , LEN_HUND);
-      else                           strlcat (t, "h=????"  , LEN_HUND);
-      if      (s_tail  == NULL    )  strlcat (t, ", t=----", LEN_HUND);
-      else if (s_tail  == &s_trun )  strlcat (t, ", t=CMDS", LEN_HUND);
-      else if (s_tail  == &s_tpass)  strlcat (t, ", t=SRCH", LEN_HUND);
-      else                           strlcat (t, ", t=????", LEN_HUND);
-      if      (s_curr  == NULL    )  strlcat (t, ", c=----", LEN_HUND);
-      else if (s_curr  == &s_crun )  strlcat (t, ", c=CMDS", LEN_HUND);
-      else if (s_curr  == &s_cpass)  strlcat (t, ", c=SRCH", LEN_HUND);
-      else                           strlcat (t, ", c=????", LEN_HUND);
-      if      (s_count == NULL    )  strlcat (t, ", n=----", LEN_HUND);
-      else if (s_count == &s_nrun )  strlcat (t, ", n=CMDS", LEN_HUND);
-      else if (s_count == &s_npass)  strlcat (t, ", n=SRCH", LEN_HUND);
-      else                           strlcat (t, ", n=????", LEN_HUND);
+      if      (s_head  == NULL    )  ystrlcat (t, "h=----"  , LEN_HUND);
+      else if (s_head  == &s_hrun )  ystrlcat (t, "h=CMDS"  , LEN_HUND);
+      else if (s_head  == &s_hpass)  ystrlcat (t, "h=SRCH"  , LEN_HUND);
+      else                           ystrlcat (t, "h=????"  , LEN_HUND);
+      if      (s_tail  == NULL    )  ystrlcat (t, ", t=----", LEN_HUND);
+      else if (s_tail  == &s_trun )  ystrlcat (t, ", t=CMDS", LEN_HUND);
+      else if (s_tail  == &s_tpass)  ystrlcat (t, ", t=SRCH", LEN_HUND);
+      else                           ystrlcat (t, ", t=????", LEN_HUND);
+      if      (s_curr  == NULL    )  ystrlcat (t, ", c=----", LEN_HUND);
+      else if (s_curr  == &s_crun )  ystrlcat (t, ", c=CMDS", LEN_HUND);
+      else if (s_curr  == &s_cpass)  ystrlcat (t, ", c=SRCH", LEN_HUND);
+      else                           ystrlcat (t, ", c=????", LEN_HUND);
+      if      (s_count == NULL    )  ystrlcat (t, ", n=----", LEN_HUND);
+      else if (s_count == &s_nrun )  ystrlcat (t, ", n=CMDS", LEN_HUND);
+      else if (s_count == &s_npass)  ystrlcat (t, ", n=SRCH", LEN_HUND);
+      else                           ystrlcat (t, ", n=????", LEN_HUND);
       snprintf (unit_answer, LEN_FULL, "HIST switch      : %s", t);
    }
    else if (strcmp (a_question, "counts"         )   == 0) {
       snprintf (unit_answer, LEN_FULL, "HIST count       : %3da, %3dc, %3ds", s_nall, s_nrun, s_npass);
    }
    else if (strcmp (a_question, "current"        ) == 0) {
-      if    (*s_head == s_hrun) strlcpy (t, "c", LEN_LABEL);
-      else                      strlcpy (t, "s", LEN_LABEL);
+      if    (*s_head == s_hrun) ystrlcpy (t, "c", LEN_LABEL);
+      else                      ystrlcpy (t, "s", LEN_LABEL);
       if (*s_curr == NULL)  snprintf (unit_answer, LEN_FULL, "HIST curr %s (--) :  -  -                      -    -    -    -", t);
       else                  snprintf (unit_answer, LEN_FULL, "HIST curr %s (%2d) : %2d  %-20.20s %3dc %3dr %3df   %c", t, *s_index, strlen ((*s_curr)->h_text), (*s_curr)->h_text, (*s_curr)->h_count, (*s_curr)->h_ran, (*s_curr)->h_found, (*s_curr)->h_mark);
    }
    else if (strcmp (a_question, "command"        )   == 0 || strcmp (a_question, "search"         )   == 0) {
       if (a_question [0] == 'c') {
-         strlcpy (t, "cmds", LEN_LABEL);
+         ystrlcpy (t, "cmds", LEN_LABEL);
          x_curr = s_hrun;
       } else {
-         strlcpy (t, "srch", LEN_LABEL);
+         ystrlcpy (t, "srch", LEN_LABEL);
          x_curr = s_hpass;
       }
       DEBUG_YVIEW   yLOG_value   ("n"         , n);
@@ -911,10 +911,10 @@ yVIEW_hist_footer       (short a_wide, char *a_entry)
    /*---(label)--------------------------*/
    switch (x_size) {
    case 'l'  : case 'm'  :
-      strlpad ("¦ to choose, ¥ to leave, _KkjJ~ to move", a_entry, '.', '|', a_wide);
+      ystrlpad ("¦ to choose, ¥ to leave, _KkjJ~ to move", a_entry, '.', '|', a_wide);
       break;
    case 's'  :
-      strlpad ("¦ pick, ¥, _KkjJ~"                      , a_entry, '.', '|', a_wide);
+      ystrlpad ("¦ pick, ¥, _KkjJ~"                      , a_entry, '.', '|', a_wide);
       break;
    }
    /*---(complete)-----------------------*/
@@ -964,11 +964,11 @@ yVIEW_hist_entry        (short a_wide, char *a_entry)
    if (x_found > 999)  x_found = 999;
    x_len   = strlen ((*s_curr)->h_text);
    /*---(formatting)---------------------*/
-   strlpadn (*s_index          , i, '.', '>', 3);
-   strlpadn ((*s_curr)->h_count, c, '.', '>', 3);
-   strlpadn (x_found           , f, '.', '>', 3);
+   ystrlpadn (*s_index          , i, '.', '>', 3);
+   ystrlpadn ((*s_curr)->h_count, c, '.', '>', 3);
+   ystrlpadn (x_found           , f, '.', '>', 3);
    if (strcmp (f, "··0") == 0)  strcpy (f, "···");
-   strlpad  ((*s_curr)->h_text , t, '.', '<', w);
+   ystrlpad  ((*s_curr)->h_text , t, '.', '<', w);
    /*---(create)-------------------------*/
    switch (x_size) {
    case 'l'  :
@@ -1027,7 +1027,7 @@ static void  o___EXIM____________o () { return; }
  *>       return rce;                                                                 <* 
  *>    }                                                                              <* 
  *>    /+---(write)--------------------------+/                                       <* 
- *>    rc = strlexport (0, S_SRCHS [n]->text);                                        <* 
+ *>    rc = ystrlexport (0, S_SRCHS [n]->text);                                        <* 
  *>    /+---(complete)-----------------------+/                                       <* 
  *>    DEBUG_YMARK   yLOG_exit    (__FUNCTION__);                                     <* 
  *>    return rc;                                                                     <* 
@@ -1053,7 +1053,7 @@ static void  o___EXIM____________o () { return; }
  *>       return rce;                                                                 <* 
  *>    }                                                                              <* 
  *>    /+---(read)---------------------------+/                                       <* 
- *>    rc = strlimport  (0, x_recd, NULL);                                            <* 
+ *>    rc = ystrlimport  (0, x_recd, NULL);                                            <* 
  *>    DEBUG_YMARK   yLOG_value   ("read"      , rc);                                 <* 
  *>    --rce;  if (rc < 0) {                                                          <* 
  *>       DEBUG_YMARK   yLOG_exitr   (__FUNCTION__, rce);                             <* 
@@ -1375,7 +1375,7 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
          return rce;
       }
       if (b_text [3] == '!')  sprintf (b_text, "%c%s", b_text [0], (*s_curr)->h_text, LEN_RECD);
-      else                    strlcpy (b_text, (*s_curr)->h_text, LEN_RECD);
+      else                    ystrlcpy (b_text, (*s_curr)->h_text, LEN_RECD);
    }
    /*---(direct save)--------------------*/
    else if (b_text [3] == '=') {
@@ -1385,7 +1385,7 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
       yVIEW_hist_new (x_mode, t);
       yview_hist__mark (b_text [2]);
       --((*s_curr)->h_count);
-      strlcpy (b_text, "", LEN_RECD);
+      ystrlcpy (b_text, "", LEN_RECD);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 0;
    }
@@ -1406,7 +1406,7 @@ yVIEW_hist_direct       (char b_text [LEN_RECD])
       if (b_text [4] == '!')  sprintf (t, "%c%c%c%s", b_text [0], b_text [0], b_text [2], (*s_curr)->h_text + 1);
       else                    sprintf (t, "%c%c%s"  , b_text [0], b_text [2], (*s_curr)->h_text + 1);
       DEBUG_YVIEW   yLOG_info    ("t"         , t);
-      strlcpy (b_text, t, LEN_RECD);
+      ystrlcpy (b_text, t, LEN_RECD);
       DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
       return 2;
    }

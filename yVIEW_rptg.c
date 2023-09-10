@@ -57,18 +57,18 @@ yVIEW_note_entry     (char n)
    strcpy (s_entry, "(not-exist)");
    if (n < 0  || n >= gVIEW_nnote)   return s_entry;
    sprintf (s, "%2d  %c %c %c %c  "   , n, gVIEW_notes [n].s, gVIEW_notes [n].xr, gVIEW_notes [n].yr, gVIEW_notes [n].size);
-   strlcpy (s_entry, s, LEN_FULL);
+   ystrlcpy (s_entry, s, LEN_FULL);
    sprintf (s, "%4dx %4dy %4dw %4dh  ", gVIEW_notes [n].x, gVIEW_notes [n].y, gVIEW_notes [n].w, gVIEW_notes [n].h);
-   strlcat (s_entry, s, LEN_FULL);
+   ystrlcat (s_entry, s, LEN_FULL);
    l = strlen (gVIEW_notes [n].text);
    if (l > 60)  sprintf (t, "%2då%-.60s>", l, gVIEW_notes [n].text);
    else         sprintf (t, "%2då%-.60sæ", l, gVIEW_notes [n].text);
    sprintf (s, "%-64.64s  ", t);
-   strlcat (s_entry, s, LEN_FULL);
+   ystrlcat (s_entry, s, LEN_FULL);
    sprintf (s, "%c %c %c %c %c  "   , gVIEW_notes [n].q, gVIEW_notes [n].c, gVIEW_notes [n].st, gVIEW_notes [n].xt, gVIEW_notes [n].yt);
-   strlcat (s_entry, s, LEN_FULL);
+   ystrlcat (s_entry, s, LEN_FULL);
    sprintf (s, "%4dx %4dy  %4dx %4dy", gVIEW_notes [n].xb, gVIEW_notes [n].yb, gVIEW_notes [n].xe, gVIEW_notes [n].ye);
-   strlcat (s_entry, s, LEN_FULL);
+   ystrlcat (s_entry, s, LEN_FULL);
    return s_entry;
 }
 

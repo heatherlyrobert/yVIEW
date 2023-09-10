@@ -479,7 +479,7 @@ yview__wipe             (char a_full, char a_part, char a_on, short a_nwide, sho
    /*---(pointers)-----------------------*/
    if (a_full == 'y') {
       p->source     = NULL;
-      strlcpy (p->text, "", LEN_RECD);
+      ystrlcpy (p->text, "", LEN_RECD);
       p->drawer     = NULL;
    }
    /*---(coordinates)--------------------*/

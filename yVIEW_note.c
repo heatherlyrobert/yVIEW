@@ -490,7 +490,7 @@ yview_note_init         (void)
    for (i = 0; i < LEN_LABEL; ++i) {
       if (s_sizes [i].abbr == 0)  break;
       sprintf (t, "%c", s_sizes [i].abbr);
-      strlcat (s_valid, t, LEN_LABEL);
+      ystrlcat (s_valid, t, LEN_LABEL);
    }
    yview_note__purge ('y');
    return 0;
@@ -1267,7 +1267,7 @@ yview_note__settarg     (char n, char *p)
       return rce;
    }
    /*---(prepare)------------------------*/
-   strlcpy (u, p, LEN_LABEL);
+   ystrlcpy (u, p, LEN_LABEL);
    x_len = strlen (u);
    DEBUG_YVIEW   yLOG_complex ("tail"      , "%2d[%s]", x_len, u);
    if (x_len != 3) {
@@ -1376,8 +1376,8 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
       return rce;
    }
    /*---(prepare)------------------------*/
-   strlcpy  (x_text, a_source, LEN_RECD);
-   strltrim (x_text, ySTR_BOTH, LEN_RECD);
+   ystrlcpy  (x_text, a_source, LEN_RECD);
+   ystrltrim (x_text, ySTR_BOTH, LEN_RECD);
    /*---(get target)---------------------*/
    l = strlen (x_text);
    DEBUG_YVIEW   yLOG_value   ("len"       , l);
@@ -1402,7 +1402,7 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
             x_scope = YVIEW_MAIN;
             p = x_text + l - 3;
          }
-         strlcpy (x_target, p, LEN_TERSE);
+         ystrlcpy (x_target, p, LEN_TERSE);
          p [0] = '\0';
          if (x_scope == YVIEW_WINDOW) {
             switch (x_target [0]) {
@@ -1455,7 +1455,7 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
     *>       } else if (strchr (YSTR_CHARS, p [2]) == NULL) {                         <* 
     *>          DEBUG_YVIEW   yLOG_note    ("char 3 not y position [a-zA-Z1-9]");     <* 
     *>       } else {                                                                 <* 
-    *>          strlcpy (x_target, p, LEN_TERSE);                                     <* 
+    *>          ystrlcpy (x_target, p, LEN_TERSE);                                     <* 
     *>          p [-1] = '\0';                                                        <* 
     *>          if (x_scope == YVIEW_WINDOW) {                                        <* 
     *>             p [-2] = '\0';                                                     <* 
@@ -1473,22 +1473,22 @@ yview_note__parse_text  (char a_source [LEN_RECD], char *r_concat, char r_text [
     *> }                                                                              <*/
    if (strcmp (x_target, "") == 0)  x_scope = YVIEW_MAIN;
    /*---(finalize text)------------------*/
-   strltrim (x_text, ySTR_BOTH, LEN_RECD);
+   ystrltrim (x_text, ySTR_BOTH, LEN_RECD);
    if (x_text [0] == '&') {
       x_concat = '&';
-      strlcpy (t, x_text + 1, LEN_RECD);
+      ystrlcpy (t, x_text + 1, LEN_RECD);
    } else {
-      strlcpy (t, x_text    , LEN_RECD);
+      ystrlcpy (t, x_text    , LEN_RECD);
    }
    /*---(save back)----------------------*/
    DEBUG_YVIEW   yLOG_char    ("x_concat"  , x_concat);
    if (r_concat != NULL)  *r_concat = x_concat;
    DEBUG_YVIEW   yLOG_info    ("x_text"    , t);
-   if (r_text   != NULL)  strlcpy (r_text  , t       , LEN_RECD);
+   if (r_text   != NULL)  ystrlcpy (r_text  , t       , LEN_RECD);
    DEBUG_YVIEW   yLOG_char    ("x_scope"   , x_scope);
    if (r_scope  != NULL)  *r_scope  = x_scope;
    DEBUG_YVIEW   yLOG_info    ("x_target"  , x_target);
-   if (r_target != NULL)  strlcpy (r_target, x_target, LEN_TERSE);
+   if (r_target != NULL)  ystrlcpy (r_target, x_target, LEN_TERSE);
    /*---(complete)-----------------------*/
    DEBUG_YVIEW   yLOG_exit    (__FUNCTION__);
    return 0;
@@ -1517,7 +1517,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char a_
    /*---(parse the text)-----------------*/
    if (a_text != NULL) {
       if (a_size == '~')  sprintf (t, "() %s", a_text);
-      else                strlcpy (t, a_text, LEN_RECD);
+      else                ystrlcpy (t, a_text, LEN_RECD);
    }
    DEBUG_YVIEW   yLOG_info    ("t"         , t);
    rc = yview_note__parse_text (t, &x_concat, x_text, &x_scope, x_target);
@@ -1562,7 +1562,7 @@ yview_note_add          (char a_part, char a_xr, char a_yr, char a_size, char a_
       DEBUG_YVIEW   yLOG_point   ("text"      , gVIEW_notes [n].text);
       if (gVIEW_notes [n].text != NULL) {
          sprintf (t, "%s%s", gVIEW_notes [n].text, x_text);
-         strlcpy (x_text, t, LEN_RECD);
+         ystrlcpy (x_text, t, LEN_RECD);
       }
       gVIEW_notes [n].text = strdup (x_text);
    } else if (strcmp (x_text, "´") != 0) {
@@ -1633,7 +1633,7 @@ yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a
       return rce;
    }
    /*---(intial text handling)-----------*/
-   strlcpy (x_text, a_text, LEN_RECD);
+   ystrlcpy (x_text, a_text, LEN_RECD);
    DEBUG_YVIEW   yLOG_info    ("x_text"    , x_text);
    /*---(check context)------------------*/
    --rce;  switch (a_part) {
@@ -1704,7 +1704,7 @@ yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a
       }
    } 
    /*---(check text)---------------------*/
-   strltrim (x_text, ySTR_BOTH, LEN_RECD);
+   ystrltrim (x_text, ySTR_BOTH, LEN_RECD);
    l = strlen (x_text);
    DEBUG_YVIEW   yLOG_complex ("text"      , "%2d å%sæ", l, x_text);
    /*---(leave targeting the same)-------*/
@@ -1712,7 +1712,7 @@ yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a
       DEBUG_YVIEW   yLOG_note    ("leave targeting alone");
       x_leave = 'y';
       x_text [l - 1] = '\0';
-      strltrim (x_text, ySTR_BOTH, LEN_RECD);
+      ystrltrim (x_text, ySTR_BOTH, LEN_RECD);
       l = strlen (x_text);
       switch (gVIEW_notes [n].c) {
       case '2' : case '3' : x_dir = 'Ö';  break;
@@ -1734,7 +1734,7 @@ yview_note_add_OLD      (char a_part, char a_xr, char a_yr, char a_size, char *a
       DEBUG_YVIEW   yLOG_point   ("text"      , gVIEW_notes [n].text);
       if (gVIEW_notes [n].text != NULL) {
          sprintf (t, "%s %s", gVIEW_notes [n].text, x_text);
-         strlcpy (x_text, t, LEN_RECD);
+         ystrlcpy (x_text, t, LEN_RECD);
       }
    }
    /*---(update text)--------------------*/
@@ -1951,7 +1951,7 @@ yview_note__direct      (char *a_all, char a_part)
    }
    /*---(prepare)------------------------*/
    x_size = a_all [2];
-   strlcpy (u, a_all + 3, LEN_RECD);
+   ystrlcpy (u, a_all + 3, LEN_RECD);
    /*---(triples)------------------------*/
    --rce;  if (x_len == 5) {
       DEBUG_YVIEW   yLOG_note    ("checking fives");
@@ -2046,8 +2046,8 @@ yVIEW_note_data         (char n, uchar *m, uchar *s, short *x, short *y, short *
    if (h   != NULL)  *h  = gVIEW_notes [n].h;
    /*---(text)---------------------------*/
    if (t   != NULL) {
-      if (gVIEW_notes [n].text == NULL)  strlcpy (t, ""              , LEN_RECD);
-      else                               strlcpy (t, gVIEW_notes [n].text, LEN_RECD);
+      if (gVIEW_notes [n].text == NULL)  ystrlcpy (t, ""              , LEN_RECD);
+      else                               ystrlcpy (t, gVIEW_notes [n].text, LEN_RECD);
    }
    /*---(target)-------------------------*/
    if (c   != NULL)  *c  = gVIEW_notes [n].c;
@@ -2173,7 +2173,7 @@ yview_note__unit        (char *a_question, int n)
    char        s           [LEN_HUND]  = "";
    char        t           [LEN_HUND]  = "";
    /*---(preprare)-----------------------*/
-   strlcpy  (unit_answer, "NOTE unit        : question not understood", LEN_FULL);
+   ystrlcpy  (unit_answer, "NOTE unit        : question not understood", LEN_FULL);
    /*---(dependency list)----------------*/
    if      (strcmp (a_question, "count"          ) == 0) {
       for (i = 0; i < YVIEW_MAX_NOTES; ++i) {

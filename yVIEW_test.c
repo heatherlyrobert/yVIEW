@@ -88,7 +88,7 @@ yVIEW__unit             (char *a_question, char a_index)
    char        s           [LEN_SHORT] = "···";
    char        t           [LEN_SHORT] = "···";
    /*---(preprare)-----------------------*/
-   strlcpy  (unit_answer, "VIEW unit        : question not understood", LEN_FULL);
+   ystrlcpy  (unit_answer, "VIEW unit        : question not understood", LEN_FULL);
    /*---(dependency list)----------------*/
    if      (strcmp (a_question, "size"           )   == 0) {
       rc = yview_by_abbr   (a_index, &p, NULL);
