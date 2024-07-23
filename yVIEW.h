@@ -138,6 +138,7 @@ char        yVIEW_loc_menu          (char a_loc);
 char        yVIEW_full              (char a_part, char a_type, char a_anchor, char a_major, char a_minor, void *a_drawer);
 char        yVIEW_simple            (char a_part, char a_major, char a_minor, void *a_drawer);
 char        yVIEW_menus             (void *a_drawer);
+char        yVIEW_mask              (void *a_drawer);
 char        yVIEW_color_set         (char a_part, char a_major, char a_minor);
 char        yVIEW_color             (char a_abbr, char a_minor, float a_alpha);
 char        yVIEW_color_back        (char a_abbr);

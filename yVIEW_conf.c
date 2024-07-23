@@ -216,6 +216,7 @@ yview__system           (char a_part, void *a_drawer)
 }
 
 char yVIEW_menus    (void *a_drawer) { return yview__system (YVIEW_MENUS   , a_drawer); }
+char yVIEW_mask     (void *a_drawer) { return yview__system (YVIEW_MASK    , a_drawer); }
 
 char
 yVIEW_simple            (char a_part, char a_major, char a_minor, void *a_drawer)
